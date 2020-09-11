@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import { ipcRenderer } from 'electron';
 
+
+import { IMAGE_OPTIMIZER } from './constants';
+
 // https://getflywheel.github.io/local-addon-api/modules/_local_renderer_.html
 import * as LocalRenderer from '@getflywheel/local/renderer';
 
@@ -47,11 +50,28 @@ export default class Boilerplate extends Component {
 		});
 	}
 
-	saveCount() {
-		ipcRenderer.send(
-			'save-count',
+	async saveCount() {
+		const res = await LocalRenderer.ipcAsync(
+			IMAGE_OPTIMIZER.SCAN_FOR_IMAGES,
 			this.state.siteId,
-			this.state.count,
+		);
+
+		console.log(res);
+
+		ipcRenderer.send(
+			IMAGE_OPTIMIZER.COMPRESS_IMAGES,
+			this.props.match.params.siteID,
+			Object.keys(res.imageData),
+		);
+
+		ipcRenderer.on(
+			IMAGE_OPTIMIZER.COMPRESS_IMAGE_SUCCESS,
+			(event, ...args) => console.log('Success!', args),
+		);
+
+		ipcRenderer.on(
+			IMAGE_OPTIMIZER.COMPRESS_IMAGE_FAIL,
+			(event, ...args) => console.log('Fail!', args),
 		);
 	}
 
