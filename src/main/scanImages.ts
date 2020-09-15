@@ -19,9 +19,6 @@ export function scanImagesFactory(serviceContainer, imageDataStore) {
 		const site = serviceContainer.siteData.getSite(siteID);
 
 		if (!site) {
-			/**
-			 * @todo improve this error handling?
-			 */
 			return new Promise((resolve, reject) => reject(new Error('Site not found!')));
 		}
 
