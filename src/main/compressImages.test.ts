@@ -3,46 +3,30 @@ import md5 from 'md5';
 import path from 'path';
 import { compressImagesFactory, backupDirName } from './compressImages';
 import { IMAGE_OPTIMIZER } from '../constants';
-// import * as LocalMain from '@getflywheel/local/main';
+import { createMockServiceContainer } from '../test/mockCreators';
+
 
 const sitePath = '/Users/cool-man-joe/Local Sites/twice-baked-potato';
-const webRoot = path.join(sitePath, 'app', 'public');
-const wpContent = path.join(webRoot, 'wp-content');
+
+const mockServiceContainer = createMockServiceContainer(sitePath);
+const wpContent = path.join(mockServiceContainer.siteData.paths.webRoot, 'wp-content');
 const backupDir = path.join(sitePath, backupDirName);
 
-const mockServiceContainer = {
-	siteData: {
-		getSite: jest.fn((siteID: string) => {
-			return {
-				paths: { webRoot },
-				longPath: sitePath,
-			};
-		}),
-	},
-	sendIPCEvent: jest.fn(),
-};
 
 jest.mock('./utils');
 const utils = require('./utils');
 
+
 jest.mock('fs-extra');
 const fsExtra = require('fs-extra');
-
-fsExtra.ensureDir.mockImplementation((dir: string) => {
-	return {
-		dir,
-	}
-});
-// fsExtra.copySync.mockImplementation(() => {});
 fsExtra.statSync.mockImplementation((path: string) => ({
 	size: 1000,
 }));
 
+
 jest.mock('child_process');
 const childProcess = require('child_process');
-
 const emitter = new EventEmitter();
-
 childProcess.spawn.mockImplementation((command: string, args: any[]) => {
 	return emitter;
 });
@@ -91,12 +75,6 @@ describe('compressImages', () => {
 
 		done();
 	});
-
-	// it('if no site is found, returns null', async (done) => {
-	// 	await compressImages('4321', Object.keys(imageData), fsExtra);
-
-	// 	done();
-	// });
 
 	it('calls serviceContainer.siteData.getSite with the passed in siteID', () => {
 		expect(mockServiceContainer.siteData.getSite.mock.calls[0][0]).toEqual(siteID);
