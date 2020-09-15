@@ -44,7 +44,7 @@ export function getFileHash(filePath: string): Promise<string> {
  *
  * @param contentPath
  */
-export async function getImageFilePathsFactory(contentPath: string): Promise<string[]> {
+export async function getImageFilePathsHelper(contentPath: string): Promise<string[]> {
 	// ignore all files that aren't JPG's.
 	// Directories must return false so that they won't be ignored. If they are ignored,
 	// they will not be traversed
@@ -79,7 +79,7 @@ export async function getImageFilePathsFactory(contentPath: string): Promise<str
  * @param site
  */
 export async function getImageFilePaths(site: Local.Site) {
-	return getImageFilePathsFactory(
+	return getImageFilePathsHelper(
 		path.join(site.paths.webRoot, 'wp-content', 'uploads'),
 	);
 }
@@ -89,14 +89,14 @@ export async function getImageFilePaths(site: Local.Site) {
  *
  * @param site
  */
-export async function getBackupImageFilePaths(site: Local.Site): Promise<string[]> {
-	return getImageFilePathsFactory(
-		/**
-		 * @todo why aren't you getting recognized, man?
-		 */
-		site.paths.imageOptimizerBackups,
-	);
-}
+// export async function getBackupImageFilePaths(site: Local.Site): Promise<string[]> {
+// 	return getImageFilePathsHelper(
+// 		/**
+// 		 * @todo why aren't you getting recognized, man?
+// 		 */
+// 		site.paths.imageOptimizerBackups,
+// 	);
+// }
 
 
 /**
