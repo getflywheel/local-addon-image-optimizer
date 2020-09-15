@@ -26,4 +26,3 @@ export const createMockServiceContainer = (sitePath = '/Users/Local Sites/my-coo
 	siteData: new MockSiteData(sitePath),
 	sendIPCEvent: jest.fn(),
 });
-
