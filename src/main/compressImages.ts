@@ -1,6 +1,5 @@
 import childProcess from 'child_process';
 import path from 'path';
-import fs from 'fs-extra';
 import cloneDeep from 'lodash/cloneDeep';
 import * as Local from '@getflywheel/local';
 import {
@@ -10,6 +9,8 @@ import { BACKUP_DIR_NAME, IPC_EVENTS } from '../constants';
 import { getFileHash, saveImageDataToDisk } from './utils';
 
 
+export const backupFileName = '.localwp-image-optimizer-backups';
+
 /**
  * Takes a list of md5 hashed ids for images that should be compressed and compress them one at a time
  * Each time an image is compressed or fails, will emit an IPC event with the file md5 and the status (success/fail)
@@ -18,7 +19,7 @@ import { getFileHash, saveImageDataToDisk } from './utils';
  * @param imageIds
  */
 export function compressImagesFactory(serviceContainer, imageDataStore) {
-	return async function(siteID: Local.Site['id'], imageMD5s: string[], stripMetaData?: boolean) {
+	return async function(siteID: Local.Site['id'], imageMD5s: string[], fs, stripMetaData?: boolean) {
 		/**
 		 * Backup location = wp-content/local-wp-image-backups
 		 */
@@ -88,7 +89,7 @@ export function compressImagesFactory(serviceContainer, imageDataStore) {
 
 					siteImageData.imageData[md5Hash] = {
 						...currentImageData,
-						compressedImageHash: await getFileHash(backupPath),
+						compressedImageHash: await getFileHash(backupPath, fs),
 						compressedSize: fs.statSync(backupPath).size,
 					};
 
