@@ -15,22 +15,21 @@ import {
 	hasImageBeenCompressed,
 } from './utils';
 
+jest.mock('fs-extra');
+
+const fsExtra = require('fs-extra');
+const mockImageBuffer = Buffer.from([1, 2, 3, 4, 5, 6, 7]);
+fsExtra.readFile.mockImplementation((filePath, cb) => {
+	cb(null, mockImageBuffer);
+	return {
+		filePath,
+		cb,
+	}
+});
+
+fsExtra.existsSync.mockImplementation((path: string) => true);
 
 jest.mock('recursive-readdir');
-
-
-const createFSMock = (mockImage?: string | Buffer) => ({
-	readFile: jest.fn((filePath, cb) => {
-		cb(null, mockImage || '');
-		return {
-			filePath,
-			cb,
-		}
-	}),
-	existsSync: jest.fn((path: string) => {
-		return true;
-	}),
-});
 
 describe('saveImageDataToDisk', () => {
 	const serviceContainerMock = {
@@ -85,15 +84,9 @@ describe('saveImageDataToDisk', () => {
 
 describe('getFileHash', () => {
 	const imageFilePath = 'app/public/wp-content/uploads/1927/07/cool-image.jpeg';
-	const mockImageBuffer = Buffer.from([1, 2, 3, 4, 5, 6, 7]);
-	let fsMock;
-
-	beforeEach(() => {
-		fsMock = createFSMock(mockImageBuffer);
-	});
 
 	it('reads a file, calls the md5 function and resolves a promise with that value', async () => {
-		const res = await getFileHash(imageFilePath, fsMock);
+		const res = await getFileHash(imageFilePath, fsExtra);
 
 		expect(md5(mockImageBuffer)).toEqual(res);
 
@@ -105,10 +98,10 @@ describe('getFileHash', () => {
 	});
 
 	it('calls fs.readFile once with the passed in filePath', async () => {
-		const res = await getFileHash(imageFilePath, fsMock);
+		const res = await getFileHash(imageFilePath, fsExtra);
 
-		expect(fsMock.readFile.mock.calls.length).toEqual(1);
-		expect(fsMock.readFile.mock.results[0].value.filePath).toEqual(imageFilePath);
+		expect(fsExtra.readFile.mock.calls.length).toEqual(2);
+		expect(fsExtra.readFile.mock.results[0].value.filePath).toEqual(imageFilePath);
 	});
 });
 
@@ -126,11 +119,6 @@ describe('getImageFilePaths', () => {
 		};
 	};
 
-	let fsMock;
-	beforeEach(() => {
-		fsMock = createFSMock();
-	});
-
 	/**
 	 * @todo figure out how to mock out the fs module in order to test that jpeg files
 	 * are indeed getting filtered correctly
@@ -140,10 +128,10 @@ describe('getImageFilePaths', () => {
 		it('calls recursiveReaddir with the correct args', async (done) => {
 			recursiveReaddir.mockImplementation(recursiveReaddirMock);
 
-			await getImageFilePathsHelper(contentPath, fsMock);
+			await getImageFilePathsHelper(contentPath, fsExtra);
 
-			expect(fsMock.existsSync.mock.calls.length).toEqual(1);
-			expect(fsMock.existsSync.mock.calls[0][0]).toEqual(contentPath);
+			expect(fsExtra.existsSync.mock.calls.length).toEqual(1);
+			expect(fsExtra.existsSync.mock.calls[0][0]).toEqual(contentPath);
 
 			expect(recursiveReaddir.mock.calls[0][0]).toEqual(contentPath);
 			expect(recursiveReaddir.mock.calls[0][1]).toSatisfyAll(filter => typeof filter === 'function');
@@ -160,7 +148,7 @@ describe('getImageFilePaths', () => {
 
 		const mockSite = { paths: { webRoot } };
 
-		await getImageFilePaths(mockSite as Local.Site, fsMock);
+		await getImageFilePaths(mockSite as Local.Site, fsExtra);
 
 		const contentPathArg = recursiveReaddir.mock.calls[1][0];
 
