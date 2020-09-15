@@ -10,10 +10,19 @@ import { IMAGE_OPTIMIZER } from './constants';
 
 
 export default function (context) {
+	/**
+	 * @todo pass the fs module in the context object through to handler functions
+	 * rather than importing directly here
+	 */
 	const { electron, fileStystem: fs } = context;
 	const { ipcMain } = electron;
 
-	console.log('Context -----------', context);
+	/**
+	 * @todo read from disk any previous image data and store in a runtime cache
+	 * this is important because it will help us determine which images have
+	 * been compressed thus far
+	 */
+
 
 	/**
 	 * Scan a site for images and return the list of all images found

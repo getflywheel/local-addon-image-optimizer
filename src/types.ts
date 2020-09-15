@@ -7,7 +7,7 @@ export interface ImageData {
 }
 
 export interface SiteImageData {
-	imageData: { [siteID: string]: ImageData };
+	imageData: { [imageID: string]: ImageData };
 	lastScan?: Date;
 	originalTotalSize?: number;
 	compressedTotalSize?: number;
