@@ -7,7 +7,10 @@ import {
 	SiteImageData,
 } from '../types';
 import { IMAGE_OPTIMIZER } from '../constants';
+import { getFileHash } from './utils';
 
+
+export const backupFileName = '.localwp-image-optimizer-backups';
 
 /**
  * Takes a list of md5 hashed ids for images that should be compressed and compress them one at a time
@@ -30,7 +33,10 @@ export function compressImagesFactory(serviceContainer, imageDataStore) {
 		/**
 		 * @todo why isn't this new class member/getter not getting picked up?
 		 */
-		const backupDirPath = site.paths.imageOptimizerBackups;
+		const backupDirPath = path.join(
+			site.paths.imageOptimizerBackups,
+			backupFileName,
+		);
 
 		fs.ensureDir(backupDirPath);
 
