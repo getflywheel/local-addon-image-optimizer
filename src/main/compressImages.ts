@@ -9,7 +9,7 @@ import { BACKUP_DIR_NAME, IPC_EVENTS } from '../constants';
 import { getFileHash, saveImageDataToDisk } from './utils';
 
 
-export const backupFileName = '.localwp-image-optimizer-backups';
+export const backupDirName = '.localwp-image-optimizer-backups';
 
 /**
  * Takes a list of md5 hashed ids for images that should be compressed and compress them one at a time
@@ -55,6 +55,9 @@ export function compressImagesFactory(serviceContainer, imageDataStore) {
 
 			const args: string[] = [];
 
+			/**
+			 * @todo write some tests to cover this case
+			 */
 			if (stripMetaData) {
 				args.push('--strip');
 			}
@@ -77,6 +80,9 @@ export function compressImagesFactory(serviceContainer, imageDataStore) {
 				);
 
 				cp.on('close', async (code) => {
+					/**
+					 * @todo test this IPC event
+					 */
 					if (code !== 0) {
 						serviceContainer.sendIPCEvent(IPC_EVENTS.COMPRESS_IMAGE_FAIL, {
 							originalImageHash: md5Hash,
