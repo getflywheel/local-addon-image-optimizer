@@ -1,5 +1,4 @@
 import path from 'path';
-import fs from 'fs-extra';
 import recursiveReaddir from 'recursive-readdir'
 import md5 from 'md5';
 import * as LocalMain from '@getflywheel/local/main';
@@ -26,7 +25,7 @@ export function saveImageDataToDisk(siteID: string, data: SiteImageData, service
 	});
 };
 
-export function getFileHash(filePath: string): Promise<string> {
+export function getFileHash(filePath: string, fs): Promise<string> {
 	return new Promise((resolve, reject) => {
 		fs.readFile(
 			filePath,
@@ -66,7 +65,7 @@ export async function getImageFilePathsHelper(contentPath: string): Promise<stri
 		[fileFilter],
 		(err, files) => {
 			if (err) {
-				reject(err);
+				reject(err)
 				return;
 			}
 
@@ -83,6 +82,7 @@ export async function getImageFilePathsHelper(contentPath: string): Promise<stri
 export async function getImageFilePaths(site: Local.Site) {
 	return getImageFilePathsHelper(
 		path.join(site.paths.webRoot, 'wp-content', 'uploads'),
+		fs,
 	);
 }
 
@@ -96,7 +96,6 @@ export async function getBackupImageFilePaths(site: Local.Site): Promise<string[
 		path.join(site.longPath, BACKUP_DIR_NAME),
 	);
 }
-
 
 /**
  * Given an MD5 hash of an image, returns wether or not this image is an original copy or has previously been

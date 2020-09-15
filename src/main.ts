@@ -1,6 +1,4 @@
-// https://getflywheel.github.io/local-addon-api/modules/_local_main_.html
 import * as LocalMain from '@getflywheel/local/main';
-
 import {
 	scanImages,
 	getImageData,
@@ -46,6 +44,6 @@ export default function (context) {
 			siteID: string,
 			imageMD5s: string[],
 			stripMetaData?: boolean,
-		) => compressImages(siteID, imageMD5s, stripMetaData),
+		) => compressImages(siteID, imageMD5s, fs, stripMetaData),
 	);
 }
