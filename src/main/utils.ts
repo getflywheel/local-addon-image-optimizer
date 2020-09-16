@@ -93,10 +93,6 @@ export async function getImageFilePaths(site: Local.Site) {
  */
 export async function getBackupImageFilePaths(site: Local.Site): Promise<string[]> {
 	return getImageFilePathsHelper(
-		/**
-		 * @todo refactor this to use the site path built and maintained in this package as Local will not
-		 * be providing this for the add on anymore
-		 */
 		path.join(site.longPath, BACKUP_FILE_NAME),
 	);
 }
