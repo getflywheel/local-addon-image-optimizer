@@ -10,11 +10,7 @@ import { IPC_EVENTS } from './constants';
 
 
 export default function (context) {
-	/**
-	 * @todo pass the fs module in the context object through to handler functions
-	 * rather than importing the module in this package's modules
-	 */
-	const { electron, fileStystem: fs } = context;
+	const { electron } = context;
 	const { ipcMain } = electron;
 
 	/**
@@ -35,11 +31,9 @@ export default function (context) {
 	/**
 	 * Get all image data for a site if it exists (ie been scanned for in the past)
 	 */
-	ipcMain.on(
+	LocalMain.addIpcAsyncListener(
 		IPC_EVENTS.GET_IMAGE_DATA,
-		(event, siteID: string) => {
-			event.returnValue = getImageData(siteID);
-		},
+		async (siteID: string) => getImageData(siteID),
 	);
 
 	/**
