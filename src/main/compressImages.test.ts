@@ -1,3 +1,5 @@
+import 'jest-extended';
+
 import { EventEmitter } from 'events';
 import md5 from 'md5';
 import path from 'path';
