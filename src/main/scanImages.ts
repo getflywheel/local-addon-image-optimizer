@@ -1,3 +1,4 @@
+import fs from 'fs-extra';
 import { SiteImageData } from '../types';
 import {
 	saveImageDataToDisk,
@@ -15,17 +16,17 @@ import {
  * @returns ImageData[]
  */
 export function scanImagesFactory(serviceContainer, imageDataStore) {
-	return async function(siteID: string, fs): Promise<SiteImageData> {
+	return async function(siteID: string): Promise<SiteImageData> {
 		const site = serviceContainer.siteData.getSite(siteID);
 
 		if (!site) {
 			return new Promise((resolve, reject) => reject(new Error('Site not found!')));
 		}
 
-		const filePaths = await getImageFilePaths(site, fs);
+		const filePaths = await getImageFilePaths(site);
 
 		const filesWithHashes = await Promise.all(
-			filePaths.map((file: string) => getFileHash(file, fs)),
+			filePaths.map((file: string) => getFileHash(file)),
 		);
 
 		const existingImageData = imageDataStore[siteID]?.imageData || {};
@@ -39,7 +40,7 @@ export function scanImagesFactory(serviceContainer, imageDataStore) {
 			const fileSize = fs.statSync(filePath).size;
 			totalImagesSize += fileSize;
 
-			const fileHash = await getFileHash(filePath, fs);
+			const fileHash = await getFileHash(filePath);
 
 			if (hasImageBeenCompressed(fileHash, existingImageData)) {
 				return await imageData;
