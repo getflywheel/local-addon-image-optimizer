@@ -1,5 +1,6 @@
 import childProcess from 'child_process';
 import path from 'path';
+import fs from 'fs-extra';
 import cloneDeep from 'lodash/cloneDeep';
 import * as Local from '@getflywheel/local';
 import {
@@ -19,10 +20,7 @@ export const backupDirName = '.localwp-image-optimizer-backups';
  * @param imageIds
  */
 export function compressImagesFactory(serviceContainer, imageDataStore) {
-	return async function(siteID: Local.Site['id'], imageMD5s: string[], fs, stripMetaData?: boolean) {
-		/**
-		 * Backup location = wp-content/local-wp-image-backups
-		 */
+	return async function(siteID: Local.Site['id'], imageMD5s: string[], stripMetaData?: boolean) {
 		const site = serviceContainer.siteData.getSite(siteID);
 
 		if (!site) {
@@ -95,7 +93,7 @@ export function compressImagesFactory(serviceContainer, imageDataStore) {
 
 					siteImageData.imageData[md5Hash] = {
 						...currentImageData,
-						compressedImageHash: await getFileHash(backupPath, fs),
+						compressedImageHash: await getFileHash(backupPath),
 						compressedSize: fs.statSync(backupPath).size,
 					};
 

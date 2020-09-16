@@ -13,7 +13,19 @@ const imageDataStore = {};
 jest.mock('fs-extra');
 const fsExtra = require('fs-extra');
 
+// mock out utils so that we don't accidentally make calls to fs, etc.
+// also this makes assertions much easier and utils should be tested independantly anyways
 jest.mock('./utils');
+const utils = require('./utils');
+utils.getImageFilePaths.mockImplementation((site) => {
+	return [
+		'fake/path/file1.jpeg',
+		'fake/path/file1.jpeg',
+	];
+});
+utils.getFileHash.mockImplementation((file) => {
+
+});
 
 describe('scanImages', () => {
 	const scanImages = scanImagesFactory(serviceContainer, imageDataStore);

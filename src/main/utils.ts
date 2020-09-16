@@ -1,4 +1,5 @@
 import path from 'path';
+import fs from 'fs-extra';
 import recursiveReaddir from 'recursive-readdir'
 import md5 from 'md5';
 import * as LocalMain from '@getflywheel/local/main';
@@ -25,7 +26,7 @@ export function saveImageDataToDisk(siteID: string, data: SiteImageData, service
 	});
 };
 
-export function getFileHash(filePath: string, fs): Promise<string> {
+export function getFileHash(filePath: string): Promise<string> {
 	return new Promise((resolve, reject) => {
 		fs.readFile(
 			filePath,
@@ -82,7 +83,6 @@ export async function getImageFilePathsHelper(contentPath: string): Promise<stri
 export async function getImageFilePaths(site: Local.Site) {
 	return getImageFilePathsHelper(
 		path.join(site.paths.webRoot, 'wp-content', 'uploads'),
-		fs,
 	);
 }
 

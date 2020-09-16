@@ -86,7 +86,7 @@ describe('getFileHash', () => {
 	const imageFilePath = 'app/public/wp-content/uploads/1927/07/cool-image.jpeg';
 
 	it('reads a file, calls the md5 function and resolves a promise with that value', async () => {
-		const res = await getFileHash(imageFilePath, fsExtra);
+		const res = await getFileHash(imageFilePath);
 
 		expect(md5(mockImageBuffer)).toEqual(res);
 
@@ -98,7 +98,7 @@ describe('getFileHash', () => {
 	});
 
 	it('calls fs.readFile once with the passed in filePath', async () => {
-		const res = await getFileHash(imageFilePath, fsExtra);
+		const res = await getFileHash(imageFilePath);
 
 		expect(fsExtra.readFile.mock.calls.length).toEqual(2);
 		expect(fsExtra.readFile.mock.results[0].value.filePath).toEqual(imageFilePath);
@@ -128,7 +128,7 @@ describe('getImageFilePaths', () => {
 		it('calls recursiveReaddir with the correct args', async (done) => {
 			recursiveReaddir.mockImplementation(recursiveReaddirMock);
 
-			await getImageFilePathsHelper(contentPath, fsExtra);
+			await getImageFilePathsHelper(contentPath);
 
 			expect(fsExtra.existsSync.mock.calls.length).toEqual(1);
 			expect(fsExtra.existsSync.mock.calls[0][0]).toEqual(contentPath);
@@ -148,7 +148,7 @@ describe('getImageFilePaths', () => {
 
 		const mockSite = { paths: { webRoot } };
 
-		await getImageFilePaths(mockSite as Local.Site, fsExtra);
+		await getImageFilePaths(mockSite as Local.Site);
 
 		const contentPathArg = recursiveReaddir.mock.calls[1][0];
 
