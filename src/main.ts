@@ -12,7 +12,7 @@ import { IPC_EVENTS } from './constants';
 export default function (context) {
 	/**
 	 * @todo pass the fs module in the context object through to handler functions
-	 * rather than importing directly here
+	 * rather than importing the module in this package's modules
 	 */
 	const { electron, fileStystem: fs } = context;
 	const { ipcMain } = electron;

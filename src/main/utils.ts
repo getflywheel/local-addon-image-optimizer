@@ -10,7 +10,7 @@ import {
 	SiteImageData,
 } from '../types';
 
-import { BACKUP_FILE_NAME, COMPRESSED_IMAGE_DATA_FILE_NAME } from '../constants';
+import { BACKUP_DIR_NAME, COMPRESSED_IMAGE_DATA_FILE_NAME } from '../constants';
 
 
 export function saveImageDataToDisk(siteID: string, data: SiteImageData, serviceContainer: LocalMain.ServiceContainerServices): void {
@@ -93,7 +93,7 @@ export async function getImageFilePaths(site: Local.Site) {
  */
 export async function getBackupImageFilePaths(site: Local.Site): Promise<string[]> {
 	return getImageFilePathsHelper(
-		path.join(site.longPath, BACKUP_FILE_NAME),
+		path.join(site.longPath, BACKUP_DIR_NAME),
 	);
 }
 
