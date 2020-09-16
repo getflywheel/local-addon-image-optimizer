@@ -6,7 +6,7 @@ import * as Local from '@getflywheel/local';
 import {
 	SiteImageData,
 } from '../types';
-import { BACKUP_FILE_NAME, IPC_EVENTS } from '../constants';
+import { BACKUP_DIR_NAME, IPC_EVENTS } from '../constants';
 import { getFileHash, saveImageDataToDisk } from './utils';
 
 
@@ -30,7 +30,7 @@ export function compressImagesFactory(serviceContainer, imageDataStore) {
 
 		const backupDirPath = path.join(
 			site.longPath,
-			BACKUP_FILE_NAME,
+			BACKUP_DIR_NAME,
 		);
 
 		fs.ensureDir(backupDirPath);
