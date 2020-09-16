@@ -6,7 +6,7 @@ import {
 	getImageData,
 	compressImages,
 } from './main/index';
-import { IMAGE_OPTIMIZER } from './constants';
+import { IPC_EVENTS } from './constants';
 
 
 export default function (context) {
@@ -28,7 +28,7 @@ export default function (context) {
 	 * Scan a site for images and return the list of all images found
 	 */
 	LocalMain.addIpcAsyncListener(
-		IMAGE_OPTIMIZER.SCAN_FOR_IMAGES,
+		IPC_EVENTS.SCAN_FOR_IMAGES,
 		async (siteID: string) => scanImages(siteID),
 	);
 
@@ -36,7 +36,7 @@ export default function (context) {
 	 * Get all image data for a site if it exists (ie been scanned for in the past)
 	 */
 	ipcMain.on(
-		IMAGE_OPTIMIZER.GET_IMAGE_DATA,
+		IPC_EVENTS.GET_IMAGE_DATA,
 		(event, siteID: string) => {
 			event.returnValue = getImageData(siteID);
 		},
@@ -46,7 +46,7 @@ export default function (context) {
 	 * Compress a list of images associated with a site by their md5 has unique ids
 	 */
 	ipcMain.on(
-		IMAGE_OPTIMIZER.COMPRESS_IMAGES,
+		IPC_EVENTS.COMPRESS_IMAGES,
 		(
 			_,
 			siteID: string,

@@ -6,7 +6,7 @@ import * as Local from '@getflywheel/local';
 import {
 	SiteImageData,
 } from '../types';
-import { IMAGE_OPTIMIZER } from '../constants';
+import { IPC_EVENTS } from '../constants';
 import { getFileHash } from './utils';
 
 
@@ -76,7 +76,7 @@ export function compressImagesFactory(serviceContainer, imageDataStore) {
 
 				cp.on('close', async (code) => {
 					if (code !== 0) {
-						serviceContainer.sendIPCEvent(IMAGE_OPTIMIZER.COMPRESS_IMAGE_FAIL, {
+						serviceContainer.sendIPCEvent(IPC_EVENTS.COMPRESS_IMAGE_FAIL, {
 							originalImageHash: md5Hash,
 							errorMessage: `Failed to process ${filePath}. Exited with code ${code}`,
 						});
@@ -91,7 +91,7 @@ export function compressImagesFactory(serviceContainer, imageDataStore) {
 						compressedSize: fs.statSync(backupPath).size,
 					};
 
-					serviceContainer.sendIPCEvent(IMAGE_OPTIMIZER.COMPRESS_IMAGE_SUCCESS, siteImageData.imageData[md5Hash]);
+					serviceContainer.sendIPCEvent(IPC_EVENTS.COMPRESS_IMAGE_SUCCESS, siteImageData.imageData[md5Hash]);
 
 					resolve();
 				});

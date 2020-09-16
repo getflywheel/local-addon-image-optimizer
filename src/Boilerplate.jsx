@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { ipcRenderer } from 'electron';
 
 
-import { IMAGE_OPTIMIZER } from './constants';
+import { IPC_EVENTS } from './constants';
 
 // https://getflywheel.github.io/local-addon-api/modules/_local_renderer_.html
 import * as LocalRenderer from '@getflywheel/local/renderer';
