@@ -1,14 +1,18 @@
 import * as LocalMain from '@getflywheel/local/main';
-
 import { SiteImageData } from '../types';
-
+import { COMPRESSED_IMAGE_DATA_FILE_NAME } from '../constants';
 import { scanImagesFactory } from './scanImages';
 import { compressImagesFactory } from './compressImages';
 
+
 const serviceContainer = LocalMain.getServiceContainer().cradle;
 
+const existingImageData = serviceContainer.userData.get(COMPRESSED_IMAGE_DATA_FILE_NAME, {});
+
 // A poor mans state for now. Soon we can make this much stronger 🦾
-const imageDataStore = {};
+const imageDataStore = {
+	...existingImageData
+};
 
 /**
  * Returns images data from a site from a previous scan.

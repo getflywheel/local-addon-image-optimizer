@@ -10,15 +10,17 @@ import {
 	SiteImageData,
 } from '../types';
 
+import { BACKUP_FILE_NAME, COMPRESSED_IMAGE_DATA_FILE_NAME } from '../constants';
+
 
 export function saveImageDataToDisk(siteID: string, data: SiteImageData, serviceContainer: LocalMain.ServiceContainerServices): void {
-	const siteImageData = serviceContainer.userData.get('site-image-data', {});
+	const siteImageData = serviceContainer.userData.get(COMPRESSED_IMAGE_DATA_FILE_NAME, {});
 
 	/**
 	 * @todo We will likely need to figure out how to clean this up when sites are deleted
 	 */
 
-	serviceContainer.userData.set('site-image-data', {
+	serviceContainer.userData.set(COMPRESSED_IMAGE_DATA_FILE_NAME, {
 		...siteImageData,
 		[siteID]: data,
 	});
@@ -95,7 +97,7 @@ export async function getBackupImageFilePaths(site: Local.Site): Promise<string[
 		 * @todo refactor this to use the site path built and maintained in this package as Local will not
 		 * be providing this for the add on anymore
 		 */
-		site.paths.imageOptimizerBackups,
+		path.join(site.longPath, BACKUP_FILE_NAME),
 	);
 }
 

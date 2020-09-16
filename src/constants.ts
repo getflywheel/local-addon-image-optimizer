@@ -5,3 +5,7 @@ export const IPC_EVENTS = {
 	COMPRESS_IMAGE_FAIL: 'imageOptimizer:image-compress-fail',
 	GET_IMAGE_DATA: 'imageOptimizer:get-image-data',
 };
+
+export const BACKUP_FILE_NAME = '.localwp-image-optimizer-backups';
+
+export const COMPRESSED_IMAGE_DATA_FILE_NAME = 'image-optimizer-plugin-image-data';
