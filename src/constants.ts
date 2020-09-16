@@ -1,4 +1,4 @@
-export const IMAGE_OPTIMIZER = {
+export const IPC_EVENTS = {
 	SCAN_FOR_IMAGES: 'imageOptimizer:scan-for-images',
 	COMPRESS_IMAGES: 'imageOptimizer:compress-images',
 	COMPRESS_IMAGE_SUCCESS: 'imageOptimizer:image-compress-success',
