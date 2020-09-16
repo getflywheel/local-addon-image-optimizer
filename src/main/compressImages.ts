@@ -6,11 +6,9 @@ import * as Local from '@getflywheel/local';
 import {
 	SiteImageData,
 } from '../types';
-import { IPC_EVENTS } from '../constants';
-import { getFileHash } from './utils';
+import { BACKUP_FILE_NAME, IPC_EVENTS } from '../constants';
+import { getFileHash, saveImageDataToDisk } from './utils';
 
-
-export const backupFileName = '.localwp-image-optimizer-backups';
 
 /**
  * Takes a list of md5 hashed ids for images that should be compressed and compress them one at a time
@@ -30,12 +28,9 @@ export function compressImagesFactory(serviceContainer, imageDataStore) {
 			return;
 		}
 
-		/**
-		 * @todo why isn't this new class member/getter not getting picked up?
-		 */
 		const backupDirPath = path.join(
-			site.paths.imageOptimizerBackups,
-			backupFileName,
+			site.longPath,
+			BACKUP_FILE_NAME,
 		);
 
 		fs.ensureDir(backupDirPath);
@@ -45,10 +40,16 @@ export function compressImagesFactory(serviceContainer, imageDataStore) {
 		for (const md5Hash of imageMD5s) {
 			const currentImageData = siteImageData.imageData[md5Hash];
 			const { filePath } = currentImageData;
-			// We do this step to ensure that image backups are nested in directories like they are in wp-content
+
+			/**
+			 * We do this step to ensure that image backups are nested under the backup directory in
+			 * the same way as they are nested inside wp-conten
+			 *
+			 * We still include "uploads" in this new file path even though that is the "base" from which we scan
+			 * for images so that we can easily expand this to scan other directories within wp-content in the future
+			 */
 			const backupPath = filePath.replace(path.join(site.paths.webRoot, 'wp-content'), backupDirPath);
 
-			// create file backup
 			fs.copySync(filePath, backupPath);
 
 			const args: string[] = [];
@@ -97,9 +98,9 @@ export function compressImagesFactory(serviceContainer, imageDataStore) {
 				});
 			});
 
-			this._imageData[siteID] = siteImageData;
+			imageDataStore[siteID] = siteImageData;
 
-			this._saveImageDataToDisk(siteID, siteImageData, serviceContainer);
+			saveImageDataToDisk(siteID, siteImageData, serviceContainer);
 		}
 	}
 };
