@@ -6,6 +6,6 @@ export const IPC_EVENTS = {
 	GET_IMAGE_DATA: 'imageOptimizer:get-image-data',
 };
 
-export const BACKUP_DIR_NAME = 'local-addon-image-optimizer-backups';
+export const BACKUP_DIR_NAME = 'backups/addon-image-optimizer';
 
 export const COMPRESSED_IMAGE_DATA_FILE_NAME = 'image-optimizer-plugin-image-data';
