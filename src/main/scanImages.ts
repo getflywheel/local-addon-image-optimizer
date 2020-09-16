@@ -46,7 +46,7 @@ export function scanImagesFactory(serviceContainer, imageDataStore) {
 			const fileHash = await getFileHash(filePath);
 
 			if (hasImageBeenCompressed(fileHash, existingImageData)) {
-				return imageData;
+				return await imageData;
 			}
 
 			return {
@@ -64,11 +64,12 @@ export function scanImagesFactory(serviceContainer, imageDataStore) {
 		 * @todo read from backup dir and rectify any copied image data
 		 */
 		const currentSiteImageData = {
+			// these should not be overidden by new data if they already exist
+			originalTotalSize: totalImagesSize,
+			compressedTotalSize: undefined,
 			...(imageDataStore[siteID] || {}),
 			imageData: updatedSiteImageData,
 			lastScan: new Date(),
-			originalTotalSize: totalImagesSize,
-			compressedTotalSize: undefined,
 			imageCount: filesWithHashes.length,
 		};
 
