@@ -25,10 +25,6 @@ export function scanImagesFactory(serviceContainer, imageDataStore) {
 
 		const filePaths = await getImageFilePaths(site);
 
-		const filesWithHashes = await Promise.all(
-			filePaths.map((file: string) => getFileHash(file)),
-		);
-
 		const existingImageData = imageDataStore[siteID]?.imageData || {};
 
 		let totalImagesSize = 0;
@@ -67,7 +63,7 @@ export function scanImagesFactory(serviceContainer, imageDataStore) {
 			...(imageDataStore[siteID] || {}),
 			imageData: updatedSiteImageData,
 			lastScan: new Date(),
-			imageCount: filesWithHashes.length,
+			imageCount: filePaths.length,
 		};
 
 		imageDataStore[siteID] = currentSiteImageData;
