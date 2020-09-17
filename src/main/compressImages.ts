@@ -3,8 +3,10 @@ import path from 'path';
 import fs from 'fs-extra';
 import cloneDeep from 'lodash/cloneDeep';
 import * as Local from '@getflywheel/local';
+import * as LocalMain from '@getflywheel/local/main';
 import {
 	SiteImageData,
+	Store,
 } from '../types';
 import { BACKUP_DIR_NAME, IPC_EVENTS } from '../constants';
 import { getFileHash, saveImageDataToDisk } from './utils';
@@ -19,7 +21,7 @@ export const backupDirName = '.localwp-image-optimizer-backups';
  *
  * @param imageIds
  */
-export function compressImagesFactory(serviceContainer, imageDataStore) {
+export function compressImagesFactory(serviceContainer: LocalMain.ServiceContainerServices, imageDataStore: Store) {
 	return async function(siteID: Local.Site['id'], imageMD5s: string[], stripMetaData?: boolean) {
 		const site = serviceContainer.siteData.getSite(siteID);
 
@@ -34,7 +36,12 @@ export function compressImagesFactory(serviceContainer, imageDataStore) {
 
 		fs.ensureDir(backupDirPath);
 
-		const siteImageData: SiteImageData = cloneDeep(imageDataStore[siteID]);
+		/**
+		 * deep clone this so that the existing store doesn not get corrupted and remains intact until we explicity update it
+		 */
+		const siteImageData: SiteImageData = cloneDeep(imageDataStore.getStateBySiteID(siteID));
+
+		const updatedImageData: SiteImageData['imageData'] = {};
 
 		for (const md5Hash of imageMD5s) {
 			const currentImageData = siteImageData.imageData[md5Hash];
@@ -60,14 +67,18 @@ export function compressImagesFactory(serviceContainer, imageDataStore) {
 				args.push('--strip');
 			}
 
-			// the src and dest args are expected as the last
-			// two argv's by jpeg-recompress, so we make sure they are added last
+			/**
+			 * the src and dest args are expected as the last
+			 * two argv's by jpeg-recompress, so we make sure they are added last
+			 */
 			args.push(
 				backupPath,
 				filePath,
 			);
 
-			// Wrap this in a promise to ensure that only one image is compressed at a time
+			/**
+			 * Wrap this in a promise to ensure that only one image is compressed at a time
+			 */
 			await new Promise((resolve) => {
 				const cp = childProcess.spawn(
 					/**
@@ -91,21 +102,27 @@ export function compressImagesFactory(serviceContainer, imageDataStore) {
 						return;
 					}
 
-					siteImageData.imageData[md5Hash] = {
+					updatedImageData[md5Hash] = {
 						...currentImageData,
 						compressedImageHash: await getFileHash(backupPath),
 						compressedSize: fs.statSync(backupPath).size,
 					};
 
-					serviceContainer.sendIPCEvent(IPC_EVENTS.COMPRESS_IMAGE_SUCCESS, siteImageData.imageData[md5Hash]);
+					serviceContainer.sendIPCEvent(IPC_EVENTS.COMPRESS_IMAGE_SUCCESS, updatedImageData[md5Hash]);
 
 					resolve();
 				});
 			});
 
-			imageDataStore[siteID] = siteImageData;
+			imageDataStore.setStateBySiteID(siteID, {
+				...siteImageData,
+				imageData: {
+					...siteImageData.imageData,
+					...updatedImageData
+				},
+			});
 
-			saveImageDataToDisk(siteID, siteImageData, serviceContainer);
+			saveImageDataToDisk(imageDataStore, serviceContainer);
 		}
 	}
 };
