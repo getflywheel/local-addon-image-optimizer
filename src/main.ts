@@ -33,7 +33,7 @@ export default function (context) {
 	 */
 	LocalMain.addIpcAsyncListener(
 		IPC_EVENTS.GET_IMAGE_DATA,
-		async (siteID: string) => getImageData(siteID),
+		getImageData,
 	);
 
 	/**
