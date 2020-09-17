@@ -16,15 +16,17 @@ export const ImageOptimizer = (props) =>  {
 
 	const [imageData, setImageData] = React.useState({});
 
+	// kicks off a scan for images
 	React.useEffect(
 		() => {
 			LocalRenderer.ipcAsync(
 				IPC_EVENTS.SCAN_FOR_IMAGES,
 				props.match.params.siteID,
 			)
-		}
+		}, []
 	);
 
+	// retrieve image data from site
 	React.useEffect(
 		() => {
 			LocalRenderer.ipcAsync(
@@ -33,10 +35,8 @@ export const ImageOptimizer = (props) =>  {
 			).then(result => {
 				setImageData(result);
 			});
-		}
+		}, []
 	);
-
-	console.log( {imageData} );
 
 	switch(overviewSelected) {
 		case false:
