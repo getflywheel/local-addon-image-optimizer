@@ -1,3 +1,5 @@
+import 'jest-extended';
+
 import path from 'path';
 import md5 from 'md5';
 import * as Local from '@getflywheel/local';
@@ -11,9 +13,13 @@ import {
 	getFileHash,
 	getImageFilePathsHelper,
 	getImageFilePaths,
-	// getBackupImageFilePaths,
 	hasImageBeenCompressed,
 } from './utils';
+
+import { COMPRESSED_IMAGE_DATA_FILE_NAME } from '../constants';
+
+import { createMockServiceContainer } from '../test/mockCreators';
+
 
 jest.mock('fs-extra');
 
@@ -32,20 +38,8 @@ fsExtra.existsSync.mockImplementation((path: string) => true);
 jest.mock('recursive-readdir');
 
 describe('saveImageDataToDisk', () => {
-	const serviceContainerMock = {
-		userData: {
-			get: jest.fn((fileBaseName, defaultData) => ({
-				fileBaseName,
-				defaultData,
-			})) as jest.Mock,
-			set: jest.fn((fileBaseName, newData) => ({
-				fileBaseName,
-				newData,
-			})) as jest.Mock,
-		},
-	};
+	const serviceContainer = createMockServiceContainer();
 
-	const fileBaseName = 'site-image-data';
 	const siteID = '1234asdf';
 	const imageData = {
 		imageData: {},
@@ -55,30 +49,33 @@ describe('saveImageDataToDisk', () => {
 		imageCount: 500,
 	};
 
-	it('calls the get and set methods on userData with the correct args', () => {
-		const { userData } = serviceContainerMock;
+	beforeAll(() => {
 		saveImageDataToDisk(
 			siteID,
 			imageData,
-			serviceContainerMock as unknown as LocalMain.ServiceContainerServices,
+			serviceContainer as unknown as LocalMain.ServiceContainerServices,
 		);
+	});
 
-		const getResult = userData.get.mock.results[0].value;
-		const setResult = userData.set.mock.results[0].value;
+	it('calls userData.get once with the correct args', () => {
+		const { get } = serviceContainer.userData;
 
-		expect(userData.get.mock.calls.length).toBe(1);
+		expect(get.mock.calls).toBeArrayOfSize(1);
 
-		expect(userData.set.mock.calls.length).toBe(1);
+		expect(get.mock.calls[0][0]).toEqual(COMPRESSED_IMAGE_DATA_FILE_NAME);
 
-		expect(getResult.fileBaseName).toEqual(fileBaseName);
+		// no data has been set yet, so userData.get should be passed an empty object
+		expect(get.mock.calls[0][1]).toContainAllKeys([]);
+	});
 
-		expect(Object.keys(getResult.defaultData).length).toBe(0);
+	it('calls userData.set once with the correct args', () => {
+		const { set } = serviceContainer.userData;
 
-		expect(setResult.fileBaseName).toEqual(fileBaseName);
+		expect(set.mock.calls).toBeArrayOfSize(1);
 
-		expect(setResult.newData[siteID]).toBeTruthy();
+		expect(set.mock.calls[0][0]).toEqual(COMPRESSED_IMAGE_DATA_FILE_NAME);
 
-		expect(setResult.newData[siteID]).toEqual(imageData);
+		expect(set.mock.calls[0][1]).toContainEntry([siteID, imageData]);
 	});
 });
 

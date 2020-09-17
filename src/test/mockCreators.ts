@@ -22,7 +22,20 @@ class MockSiteData {
 	sendIPCEvent = jest.fn();
 }
 
+class MockUserData {
+	mockUserData: { [key: string]: any } = {};
+
+	get = jest.fn((fileName, defaultData) => this.mockUserData[fileName] || defaultData);
+
+	set = jest.fn((fileName, newData) => {
+		this.mockUserData[fileName] = newData
+
+		return newData;
+	});
+}
+
 export const createMockServiceContainer = (sitePath = '/Users/Local Sites/my-cool-site') => ({
 	siteData: new MockSiteData(sitePath),
 	sendIPCEvent: jest.fn(),
+	userData: new MockUserData(),
 });
