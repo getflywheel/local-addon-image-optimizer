@@ -1,4 +1,4 @@
-import Boilerplate from './Boilerplate';
+import { ImageOptimizer } from './renderer/index';
 import fs from 'fs-extra';
 import path from 'path';
 
@@ -12,7 +12,7 @@ export default function (context) {
 
 	// Create the route/page of content that will be displayed when the menu option is clicked
 	hooks.addContent('routesSiteInfo', () => <Route key={`${addonID}-addon`} path={`/main/site-info/:siteID/${addonID}`}
-		render={(props) => <Boilerplate {...props} />} />);
+		render={() => <ImageOptimizer />} />);
 
 
 	// Add menu option within the site menu bar
