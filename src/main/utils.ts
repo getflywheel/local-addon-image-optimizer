@@ -87,17 +87,6 @@ export async function getImageFilePaths(site: Local.Site) {
 }
 
 /**
- * Get all JPG's from <site-root>/.localwp-image-optimizer-backups
- *
- * @param site
- */
-export async function getBackupImageFilePaths(site: Local.Site): Promise<string[]> {
-	return getImageFilePathsHelper(
-		path.join(site.longPath, BACKUP_DIR_NAME),
-	);
-}
-
-/**
  * Given an MD5 hash of an image, returns wether or not this image is an original copy or has previously been
  * compressed by Local
  *

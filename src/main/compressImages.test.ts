@@ -4,7 +4,7 @@ import { EventEmitter } from 'events';
 import md5 from 'md5';
 import path from 'path';
 import { compressImagesFactory, backupDirName } from './compressImages';
-import { IMAGE_OPTIMIZER } from '../constants';
+import { IPC_EVENTS } from '../constants';
 import { createMockServiceContainer } from '../test/mockCreators';
 
 
@@ -117,7 +117,7 @@ describe('compressImages', () => {
 	it('calls sendIPCEvent with the correct args when successful', () => {
 		const mock = mockServiceContainer.sendIPCEvent.mock;
 
-		expect(mock.calls[0][0]).toEqual(IMAGE_OPTIMIZER.COMPRESS_IMAGE_SUCCESS);
+		expect(mock.calls[0][0]).toEqual(IPC_EVENTS.COMPRESS_IMAGE_SUCCESS);
 		expect(mock.calls[0][1]).toContainKeys(expectedImageDataKeys);
 	});
 
