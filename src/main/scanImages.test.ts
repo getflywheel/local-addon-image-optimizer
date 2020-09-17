@@ -76,10 +76,7 @@ describe('scanImages', () => {
 			'imageCount',
 		]);
 
-		expect(mock.calls[0][2]).toContainAllKeys([
-			'siteData',
-			'sendIPCEvent',
-		]);
+		expect(mock.calls[0][2]).toEqual(serviceContainer)
 	});
 
 	it('updates imageDataStore[siteID] with the newly scanned imageData', () => {
