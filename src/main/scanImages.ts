@@ -1,5 +1,6 @@
 import fs from 'fs-extra';
-import { SiteImageData } from '../types';
+import * as LocalMain from '@getflywheel/local/main';
+import { SiteImageData, Store } from '../types';
 import {
 	saveImageDataToDisk,
 	getImageFilePaths,
@@ -15,7 +16,7 @@ import {
  *
  * @returns ImageData[]
  */
-export function scanImagesFactory(serviceContainer, imageDataStore) {
+export function scanImagesFactory(serviceContainer: LocalMain.ServiceContainerServices, imageDataStore: Store) {
 	return async function(siteID: string): Promise<SiteImageData> {
 		const site = serviceContainer.siteData.getSite(siteID);
 
@@ -25,12 +26,13 @@ export function scanImagesFactory(serviceContainer, imageDataStore) {
 
 		const filePaths = await getImageFilePaths(site);
 
-		const existingImageData = imageDataStore[siteID]?.imageData || {};
+		const siteImageData = imageDataStore.getStateBySiteID(siteID);
+		const imageData = siteImageData.imageData || {};
 
 		let totalImagesSize = 0;
 
 		const updatedSiteImageData = await filePaths.reduce(async (
-			imageData: Promise<SiteImageData['imageData']>,
+			imageDataAccumulator: Promise<SiteImageData['imageData']>,
 			filePath: string,
 		) => {
 			const fileSize = fs.statSync(filePath).size;
@@ -38,38 +40,41 @@ export function scanImagesFactory(serviceContainer, imageDataStore) {
 
 			const fileHash = await getFileHash(filePath);
 
-			if (hasImageBeenCompressed(fileHash, existingImageData)) {
-				return await imageData;
+			/**
+			 * We don't need to record new data about a file if we have already compressed it
+			 */
+			if (hasImageBeenCompressed(fileHash, imageData)) {
+				return await imageDataAccumulator;
 			}
 
 			return {
-				...(await imageData),
+				...(await imageDataAccumulator),
 				[fileHash]: {
 					originalImageHash: fileHash,
 					filePath,
 					originalSize: fileSize,
 				},
 			};
-		}, Promise.resolve(existingImageData)) as SiteImageData['imageData'];
+		}, Promise.resolve(imageData)) as SiteImageData['imageData'];
 
 
-		/**
-		 * @todo read from backup dir and rectify any copied image data
-		 */
-		const currentSiteImageData = {
-			// these should not be overidden by new data if they already exist
+		const nextSiteImageData = {
+			/**
+			 * these should not be overidden by new data if they already exist so we add them before
+			 * copying in the previous state so that they will get overidden if they already exist
+			 */
 			originalTotalSize: totalImagesSize,
-			compressedTotalSize: undefined,
-			...(imageDataStore[siteID] || {}),
+			compressedTotalSize: null,
+			...siteImageData,
 			imageData: updatedSiteImageData,
 			lastScan: new Date(),
 			imageCount: filePaths.length,
 		};
 
-		imageDataStore[siteID] = currentSiteImageData;
+		imageDataStore.setStateBySiteID(siteID, nextSiteImageData);
 
-		saveImageDataToDisk(siteID, currentSiteImageData, serviceContainer);
+		saveImageDataToDisk(imageDataStore, serviceContainer);
 
-		return currentSiteImageData;
+		return nextSiteImageData;
 	}
 };

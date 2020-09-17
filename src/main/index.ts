@@ -3,16 +3,14 @@ import { SiteImageData } from '../types';
 import { COMPRESSED_IMAGE_DATA_FILE_NAME } from '../constants';
 import { scanImagesFactory } from './scanImages';
 import { compressImagesFactory } from './compressImages';
+import createStore from './createStore';
 
 
 const serviceContainer = LocalMain.getServiceContainer().cradle;
 
 const existingImageData = serviceContainer.userData.get(COMPRESSED_IMAGE_DATA_FILE_NAME, {});
 
-// A poor mans state for now. Soon we can make this much stronger 🦾
-const imageDataStore = {
-	...existingImageData
-};
+const imageDataStore = createStore(existingImageData);
 
 /**
  * Returns images data from a site from a previous scan.
@@ -26,7 +24,7 @@ const imageDataStore = {
  * @returns SiteImageData
  */
 export function getImageData(siteID: string): SiteImageData {
-	return (imageDataStore[siteID] || {} as SiteImageData);
+	return imageDataStore.getStateBySiteID(siteID);
 }
 
 export const scanImages = scanImagesFactory(serviceContainer, imageDataStore);

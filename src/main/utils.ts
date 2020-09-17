@@ -13,7 +13,7 @@ import {
 import { BACKUP_DIR_NAME, COMPRESSED_IMAGE_DATA_FILE_NAME } from '../constants';
 
 
-export function saveImageDataToDisk(siteID: string, data: SiteImageData, serviceContainer: LocalMain.ServiceContainerServices): void {
+export function saveImageDataToDisk(imageDataStore, serviceContainer: LocalMain.ServiceContainerServices): void {
 	const siteImageData = serviceContainer.userData.get(COMPRESSED_IMAGE_DATA_FILE_NAME, {});
 
 	/**
@@ -22,7 +22,7 @@ export function saveImageDataToDisk(siteID: string, data: SiteImageData, service
 
 	serviceContainer.userData.set(COMPRESSED_IMAGE_DATA_FILE_NAME, {
 		...siteImageData,
-		[siteID]: data,
+		...imageDataStore.getState(),
 	});
 };
 

@@ -17,3 +17,10 @@ export interface SiteImageData {
 export interface CachedImageDataBySiteID {
 	[siteID: string]: SiteImageData;
 }
+
+export interface Store {
+	getState: () => CachedImageDataBySiteID;
+	getStateBySiteID: (siteID: string) => SiteImageData;
+	setState: (newState: CachedImageDataBySiteID) => void;
+	setStateBySiteID: (siteID: string, newState: SiteImageData) => void;
+}
