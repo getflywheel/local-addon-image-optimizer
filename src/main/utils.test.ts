@@ -7,7 +7,6 @@ import * as LocalMain from '@getflywheel/local/main';
 import {
 	SiteImageData,
 } from '../types';
-
 import {
 	saveImageDataToDisk,
 	getFileHash,
@@ -15,9 +14,8 @@ import {
 	getImageFilePaths,
 	hasImageBeenCompressed,
 } from './utils';
-
+import createStore from './createStore';
 import { COMPRESSED_IMAGE_DATA_FILE_NAME } from '../constants';
-
 import { createMockServiceContainer } from '../test/mockCreators';
 
 
@@ -49,10 +47,13 @@ describe('saveImageDataToDisk', () => {
 		imageCount: 500,
 	};
 
+	const store = createStore();
+
+	store.setStateBySiteID(siteID, imageData);
+
 	beforeAll(() => {
 		saveImageDataToDisk(
-			siteID,
-			imageData,
+			store,
 			serviceContainer as unknown as LocalMain.ServiceContainerServices,
 		);
 	});

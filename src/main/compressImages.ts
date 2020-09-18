@@ -12,8 +12,6 @@ import { BACKUP_DIR_NAME, IPC_EVENTS } from '../constants';
 import { getFileHash, saveImageDataToDisk } from './utils';
 
 
-export const backupDirName = '.localwp-image-optimizer-backups';
-
 /**
  * Takes a list of md5 hashed ids for images that should be compressed and compress them one at a time
  * Each time an image is compressed or fails, will emit an IPC event with the file md5 and the status (success/fail)

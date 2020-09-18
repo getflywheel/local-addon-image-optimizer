@@ -3,8 +3,11 @@ import 'jest-extended';
 import { EventEmitter } from 'events';
 import md5 from 'md5';
 import path from 'path';
-import { compressImagesFactory, backupDirName } from './compressImages';
-import { IPC_EVENTS } from '../constants';
+import * as LocalMain from '@getflywheel/local/main';
+import { compressImagesFactory } from './compressImages';
+import createStore from './createStore';
+import { IPC_EVENTS, BACKUP_DIR_NAME } from '../constants';
+import { SiteImageData } from '../types';
 import { createMockServiceContainer } from '../test/mockCreators';
 
 
@@ -12,7 +15,7 @@ const sitePath = '/Users/cool-man-joe/Local Sites/twice-baked-potato';
 
 const mockServiceContainer = createMockServiceContainer(sitePath);
 const wpContent = path.join(mockServiceContainer.siteData.paths.webRoot, 'wp-content');
-const backupDir = path.join(sitePath, backupDirName);
+const backupDir = path.join(sitePath, BACKUP_DIR_NAME);
 
 
 jest.mock('./utils');
@@ -37,7 +40,7 @@ childProcess.spawn.mockImplementation((command: string, args: any[]) => {
 describe('compressImages', () => {
 	const siteID = '1234';
 	const imageID = md5('strongbad');
-	const imageDataStore = {
+	const initialState = {
 		[siteID]: {
 			imageData: {
 				[imageID]: {
@@ -47,8 +50,10 @@ describe('compressImages', () => {
 					originalSize: 30000,
 				},
 			}
-		},
+		} as SiteImageData,
 	};
+
+	const imageDataStore = createStore(initialState);
 
 	const expectedImageDataKeys = [
 		'originalImageHash',
@@ -59,14 +64,14 @@ describe('compressImages', () => {
 	];
 
 	const compressImages = compressImagesFactory(
-		mockServiceContainer,
+		mockServiceContainer as unknown as LocalMain.ServiceContainerServices,
 		imageDataStore,
 	);
 
 	let res
 
 	beforeAll(async (done) => {
-		res = compressImages(siteID, Object.keys(imageDataStore[siteID].imageData), fsExtra)
+		res = compressImages(siteID, Object.keys(imageDataStore.getStateBySiteID(siteID).imageData), fsExtra)
 			.then(() => done());
 
 		/**
@@ -124,10 +129,8 @@ describe('compressImages', () => {
 	it('calls the saveImageDataToDisk util with the correct args', () => {
 		const mock = utils.saveImageDataToDisk.mock;
 
-		expect(mock.calls[0][0]).toEqual(siteID);
+		expect(mock.calls[0][0]).toEqual(imageDataStore);
 
-		expect(mock.calls[0][1].imageData).toBeTruthy();
-
-		expect(mock.calls[0][1].imageData[imageID]).toContainKeys(expectedImageDataKeys);
+		expect(mock.calls[0][1]).toEqual(mockServiceContainer);
 	});
 });
