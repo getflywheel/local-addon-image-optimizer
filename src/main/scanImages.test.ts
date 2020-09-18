@@ -1,13 +1,15 @@
 import 'jest-extended';
 
 import md5 from 'md5';
+import * as LocalMain from '@getflywheel/local/main';
 import { createMockServiceContainer } from '../test/mockCreators';
 import { scanImagesFactory } from './scanImages';
+import createStore from './createStore';
 
 const sitePath = '/Users/cool-man-joe/Local Sites/twice-baked-potato';
 const serviceContainer = createMockServiceContainer(sitePath);
 
-const imageDataStore = {};
+const imageDataStore = createStore();
 
 /**
  * @todo Clean up dependencies that are unused and make fs-extra a dev only dependency
@@ -36,7 +38,10 @@ utils.getFileHash.mockImplementation((filePath) => {
 });
 
 describe('scanImages', () => {
-	const scanImages = scanImagesFactory(serviceContainer, imageDataStore);
+	const scanImages = scanImagesFactory(
+		serviceContainer as unknown as LocalMain.ServiceContainerServices,
+		imageDataStore
+	);
 	const siteID = '1234';
 	let siteImageData;
 
@@ -66,21 +71,13 @@ describe('scanImages', () => {
 	it('calls saveImageDataToDisk with the correct args', () => {
 		const { mock } = utils.saveImageDataToDisk;
 
-		expect(mock.calls[0][0]).toEqual(siteID);
+		expect(mock.calls[0][0]).toEqual(imageDataStore);
 
-		expect(mock.calls[0][1]).toContainAllKeys([
-			'imageData',
-			'lastScan',
-			'originalTotalSize',
-			'compressedTotalSize',
-			'imageCount',
-		]);
-
-		expect(mock.calls[0][2]).toEqual(serviceContainer)
+		expect(mock.calls[0][1]).toEqual(serviceContainer);
 	});
 
 	it('updates imageDataStore[siteID] with the newly scanned imageData', () => {
-		expect(imageDataStore[siteID]).toEqual(siteImageData);
+		expect(imageDataStore.getStateBySiteID(siteID)).toEqual(siteImageData);
 	});
 
 	it('siteImageData.imageData contains keys and the appropriate fields for each of the hashed files', () => {

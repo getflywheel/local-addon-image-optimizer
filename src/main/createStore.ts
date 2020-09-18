@@ -4,7 +4,7 @@ import {
 	Store,
 } from '../types';
 
-export default function createStore(initialState = {}): Store {
+export default function createStore(initialState: CachedImageDataBySiteID = {}): Store {
 	let state = initialState;
 
 	return {
@@ -21,7 +21,7 @@ export default function createStore(initialState = {}): Store {
 		 * @param siteID
 		 */
 		getStateBySiteID(siteID: string): SiteImageData {
-			return state[siteID] || {};
+			return state[siteID] || ({} as SiteImageData);
 		},
 
 		/**
@@ -47,8 +47,8 @@ export default function createStore(initialState = {}): Store {
 			state = {
 				...state,
 				[siteID]: {
-					...(state[siteID] || {}),
-					newState,
+					...(state[siteID] || {} as SiteImageData),
+					...newState,
 				}
 			};
 		},
