@@ -4,6 +4,8 @@ export interface ImageData {
 	filePath: string;
 	originalSize: number;
 	compressedSize: number;
+	fileStatus: string;
+	isChecked: boolean;
 }
 
 export interface SiteImageData {

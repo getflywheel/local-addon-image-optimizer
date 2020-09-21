@@ -2,6 +2,7 @@ import React, { useState, useEffect, useReducer } from 'react';
 import { Overview } from './overview';
 import { FileListView } from './fileListView';
 import { IPC_EVENTS } from '../constants';
+import { SiteImageData } from '../types';
 
 import { scanImageReducer, initialState, SCAN_IMAGES_ACTIONS } from '../scanImageReducer';
 
@@ -23,6 +24,12 @@ export const ImageOptimizer = (props) => {
 			dispatch({ type: SCAN_IMAGES_ACTIONS.FAILURE, payload: error });
 		}
 	}
+	const [siteImageData, setImageData] = React.useState({} as SiteImageData);
+
+	const [toggleSelectAllValue, setToggleAll] = React.useState(true);
+
+	const [isCurrentlyOptimizing, setOptimizeStart] = React.useState(false);
+
 
 	useEffect(
 		() => {
@@ -36,8 +43,20 @@ export const ImageOptimizer = (props) => {
 			LocalRenderer.ipcAsync(
 				IPC_EVENTS.GET_IMAGE_DATA,
 				props.match.params.siteID,
-			).then(result => {
-				setImageData(result);
+			).then((result: SiteImageData) => {
+				setImageData({
+					...result,
+					imageData:
+						Object.entries(result.imageData).reduce((acc, [id, data]) => {
+							return {
+								...acc,
+								[id]: {
+									...data,
+									isChecked: true,
+								},
+							};
+						}, {})
+				});
 			});
 		}, []
 	);
