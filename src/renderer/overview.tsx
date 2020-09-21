@@ -5,12 +5,12 @@ import LastOptimizeStatus from './lastOptimizeStatus';
 
 interface IProps {
 	setOverviewSelected: (x: boolean) => void,
-	onScanForImages: () => void,
+	handleScanForImages: () => void,
 	scanImageState: GenericObject,
 }
 
 export const Overview = (props: IProps) => {
-	const { setOverviewSelected, onScanForImages, scanImageState } = props;
+	const { setOverviewSelected, handleScanForImages, scanImageState } = props;
 	const { scannedImages, lastUpdated, totalDeductions, totalFileSizeDeductions, totalImageOptimized } = scanImageState;
 	const scannedImagesCount = scannedImages.imageCount || 0;
 
@@ -31,7 +31,7 @@ export const Overview = (props: IProps) => {
 		{/* // TODO-abotz: Need designs from Julie to update this */}
 		<div>
 			{scanImageState.scanLoading && 'Loading...'}
-			<Button onClick={() => onScanForImages()}>Placeholder Scan Button (REMOVE)</Button>
+			<Button onClick={() => handleScanForImages()}>Placeholder Scan Button (REMOVE)</Button>
 		</div>
 	</div>
 
