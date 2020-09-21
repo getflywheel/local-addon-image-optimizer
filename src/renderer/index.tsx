@@ -1,15 +1,12 @@
 import React, { useState, useEffect, useReducer } from 'react';
 import { Overview } from './overview';
 import { FileListView } from './fileListView';
-import { ipcRenderer } from 'electron';
 import { IPC_EVENTS } from '../constants';
 
 import { scanImageReducer, initialState, SCAN_IMAGES_ACTIONS } from '../scanImageReducer';
 
 // https://getflywheel.github.io/local-addon-api/modules/_local_renderer_.html
 import * as LocalRenderer from '@getflywheel/local/renderer';
-// https://github.com/getflywheel/local-components
-import { Button, FlyModal, Title, Text } from '@getflywheel/local-components';
 
 export const ImageOptimizer = (props) => {
 	const [scanImageState, dispatch] = useReducer(scanImageReducer, initialState);
@@ -18,13 +15,13 @@ export const ImageOptimizer = (props) => {
 	const [imageData, setImageData] = useState({});
 
 	const scanForImages = async () => {
-		dispatch({ type: SCAN_IMAGES_ACTIONS.REQUEST });
-		LocalRenderer.ipcAsync(
-			IPC_EVENTS.SCAN_FOR_IMAGES,
-			props.match.params.siteID,
-		).then(scannedImages => {
+		try {
+			dispatch({ type: SCAN_IMAGES_ACTIONS.REQUEST });
+			const scannedImages = await LocalRenderer.ipcAsync(IPC_EVENTS.SCAN_FOR_IMAGES, props.match.params.siteID);
 			dispatch({ type: SCAN_IMAGES_ACTIONS.SUCCESS, payload: scannedImages });
-		}).catch(error => dispatch({ type: SCAN_IMAGES_ACTIONS.FAILURE, payload: error }));
+		} catch (error) {
+			dispatch({ type: SCAN_IMAGES_ACTIONS.FAILURE, payload: error });
+		}
 	}
 
 	useEffect(
@@ -60,7 +57,7 @@ export const ImageOptimizer = (props) => {
 				<Overview
 					scanImageState={scanImageState}
 					setOverviewSelected={setOverviewSelected}
-					onScanForImages={handleScanForImages}
+					handleScanForImages={scanForImages}
 				/>
 			);
 	}
