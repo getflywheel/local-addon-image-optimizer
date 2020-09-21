@@ -1,15 +1,38 @@
-import React, { Component } from 'react';
+import React from 'react';
 
-// https://getflywheel.github.io/local-addon-api/modules/_local_renderer_.html
-import * as LocalRenderer from '@getflywheel/local/renderer';
+import { Button, Banner } from '@getflywheel/local-components';
+import LastOptimizeStatus from './lastOptimizeStatus';
 
-// https://github.com/getflywheel/local-components
-import { Button, FlyModal, Title, Text } from '@getflywheel/local-components';
+interface IProps {
+	setOverviewSelected: (x: boolean) => void,
+	onScanForImages: () => void,
+	scanImageState: GenericObject,
+}
 
-export const Overview = (props) =>  (
+export const Overview = (props: IProps) => {
+	const { setOverviewSelected, onScanForImages, scanImageState } = props;
+	const { scannedImages, lastUpdated, totalDeductions, totalFileSizeDeductions, totalImageOptimized } = scanImageState;
+	const scannedImagesCount = scannedImages.imageCount || 0;
 
-	<div>
-		Hello World, this is the overview tab
-		<Button onClick={()=>props.setOverviewSelected(false)}> File List View </Button>
+	return <div className="overview_Container">
+		{scannedImagesCount > 0 &&
+			<Banner variant="warning" icon="warning" buttonText={'View Images'} buttonOnClick={() => setOverviewSelected(false)}>
+				We've found <strong>{scannedImagesCount}</strong>images slowing down your site.
+			</Banner>
+		}
+
+		<LastOptimizeStatus
+			lastUpdated={lastUpdated}
+			totalDeductions={totalDeductions}
+			totalFileSizeDeductions={totalFileSizeDeductions}
+			totalImageOptimized={totalImageOptimized}
+		/>
+
+		{/* // TODO-abotz: Need designs from Julie to update this */}
+		<div>
+			{scanImageState.scanLoading && 'Loading...'}
+			<Button onClick={() => onScanForImages()}>Placeholder Scan Button (REMOVE)</Button>
+		</div>
 	</div>
-);
+
+}
