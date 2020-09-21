@@ -1,33 +1,40 @@
-import React, { Component, useEffect } from 'react';
+import React, { useState, useEffect, useReducer } from 'react';
 import { Overview } from './overview';
 import { FileListView } from './fileListView';
 import { ipcRenderer } from 'electron';
 import { IPC_EVENTS } from '../constants';
 
+import { scanImageReducer, initialState, SCAN_IMAGES_ACTIONS } from '../scanImageReducer';
 
 // https://getflywheel.github.io/local-addon-api/modules/_local_renderer_.html
 import * as LocalRenderer from '@getflywheel/local/renderer';
-
 // https://github.com/getflywheel/local-components
 import { Button, FlyModal, Title, Text } from '@getflywheel/local-components';
 
-export const ImageOptimizer = (props) =>  {
-	const [overviewSelected, setOverviewSelected] = React.useState(true);
+export const ImageOptimizer = (props) => {
+	const [scanImageState, dispatch] = useReducer(scanImageReducer, initialState);
+	const [overviewSelected, setOverviewSelected] = useState(true);
 
-	const [imageData, setImageData] = React.useState({});
+	const [imageData, setImageData] = useState({});
 
-	// kicks off a scan for images
-	React.useEffect(
+	const scanForImages = async () => {
+		dispatch({ type: SCAN_IMAGES_ACTIONS.REQUEST });
+		LocalRenderer.ipcAsync(
+			IPC_EVENTS.SCAN_FOR_IMAGES,
+			props.match.params.siteID,
+		).then(scannedImages => {
+			dispatch({ type: SCAN_IMAGES_ACTIONS.SUCCESS, payload: scannedImages });
+		}).catch(error => dispatch({ type: SCAN_IMAGES_ACTIONS.FAILURE, payload: error }));
+	}
+
+	useEffect(
 		() => {
-			LocalRenderer.ipcAsync(
-				IPC_EVENTS.SCAN_FOR_IMAGES,
-				props.match.params.siteID,
-			)
+			scanForImages();
 		}, []
 	);
 
 	// retrieve image data from site
-	React.useEffect(
+	useEffect(
 		() => {
 			LocalRenderer.ipcAsync(
 				IPC_EVENTS.GET_IMAGE_DATA,
@@ -38,16 +45,22 @@ export const ImageOptimizer = (props) =>  {
 		}, []
 	);
 
-	switch(overviewSelected) {
+	const handleScanForImages = () => {
+		scanForImages();
+	}
+
+	switch (overviewSelected) {
 		case false:
-			return(
+			return (
 				<FileListView />
 			);
 
 		default:
-			return(
+			return (
 				<Overview
-					setOverviewSelected = {setOverviewSelected}
+					scanImageState={scanImageState}
+					setOverviewSelected={setOverviewSelected}
+					onScanForImages={handleScanForImages}
 				/>
 			);
 	}

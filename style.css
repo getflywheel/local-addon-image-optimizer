@@ -1,0 +1,27 @@
+.overview_Container {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+}
+
+.lastOptimizeStatus_Table>li {
+	display: flex !important;
+	flex: 1;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.lastOptimizeStatus_Row>div {
+	display: flex !important;
+	flex: 1;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.lastOptimizeStatus_Text {
+	padding: 0 20px;
+}
+
+.lastOptimizeStatus_Button {
+	margin-right: 15px;
+}
