@@ -14,9 +14,13 @@ export const colFileSize = (
 
 	const fileSize = dataArgs.isHeader ? dataArgs.cellData : convertToMb();
 
+	if(dataArgs.cellData)
 		return(
 			<div>
 				{fileSize}
 			</div>
 		);
+	else {
+		return null;
+	}
 };

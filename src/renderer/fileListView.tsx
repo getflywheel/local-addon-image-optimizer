@@ -19,7 +19,8 @@ export const FileListView = (props) =>  {
 					props.handleCheckBoxChange,
 					props.toggleSelectAll,
 					props.toggleSelectAllValue,
-					props.isCurrentlyOptimizing);
+					props.isCurrentlyOptimizing
+				);
 			case 'filePath':
 				return colFileName(dataArgs);
 			case 'originalSize':
@@ -37,6 +38,12 @@ export const FileListView = (props) =>  {
 					onClick={props.getCompressionList}
 				>
 					Optimize Images
+				</Button>
+
+				<Button
+					onClick={props.getImageDataState}
+				>
+					View State
 				</Button>
 			</div>
 			<VirtualTable

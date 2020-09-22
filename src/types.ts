@@ -14,6 +14,8 @@ export interface SiteImageData {
 	originalTotalSize?: number;
 	compressedTotalSize?: number;
 	imageCount?: number;
+	selectAllFilesValue?: boolean;
+	isCurrentlyOptimizing?: boolean;
 }
 
 export interface CachedImageDataBySiteID {
