@@ -113,7 +113,6 @@ export function compressImagesFactory(serviceContainer: LocalMain.ServiceContain
 						...currentImageData,
 						compressedImageHash: await getFileHash(filePath),
 						compressedSize: fs.statSync(filePath).size,
-						fileStatus: 'success',
 					};
 
 					serviceContainer.sendIPCEvent(IPC_EVENTS.COMPRESS_IMAGE_SUCCESS, updatedImageData[md5Hash]);

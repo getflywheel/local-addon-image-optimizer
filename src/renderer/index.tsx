@@ -4,19 +4,18 @@ import { FileListView } from './fileListView';
 import { IPC_EVENTS } from '../constants';
 import { ipcRenderer } from 'electron';
 import { SiteImageData } from '../types';
-
 import { scanImageReducer, initialState, SCAN_IMAGES_ACTIONS } from '../scanImageReducer';
-
-// https://getflywheel.github.io/local-addon-api/modules/_local_renderer_.html
 import * as LocalRenderer from '@getflywheel/local/renderer';
-
 import { fileListReducer } from './fileListReducer';
 import { POPULATE_FILE_LIST } from './fileListReducer';
-import { Button, FlyModal, Title, Text } from '@getflywheel/local-components';
+
 
 export const ImageOptimizer = (props) => {
 	const [scanImageState, dispatch] = useReducer(scanImageReducer, initialState);
+
+	// should we add this piece of state to siteImageData?
 	const [overviewSelected, setOverviewSelected] = useState(true);
+
 	const initialImageData = {} as SiteImageData;
 	const [siteImageData, imageStateUpdate] = useReducer(fileListReducer, initialImageData);
 
@@ -50,19 +49,13 @@ export const ImageOptimizer = (props) => {
 		}, []
 	);
 
-	// trigger a new image scan
-	const handleScanForImages = () => {
-		scanForImages();
-	}
-
-	// listen for optimization events
+	// listen for optimization events and update status accordingly
 	useEffect(
 		() => {
 			if (!ipcRenderer.listenerCount(IPC_EVENTS.COMPRESS_IMAGE_SUCCESS)) {
 				ipcRenderer.on(
 					IPC_EVENTS.COMPRESS_IMAGE_SUCCESS,
 					(_, newImageData: ImageData) => {
-						console.log(newImageData);
 						imageStateUpdate({
 							type: POPULATE_FILE_LIST.IMAGE_OPTIMIZE_SUCCESS, payload: newImageData
 						});
@@ -77,7 +70,6 @@ export const ImageOptimizer = (props) => {
 						imageStateUpdate({
 							type: POPULATE_FILE_LIST.IMAGE_OPTIMIZE_FAIL, payload: { originalImageHash, errorMessage }
 						});
-						console.log({originalImageHash}, {errorMessage});
 					},
 				);
 			}
@@ -121,6 +113,8 @@ export const ImageOptimizer = (props) => {
 		console.log(siteImageData);
 	}
 
+	// todo - split this out into two parts and have it open the confirmation modal
+	// currently it kicks off an optimization job
 	const getCompressionList = () => {
 		const compressionList = Object.entries(siteImageData.imageData).reduce((acc, [id, data]) => {
 			if (data.isChecked) {
@@ -129,7 +123,6 @@ export const ImageOptimizer = (props) => {
 			return acc
 		}, [])
 
-		console.log(compressionList);
 		imageStateUpdate({ type: POPULATE_FILE_LIST.IS_OPTIMIZING });
 
 		ipcRenderer.send(

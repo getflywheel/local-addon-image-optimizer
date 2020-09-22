@@ -1,9 +1,7 @@
 import React from 'react';
-
 import {
 		IVirtualTableCellRendererDataArgs
 	} from '@getflywheel/local-components';
-import { string } from 'prop-types';
 
 export const colFileSize = (
 	dataArgs: IVirtualTableCellRendererDataArgs,
@@ -18,13 +16,13 @@ export const colFileSize = (
 	} else if (dataArgs.colKey === 'originalSize') {
 		return (
 			<div>
-				{dataArgs.isHeader ? dataArgs.cellData : Math.round(dataArgs.rowData.originalSize / 1000000) + ' MB'}
+				{dataArgs.isHeader ? dataArgs.cellData : (dataArgs.rowData.originalSize / (1024*1024)).toFixed(2) + ' MB'}
 			</div>
 		);
 	} else if (dataArgs.colKey === 'compressedSize') {
 		return (
 			<div>
-				{dataArgs.isHeader ? dataArgs.cellData : Math.round(dataArgs.rowData.compressedSize / 1000000) + ' MB'}
+				{dataArgs.isHeader ? dataArgs.cellData : (dataArgs.rowData.originalSize / (1024*1024)).toFixed(2) + ' MB'}
 			</div>
 		);
 	} else {
