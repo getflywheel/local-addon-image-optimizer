@@ -1,9 +1,4 @@
-import React, { Component } from 'react';
-
-// https://getflywheel.github.io/local-addon-api/modules/_local_renderer_.html
-import * as LocalRenderer from '@getflywheel/local/renderer';
-
-// https://github.com/getflywheel/local-components
+import React from 'react';
 import {
 		Checkbox,
 		IVirtualTableCellRendererDataArgs,

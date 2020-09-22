@@ -88,7 +88,7 @@ export function fileListReducer(state: SiteImageData, action: IAction) {
 							...state.imageData[action.payload.originalImageHash],
 							compressedImageHash: action.payload.compressedImageHash,
 							compressedSize: action.payload.compressedSize,
-							fileStatus: action.payload.fileStatus,
+							fileStatus: 'succeeded',
 						}
 					},
 			}
