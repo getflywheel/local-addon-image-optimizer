@@ -24,7 +24,7 @@ export const colFileStatus = (
 		return(
 			<div>
 				<Checkbox
-					checked={checked}
+					checked={ checked }
 					onChange={ onChange }
 				/>
 			</div>
