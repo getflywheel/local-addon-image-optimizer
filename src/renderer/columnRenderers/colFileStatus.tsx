@@ -32,7 +32,7 @@ export const colFileStatus = (
 	} else {
 		return(
 			<div>
-				Optimization started
+				{ dataArgs.rowData.fileStatus }
 			</div>
 		);
 	}

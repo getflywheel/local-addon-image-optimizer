@@ -3,24 +3,31 @@ import React from 'react';
 import {
 		IVirtualTableCellRendererDataArgs
 	} from '@getflywheel/local-components';
+import { string } from 'prop-types';
 
 export const colFileSize = (
 	dataArgs: IVirtualTableCellRendererDataArgs,
 	) =>  {
 
-	const convertToMb = () => {
-		return Math.round(dataArgs.cellData / 1024) + ' MB';
-	}
-
-	const fileSize = dataArgs.isHeader ? dataArgs.cellData : convertToMb();
-
-	if(dataArgs.cellData)
-		return(
+	if (!dataArgs.cellData || typeof dataArgs.cellData === 'string') {
+		return (
 			<div>
-				{fileSize}
+				{dataArgs.cellData}
 			</div>
 		);
-	else {
+	} else if (dataArgs.colKey === 'originalSize') {
+		return (
+			<div>
+				{dataArgs.isHeader ? dataArgs.cellData : Math.round(dataArgs.rowData.originalSize / 1000000) + ' MB'}
+			</div>
+		);
+	} else if (dataArgs.colKey === 'compressedSize') {
+		return (
+			<div>
+				{dataArgs.isHeader ? dataArgs.cellData : Math.round(dataArgs.rowData.compressedSize / 1000000) + ' MB'}
+			</div>
+		);
+	} else {
 		return null;
 	}
 };
