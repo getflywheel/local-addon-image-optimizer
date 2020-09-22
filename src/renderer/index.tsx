@@ -15,10 +15,10 @@ import { POPULATE_FILE_LIST } from './fileListReducer';
 import { Button, FlyModal, Title, Text } from '@getflywheel/local-components';
 
 export const ImageOptimizer = (props) => {
-	const [scanImageState, imageStateUpdate] = useReducer(scanImageReducer, initialState);
+	const [scanImageState, dispatch] = useReducer(scanImageReducer, initialState);
 	const [overviewSelected, setOverviewSelected] = useState(true);
 	const initialImageData = {} as SiteImageData;
-	const [siteImageData, dispatch] = useReducer(fileListReducer, initialImageData);
+	const [siteImageData, imageStateUpdate] = useReducer(fileListReducer, initialImageData);
 
 	const scanForImages = async () => {
 		try {
@@ -36,20 +36,21 @@ export const ImageOptimizer = (props) => {
 		}, []
 	);
 
-	// retrieve image data from site
+	// set up initial state for file list view
 	useEffect(
 		() => {
 			LocalRenderer.ipcAsync(
 				IPC_EVENTS.GET_IMAGE_DATA,
 				props.match.params.siteID,
 			).then((result: SiteImageData) => {
-				dispatch({
+				imageStateUpdate({
 					type: POPULATE_FILE_LIST.SET_IMAGE_DATA, payload: result
 				});
 			});
 		}, []
 	);
 
+	// trigger a new image scan
 	const handleScanForImages = () => {
 		scanForImages();
 	}
@@ -57,21 +58,44 @@ export const ImageOptimizer = (props) => {
 	// listen for optimization events
 	useEffect(
 		() => {
-			if (ipcRenderer.listenerCount(IPC_EVENTS.COMPRESS_IMAGE_SUCCESS)) {
-				return null;
+			if (!ipcRenderer.listenerCount(IPC_EVENTS.COMPRESS_IMAGE_SUCCESS)) {
+				ipcRenderer.on(
+					IPC_EVENTS.COMPRESS_IMAGE_SUCCESS,
+					(_, newImageData: ImageData) => {
+						console.log(newImageData);
+						imageStateUpdate({
+							type: POPULATE_FILE_LIST.IMAGE_OPTIMIZE_SUCCESS, payload: newImageData
+						});
+					},
+				);
 			}
 
-			ipcRenderer.on(
-				IPC_EVENTS.COMPRESS_IMAGE_SUCCESS,
-				(_, newImageData: ImageData) => {
-					// dispatch({
-					// 	type: POPULATE_FILE_LIST.IMAGE_OPTIMIZE_SUCCESS, payload: newImageData
-					// });
-					console.log(newImageData);
-				},
-			);
+			if (!ipcRenderer.listenerCount(IPC_EVENTS.COMPRESS_IMAGE_FAIL)) {
+				ipcRenderer.on(
+					IPC_EVENTS.COMPRESS_IMAGE_FAIL,
+					(_, originalImageHash, errorMessage) => {
+						imageStateUpdate({
+							type: POPULATE_FILE_LIST.IMAGE_OPTIMIZE_FAIL, payload: { originalImageHash, errorMessage }
+						});
+						console.log({originalImageHash}, {errorMessage});
+					},
+				);
+			}
+
+			if (!ipcRenderer.listenerCount(IPC_EVENTS.COMPRESS_IMAGE_STARTED)) {
+				ipcRenderer.on(
+					IPC_EVENTS.COMPRESS_IMAGE_STARTED,
+					(_, md5hash) => {
+						imageStateUpdate({
+							type: POPULATE_FILE_LIST.IMAGE_OPTIMIZE_SUCCESS, payload: { md5hash }
+						});
+					},
+				);
+			}
 
 			return () => {
+				ipcRenderer.removeAllListeners(IPC_EVENTS.COMPRESS_IMAGE_STARTED);
+				ipcRenderer.removeAllListeners(IPC_EVENTS.COMPRESS_IMAGE_FAIL);
 				ipcRenderer.removeAllListeners(IPC_EVENTS.COMPRESS_IMAGE_SUCCESS);
 			}
 		},
@@ -105,6 +129,7 @@ export const ImageOptimizer = (props) => {
 			return acc
 		}, [])
 
+		console.log(compressionList);
 		imageStateUpdate({ type: POPULATE_FILE_LIST.IS_OPTIMIZING });
 
 		ipcRenderer.send(

@@ -3,7 +3,7 @@ export interface ImageData {
 	compressedImageHash: string;
 	filePath: string;
 	originalSize: number;
-	compressedSize: number;
+	compressedSize: number | string;
 	fileStatus: string;
 	isChecked: boolean;
 }

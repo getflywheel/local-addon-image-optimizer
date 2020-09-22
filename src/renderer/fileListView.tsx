@@ -46,6 +46,7 @@ export const FileListView = (props) =>  {
 					View State
 				</Button>
 			</div>
+			<div>
 			<VirtualTable
 				cellRenderer={cellRender}
 				data={(props.imageData)}
@@ -58,6 +59,7 @@ export const FileListView = (props) =>  {
 				headersCapitalize='none'
 				striped
 			/>
+			</div>
 		</div>
 	);
 };

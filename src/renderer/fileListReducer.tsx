@@ -10,7 +10,10 @@ export const POPULATE_FILE_LIST = {
 	TOGGLE_CHECKED_ONE: 'toggle_checked_one',
 	TOGGLE_CHECKED_ALL: 'toggle_checked_all',
 	IS_OPTIMIZING: 'is_optimizing',
+	IMAGE_OPTIMIZE_STARTED: 'image_optimize_started',
+	IMAGE_OPTIMIZE_FAIL: 'image_optimize_fail',
 	IMAGE_OPTIMIZE_SUCCESS: 'image_optimize_success',
+
 }
 
 export function fileListReducer(state: SiteImageData, action: IAction) {
@@ -64,10 +67,43 @@ export function fileListReducer(state: SiteImageData, action: IAction) {
 					isCurrentlyOptimizing: true,
 			}
 
+		case POPULATE_FILE_LIST.IMAGE_OPTIMIZE_STARTED:
+			return {
+					...state,
+					imageData: {
+						...state.imageData,
+						[action.payload.md5hash]: {
+							...state.imageData[action.payload.md5hash],
+							fileStatus: 'started',
+						}
+					},
+			}
+
 		case POPULATE_FILE_LIST.IMAGE_OPTIMIZE_SUCCESS:
 			return {
 					...state,
+					imageData: {
+						...state.imageData,
+						[action.payload.originalImageHash]: {
+							...state.imageData[action.payload.originalImageHash],
+							compressedImageHash: action.payload.compressedImageHash,
+							compressedSize: action.payload.compressedSize,
+							fileStatus: action.payload.fileStatus,
+						}
+					},
+			}
 
+		case POPULATE_FILE_LIST.IMAGE_OPTIMIZE_FAIL:
+			return {
+					...state,
+					imageData: {
+						...state.imageData,
+						[action.payload.originalImageHash]: {
+							...state.imageData[action.payload.originalImageHash],
+							compressedSize: action.payload.errorMessage,
+							fileStatus: 'failed',
+						}
+					},
 			}
 
 		default:

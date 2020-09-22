@@ -42,9 +42,18 @@ export function compressImagesFactory(serviceContainer: LocalMain.ServiceContain
 		const updatedImageData: SiteImageData['imageData'] = {};
 
 		for (const md5Hash of imageMD5s) {
+			serviceContainer.sendIPCEvent(IPC_EVENTS.COMPRESS_IMAGE_STARTED, md5Hash);
+
 			const currentImageData = siteImageData.imageData[md5Hash];
 			const { filePath } = currentImageData;
 
+			if(!fs.existsSync(filePath)) {
+				serviceContainer.sendIPCEvent(IPC_EVENTS.COMPRESS_IMAGE_FAIL,
+					md5Hash, `File not found!`
+				);
+
+				continue;
+			}
 			/**
 			 * We do this step to ensure that image backups are nested under the backup directory in
 			 * the same way as they are nested inside wp-conten
@@ -102,8 +111,8 @@ export function compressImagesFactory(serviceContainer: LocalMain.ServiceContain
 
 					updatedImageData[md5Hash] = {
 						...currentImageData,
-						compressedImageHash: await getFileHash(backupPath),
-						compressedSize: fs.statSync(backupPath).size,
+						compressedImageHash: await getFileHash(filePath),
+						compressedSize: fs.statSync(filePath).size,
 						fileStatus: 'success',
 					};
 
