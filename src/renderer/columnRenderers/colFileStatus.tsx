@@ -4,13 +4,23 @@ import {
 		IVirtualTableCellRendererDataArgs,
 	} from '@getflywheel/local-components';
 
-export const colFileStatus = (
+interface IFileStatusProps {
 	dataArgs: IVirtualTableCellRendererDataArgs,
-	handleCheckBoxChange,
-	toggleSelectAll,
-	toggleSelectAllValue,
-	isCurrentlyOptimizing,
-	) =>  {
+	handleCheckBoxChange: (imageID: string) => (isChecked: boolean) => void,
+	toggleSelectAll: (isChecked: boolean) => void,
+	toggleSelectAllValue: boolean,
+	isCurrentlyOptimizing: boolean
+}
+
+export const ColFileStatus = (props: IFileStatusProps) =>  {
+
+	const {
+		dataArgs,
+		handleCheckBoxChange,
+		toggleSelectAll,
+		toggleSelectAllValue,
+		isCurrentlyOptimizing,
+	} = props;
 
 	const checked = dataArgs.isHeader ? toggleSelectAllValue : dataArgs.rowData.isChecked;
 	const onChange = dataArgs.isHeader ? toggleSelectAll : handleCheckBoxChange(dataArgs.rowData.originalImageHash);

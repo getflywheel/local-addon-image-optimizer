@@ -49,7 +49,7 @@ export function compressImagesFactory(serviceContainer: LocalMain.ServiceContain
 
 			if(!fs.existsSync(filePath)) {
 				serviceContainer.sendIPCEvent(IPC_EVENTS.COMPRESS_IMAGE_FAIL,
-					md5Hash, `File not found!`
+					md5Hash, 'File not found!'
 				);
 
 				continue;
