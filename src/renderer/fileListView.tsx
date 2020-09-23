@@ -1,32 +1,55 @@
 import React from 'react';
-import { colFileStatus } from './columnRenderers/colFileStatus';
-import { colFileName } from './columnRenderers/colFileName';
-import { colFileSize } from './columnRenderers/colFileSize'
-
-// https://github.com/getflywheel/local-components
+import { ColFileStatus } from './columnRenderers/ColFileStatus';
+import { ColFileName } from './columnRenderers/ColFileName';
+import { ColFileSize } from './columnRenderers/ColFileSize'
 import { Button,
 		VirtualTable,
 		VirtualTableCellRenderer,
 		IVirtualTableCellRendererDataArgs
 	} from '@getflywheel/local-components';
+import { ImageData } from '../types';
 
-export const FileListView = (props) =>  {
+interface IFileListViewProps {
+	imageData: ImageData[],
+	handleCheckBoxChange: (imageID: string) => (isChecked: boolean) => void,
+	toggleSelectAll: (isChecked: boolean) => void,
+	toggleSelectAllValue: boolean,
+	getImageDataState: () => void,
+	getCompressionList: () => void,
+	isCurrentlyOptimizing: boolean,
+}
+
+export const FileListView = (props: IFileListViewProps) =>  {
 	const cellRender: VirtualTableCellRenderer = (dataArgs: IVirtualTableCellRendererDataArgs) => {
 		switch (dataArgs.colKey) {
 			case 'fileStatus':
-				return colFileStatus(
-					dataArgs,
-					props.handleCheckBoxChange,
-					props.toggleSelectAll,
-					props.toggleSelectAllValue,
-					props.isCurrentlyOptimizing
+				return (
+					<ColFileStatus
+						dataArgs={dataArgs}
+						handleCheckBoxChange={props.handleCheckBoxChange}
+						toggleSelectAll={props.toggleSelectAll}
+						toggleSelectAllValue={props.toggleSelectAllValue}
+						isCurrentlyOptimizing={props.isCurrentlyOptimizing}
+					/>
 				);
 			case 'filePath':
-				return colFileName(dataArgs);
+				return (
+					<ColFileName
+						dataArgs={dataArgs}
+					/>
+				);
 			case 'originalSize':
-				return colFileSize(dataArgs);
+				return (
+					<ColFileSize
+						dataArgs={dataArgs}
+					/>
+				);
 			case 'compressedSize':
-				return colFileSize(dataArgs);
+				return (
+					<ColFileSize
+						dataArgs={dataArgs}
+					/>
+				);
 			default: return null;
 		}
 	};

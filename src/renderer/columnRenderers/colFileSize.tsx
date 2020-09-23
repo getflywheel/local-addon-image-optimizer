@@ -1,12 +1,11 @@
 import React from 'react';
-import {
-		IVirtualTableCellRendererDataArgs
-	} from '@getflywheel/local-components';
+import { IVirtualTableCellRendererDataArgs } from '@getflywheel/local-components';
+interface IFileSizeProps {
+	dataArgs: IVirtualTableCellRendererDataArgs
+}
 
-export const colFileSize = (
-	dataArgs: IVirtualTableCellRendererDataArgs,
-	) =>  {
-
+export const ColFileSize = (props: IFileSizeProps) =>  {
+	const { dataArgs } = props;
 	if (!dataArgs.cellData || typeof dataArgs.cellData === 'string') {
 		return (
 			<div>

@@ -1,11 +1,11 @@
 export interface ImageData {
 	originalImageHash: string;
-	compressedImageHash: string;
+	compressedImageHash?: string;
 	filePath: string;
 	originalSize: number;
-	compressedSize: number | string;
-	fileStatus: string;
-	isChecked: boolean;
+	compressedSize?: number | string;
+	fileStatus?: string;
+	isChecked?: boolean;
 }
 
 export interface SiteImageData {
@@ -14,8 +14,6 @@ export interface SiteImageData {
 	originalTotalSize?: number;
 	compressedTotalSize?: number;
 	imageCount?: number;
-	selectAllFilesValue?: boolean;
-	isCurrentlyOptimizing?: boolean;
 }
 
 export interface CachedImageDataBySiteID {

@@ -3,7 +3,7 @@ import { Overview } from './overview';
 import { FileListView } from './fileListView';
 import { IPC_EVENTS } from '../constants';
 import { ipcRenderer } from 'electron';
-import { SiteImageData } from '../types';
+import { RenderedImageData } from './types';
 import { scanImageReducer, initialState, SCAN_IMAGES_ACTIONS } from '../scanImageReducer';
 import * as LocalRenderer from '@getflywheel/local/renderer';
 import { fileListReducer } from './fileListReducer';
@@ -11,21 +11,18 @@ import { POPULATE_FILE_LIST } from './fileListReducer';
 
 
 export const ImageOptimizer = (props) => {
-	const [scanImageState, dispatch] = useReducer(scanImageReducer, initialState);
-
-	// should we add this piece of state to siteImageData?
 	const [overviewSelected, setOverviewSelected] = useState(true);
-
-	const initialImageData = {} as SiteImageData;
-	const [siteImageData, imageStateUpdate] = useReducer(fileListReducer, initialImageData);
+	const initialImageData = {} as RenderedImageData;
+	const [siteImageData, dispatchSiteImageData] = useReducer(fileListReducer, initialImageData);
+	const [scanImageState, dispatchScanImageData] = useReducer(scanImageReducer, initialState);
 
 	const scanForImages = async () => {
 		try {
-			dispatch({ type: SCAN_IMAGES_ACTIONS.REQUEST });
+			dispatchScanImageData({ type: SCAN_IMAGES_ACTIONS.REQUEST });
 			const scannedImages = await LocalRenderer.ipcAsync(IPC_EVENTS.SCAN_FOR_IMAGES, props.match.params.siteID);
-			dispatch({ type: SCAN_IMAGES_ACTIONS.SUCCESS, payload: scannedImages });
+			dispatchScanImageData({ type: SCAN_IMAGES_ACTIONS.SUCCESS, payload: scannedImages });
 		} catch (error) {
-			dispatch({ type: SCAN_IMAGES_ACTIONS.FAILURE, payload: error });
+			dispatchScanImageData({ type: SCAN_IMAGES_ACTIONS.FAILURE, payload: error });
 		}
 	}
 
@@ -41,8 +38,8 @@ export const ImageOptimizer = (props) => {
 			LocalRenderer.ipcAsync(
 				IPC_EVENTS.GET_IMAGE_DATA,
 				props.match.params.siteID,
-			).then((result: SiteImageData) => {
-				imageStateUpdate({
+			).then((result: RenderedImageData) => {
+				dispatchSiteImageData({
 					type: POPULATE_FILE_LIST.SET_IMAGE_DATA, payload: result
 				});
 			});
@@ -56,7 +53,7 @@ export const ImageOptimizer = (props) => {
 				ipcRenderer.on(
 					IPC_EVENTS.COMPRESS_IMAGE_SUCCESS,
 					(_, newImageData: ImageData) => {
-						imageStateUpdate({
+						dispatchSiteImageData({
 							type: POPULATE_FILE_LIST.IMAGE_OPTIMIZE_SUCCESS, payload: newImageData
 						});
 					},
@@ -67,7 +64,7 @@ export const ImageOptimizer = (props) => {
 				ipcRenderer.on(
 					IPC_EVENTS.COMPRESS_IMAGE_FAIL,
 					(_, originalImageHash, errorMessage) => {
-						imageStateUpdate({
+						dispatchSiteImageData({
 							type: POPULATE_FILE_LIST.IMAGE_OPTIMIZE_FAIL, payload: { originalImageHash, errorMessage }
 						});
 					},
@@ -78,7 +75,7 @@ export const ImageOptimizer = (props) => {
 				ipcRenderer.on(
 					IPC_EVENTS.COMPRESS_IMAGE_STARTED,
 					(_, md5hash) => {
-						imageStateUpdate({
+						dispatchSiteImageData({
 							type: POPULATE_FILE_LIST.IMAGE_OPTIMIZE_SUCCESS, payload: { md5hash }
 						});
 					},
@@ -95,15 +92,15 @@ export const ImageOptimizer = (props) => {
 	);
 
 	// handles file selection for final optimization list
-	const handleCheckBoxChange = (imageID) => (isChecked) => {
-		imageStateUpdate({
+	const handleCheckBoxChange: (imageID: string) => (isChecked: boolean) => void = (imageID) => (isChecked) => {
+		dispatchSiteImageData({
 			type: POPULATE_FILE_LIST.TOGGLE_CHECKED_ONE, payload: { imageID, isChecked }
 		});
 	};
 
 	// select or deselect all files
 	const toggleSelectAll = (isChecked) => {
-		imageStateUpdate({
+		dispatchSiteImageData({
 			type: POPULATE_FILE_LIST.TOGGLE_CHECKED_ALL, payload: { isChecked }
 		})
 	};
@@ -123,7 +120,7 @@ export const ImageOptimizer = (props) => {
 			return acc
 		}, [])
 
-		imageStateUpdate({ type: POPULATE_FILE_LIST.IS_OPTIMIZING });
+		dispatchSiteImageData({ type: POPULATE_FILE_LIST.IS_OPTIMIZING });
 
 		ipcRenderer.send(
 			IPC_EVENTS.COMPRESS_IMAGES,

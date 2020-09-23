@@ -1,20 +1,19 @@
 import React from 'react';
 import path from 'path';
+import { IVirtualTableCellRendererDataArgs } from '@getflywheel/local-components';
 
-// https://github.com/getflywheel/local-components
-import {
-		IVirtualTableCellRendererDataArgs,
-	} from '@getflywheel/local-components';
+interface IFileNameProps {
+	dataArgs: IVirtualTableCellRendererDataArgs
+}
 
-export const colFileName = (
-	dataArgs: IVirtualTableCellRendererDataArgs,
-	) =>  {
+export const ColFileName = ( props: IFileNameProps ) =>  {
+	const { dataArgs } = props;
 
-	const convertFullPathToFileName = () => {
+ 	const getFileName = () => {
 		return path.basename(dataArgs.cellData)
 	}
 
-	const fileName = dataArgs.isHeader ? dataArgs.cellData : convertFullPathToFileName();
+	const fileName = dataArgs.isHeader ? dataArgs.cellData : getFileName();
 
 		return(
 			<div>

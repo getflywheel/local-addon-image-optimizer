@@ -1,4 +1,5 @@
-import { SiteImageData, ImageData } from '../types';
+import { ImageData } from '../types';
+import { RenderedImageData } from './types'
 
 interface IAction {
 	type: string,
@@ -16,7 +17,7 @@ export const POPULATE_FILE_LIST = {
 
 }
 
-export function fileListReducer(state: SiteImageData, action: IAction) {
+export function fileListReducer(state: RenderedImageData, action: IAction) {
 	switch (action.type) {
 		case POPULATE_FILE_LIST.SET_IMAGE_DATA:
 			return {
@@ -86,8 +87,7 @@ export function fileListReducer(state: SiteImageData, action: IAction) {
 						...state.imageData,
 						[action.payload.originalImageHash]: {
 							...state.imageData[action.payload.originalImageHash],
-							compressedImageHash: action.payload.compressedImageHash,
-							compressedSize: action.payload.compressedSize,
+							...action.payload,
 							fileStatus: 'succeeded',
 						}
 					},
