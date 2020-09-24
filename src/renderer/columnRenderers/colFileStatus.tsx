@@ -2,6 +2,7 @@ import React from 'react';
 import {
 		Checkbox,
 		IVirtualTableCellRendererDataArgs,
+		Spinner,
 	} from '@getflywheel/local-components';
 
 interface IFileStatusProps {
@@ -35,10 +36,32 @@ export const ColFileStatus = (props: IFileStatusProps) =>  {
 			</div>
 		);
 	} else {
-		return(
-			<div>
-				{ dataArgs.rowData.fileStatus }
-			</div>
-		);
+		switch (dataArgs.rowData.fileStatus) {
+			case 'started':
+				return(
+					<div>
+						<Spinner />
+					</div>
+				);
+
+			case 'succeeded':
+				return(
+					<div>
+
+					</div>
+				);
+
+			case 'failed':
+				return(
+					<div>
+
+					</div>
+				);
+
+			default:
+				return (
+					null
+				);
+		}
 	}
 };

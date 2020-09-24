@@ -114,7 +114,9 @@ export const ImageOptimizer = (props) => {
 			return acc
 		}, [])
 
-		dispatchSiteImageData({ type: POPULATE_FILE_LIST.IS_OPTIMIZING });
+		const compressionListTotal = compressionList.length;
+
+		dispatchSiteImageData({ type: POPULATE_FILE_LIST.IS_OPTIMIZING, payload: {compressionListTotal} });
 
 		ipcRenderer.send(
 			IPC_EVENTS.COMPRESS_IMAGES,
@@ -133,6 +135,8 @@ export const ImageOptimizer = (props) => {
 					toggleSelectAllValue={siteImageData.selectAllFilesValue}
 					getCompressionList={getCompressionList}
 					isCurrentlyOptimizing={siteImageData.isCurrentlyOptimizing}
+					compressionListCompletionPercentage={siteImageData.compressionListCompletionPercentage}
+					setOverviewSelected={setOverviewSelected}
 				/>
 			);
 
