@@ -24,8 +24,8 @@
     "build": "tsc",
     "prepare": "tsc",
     "watch": "yarn run build --watch",
-	"test": "yarn jest src/**/*.test.ts",
-	"test:watch": "yarn test --watch"
+    "test": "yarn jest src/**/*.test.ts",
+    "test:watch": "yarn test --watch"
   },
   "devDependencies": {
     "@getflywheel/eslint-config-local": "1.0.4",
@@ -53,6 +53,7 @@
     "classnames": "^2.2.6",
     "dateformat": "^3.0.3",
     "fs-extra": "^9.0.1",
+    "jpeg-recompress-bin": "^5.1.1",
     "lodash": "^4.17.20",
     "md5": "^2.3.0",
     "prop-types": "^15.6.2",
