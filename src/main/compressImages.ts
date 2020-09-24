@@ -1,5 +1,6 @@
 import childProcess from 'child_process';
 import path from 'path';
+import jpegRecompress from 'jpeg-recompress-bin';
 import fs from 'fs-extra';
 import cloneDeep from 'lodash/cloneDeep';
 import * as Local from '@getflywheel/local';
@@ -89,10 +90,7 @@ export function compressImagesFactory(serviceContainer: LocalMain.ServiceContain
 			 */
 			await new Promise((resolve) => {
 				const cp = childProcess.spawn(
-					/**
-					 * @todo get this guy included with lightning services
-					 */
-					'jpeg-recompress',
+					jpegRecompress,
 					args,
 				);
 
