@@ -26,23 +26,22 @@ export const ImageOptimizer = (props) => {
 		}
 	}
 
-	useEffect(
-		() => {
-			scanForImages();
-		}, []
-	);
-
 	// set up initial state for file list view
 	useEffect(
 		() => {
-			LocalRenderer.ipcAsync(
-				IPC_EVENTS.GET_IMAGE_DATA,
-				props.match.params.siteID,
-			).then((result: RenderedImageData) => {
+			const setSiteImageData = async () => {
+				await scanForImages();
+
+				const mainImageData = await LocalRenderer.ipcAsync(
+					IPC_EVENTS.GET_IMAGE_DATA,
+					props.match.params.siteID,
+				);
+
 				dispatchSiteImageData({
-					type: POPULATE_FILE_LIST.SET_IMAGE_DATA, payload: result
+					type: POPULATE_FILE_LIST.SET_IMAGE_DATA, payload: mainImageData
 				});
-			});
+			}
+			setSiteImageData();
 		}, []
 	);
 
@@ -76,7 +75,7 @@ export const ImageOptimizer = (props) => {
 					IPC_EVENTS.COMPRESS_IMAGE_STARTED,
 					(_, md5hash) => {
 						dispatchSiteImageData({
-							type: POPULATE_FILE_LIST.IMAGE_OPTIMIZE_SUCCESS, payload: { md5hash }
+							type: POPULATE_FILE_LIST.IMAGE_OPTIMIZE_STARTED, payload: { md5hash }
 						});
 					},
 				);
@@ -105,11 +104,6 @@ export const ImageOptimizer = (props) => {
 		})
 	};
 
-	// remove this - currently used for debugging
-	const getImageDataState = () => {
-		console.log(siteImageData);
-	}
-
 	// todo - split this out into two parts and have it open the confirmation modal
 	// currently it kicks off an optimization job
 	const getCompressionList = () => {
@@ -137,7 +131,6 @@ export const ImageOptimizer = (props) => {
 					handleCheckBoxChange={handleCheckBoxChange}
 					toggleSelectAll={toggleSelectAll}
 					toggleSelectAllValue={siteImageData.selectAllFilesValue}
-					getImageDataState={getImageDataState}
 					getCompressionList={getCompressionList}
 					isCurrentlyOptimizing={siteImageData.isCurrentlyOptimizing}
 				/>

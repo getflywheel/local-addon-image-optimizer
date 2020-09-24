@@ -21,7 +21,7 @@ export const ColFileSize = (props: IFileSizeProps) =>  {
 	} else if (dataArgs.colKey === 'compressedSize') {
 		return (
 			<div>
-				{dataArgs.isHeader ? dataArgs.cellData : (dataArgs.rowData.originalSize / (1024*1024)).toFixed(2) + ' MB'}
+				{dataArgs.isHeader ? dataArgs.cellData : (dataArgs.rowData.compressedSize / (1024*1024)).toFixed(2) + ' MB'}
 			</div>
 		);
 	} else {

@@ -5,16 +5,19 @@ import { ColFileSize } from './columnRenderers/ColFileSize'
 import { Button,
 		VirtualTable,
 		VirtualTableCellRenderer,
-		IVirtualTableCellRendererDataArgs
+		IVirtualTableCellRendererDataArgs,
+		ProgressBar,
+		TextButton,
+		PrimaryButton,
 	} from '@getflywheel/local-components';
 import { ImageData } from '../types';
+import classnames from 'classnames';
 
 interface IFileListViewProps {
 	imageData: ImageData[],
 	handleCheckBoxChange: (imageID: string) => (isChecked: boolean) => void,
 	toggleSelectAll: (isChecked: boolean) => void,
 	toggleSelectAllValue: boolean,
-	getImageDataState: () => void,
 	getCompressionList: () => void,
 	isCurrentlyOptimizing: boolean,
 }
@@ -55,32 +58,39 @@ export const FileListView = (props: IFileListViewProps) =>  {
 	};
 
 	return(
-		<div>
-			<div>
+		<div className='fileView_Container'>
+			<div className='fileView_Header'>
+
+				<TextButton>
+					Back To Overview
+				</TextButton>
+
 				<Button
+					className='fileView_Start_Optimization'
 					onClick={props.getCompressionList}
+					privateOptions={{
+						color: 'green',
+						form: 'fill'
+					}}
 				>
 					Optimize Images
 				</Button>
-
-				<Button
-					onClick={props.getImageDataState}
-				>
-					View State
-				</Button>
 			</div>
+				<ProgressBar progress={60} />
 			<div>
 			<VirtualTable
 				cellRenderer={cellRender}
 				data={(props.imageData)}
 				headers={[
-					{ key: 'fileStatus', value: '' },
-					{ key: 'filePath', value: 'Filename' },
-					{ key: 'originalSize', value: 'Original Size' },
-					{ key: 'compressedSize', value: 'Compressed Size' }
+					{ key: 'fileStatus', value: '', className: 'fileListViewer_Column_Selected'  },
+					{ key: 'filePath', value: 'Filename', className: 'fileListViewer_Column_File_Name'},
+					{ key: 'originalSize', value: 'Original Size', className: 'fileListViewer_Column_Original_Size' },
+					{ key: 'compressedSize', value: 'Compressed Size', className: 'fileListViewer_Column_Compressed_Size' }
 				]}
 				headersCapitalize='none'
 				striped
+				rowHeightSize="s"
+				rowHeaderHeightSize="m"
 			/>
 			</div>
 		</div>

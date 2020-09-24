@@ -25,3 +25,35 @@
 .lastOptimizeStatus_Button {
 	margin-right: 15px;
 }
+
+.fileView_Container {
+	overflow-y: auto;
+}
+
+.fileListViewer_Column_Selected {
+	flex: 0 0 16px;
+	margin-right: 20px;
+	margin-left: 10px;
+	align-self: center;
+}
+
+.fileListViewer_Column_Compressed_Size, .fileListViewer_Column_Original_Size {
+	align-self: center;
+}
+
+.fileListViewer_Column_File_Name {
+	flex: 1 1 300px;
+	min-width: 200px;
+	margin-right: 20px;
+	align-items: center;
+	align-self: center;
+}
+
+.fileView_Header {
+	margin: 25px;
+	display: flex;
+}
+
+.fileView_Start_Optimization {
+	margin-left: auto;
+}
