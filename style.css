@@ -39,13 +39,17 @@
 
 .fileListViewer_Column_Compressed_Size, .fileListViewer_Column_Original_Size {
 	align-self: center;
+	text-align: right;
+}
+
+.fileListViewer_Column_Compressed_Size {
+	margin-right: 50px;
 }
 
 .fileListViewer_Column_File_Name {
 	flex: 1 1 300px;
 	min-width: 200px;
 	margin-right: 20px;
-	align-items: center;
 	align-self: center;
 }
 

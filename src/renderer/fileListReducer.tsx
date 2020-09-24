@@ -14,10 +14,14 @@ export const POPULATE_FILE_LIST = {
 	IMAGE_OPTIMIZE_STARTED: 'image_optimize_started',
 	IMAGE_OPTIMIZE_FAIL: 'image_optimize_fail',
 	IMAGE_OPTIMIZE_SUCCESS: 'image_optimize_success',
-
 }
 
 export function fileListReducer(state: RenderedImageData, action: IAction) {
+
+	const incrementCounter = (state.compressionListCounter + 1);
+
+	const incrementProgress = ( incrementCounter / state.compressionListTotal ) * 100;
+
 	switch (action.type) {
 		case POPULATE_FILE_LIST.SET_IMAGE_DATA:
 			return {
@@ -35,6 +39,7 @@ export function fileListReducer(state: RenderedImageData, action: IAction) {
 						}, {}),
 				selectAllFilesValue: true,
 				isCurrentlyOptimizing: false,
+				compressionListCompletionPercentage: 0,
 			};
 
 		case POPULATE_FILE_LIST.TOGGLE_CHECKED_ONE:
@@ -66,6 +71,8 @@ export function fileListReducer(state: RenderedImageData, action: IAction) {
 			return {
 					...state,
 					isCurrentlyOptimizing: true,
+					compressionListTotal: action.payload.compressionListTotal,
+					compressionListCounter: 0,
 			}
 
 		case POPULATE_FILE_LIST.IMAGE_OPTIMIZE_STARTED:
@@ -91,6 +98,8 @@ export function fileListReducer(state: RenderedImageData, action: IAction) {
 							fileStatus: 'succeeded',
 						}
 					},
+					compressionListCounter: incrementCounter,
+					compressionListCompletionPercentage: incrementProgress
 			}
 
 		case POPULATE_FILE_LIST.IMAGE_OPTIMIZE_FAIL:
@@ -104,6 +113,8 @@ export function fileListReducer(state: RenderedImageData, action: IAction) {
 							fileStatus: 'failed',
 						}
 					},
+					compressionListCounter: incrementCounter,
+					compressionListCompletionPercentage: incrementProgress,
 			}
 
 		default:

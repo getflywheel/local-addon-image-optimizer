@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {SetStateAction, useState} from 'react';
 import { ColFileStatus } from './columnRenderers/ColFileStatus';
 import { ColFileName } from './columnRenderers/ColFileName';
 import { ColFileSize } from './columnRenderers/ColFileSize'
@@ -8,10 +8,8 @@ import { Button,
 		IVirtualTableCellRendererDataArgs,
 		ProgressBar,
 		TextButton,
-		PrimaryButton,
 	} from '@getflywheel/local-components';
 import { ImageData } from '../types';
-import classnames from 'classnames';
 
 interface IFileListViewProps {
 	imageData: ImageData[],
@@ -20,6 +18,8 @@ interface IFileListViewProps {
 	toggleSelectAllValue: boolean,
 	getCompressionList: () => void,
 	isCurrentlyOptimizing: boolean,
+	compressionListCompletionPercentage: number,
+	setOverviewSelected: (x: boolean) => void,
 }
 
 export const FileListView = (props: IFileListViewProps) =>  {
@@ -61,7 +61,9 @@ export const FileListView = (props: IFileListViewProps) =>  {
 		<div className='fileView_Container'>
 			<div className='fileView_Header'>
 
-				<TextButton>
+				<TextButton
+					onClick={() => props.setOverviewSelected(true)}
+				>
 					Back To Overview
 				</TextButton>
 
@@ -76,16 +78,16 @@ export const FileListView = (props: IFileListViewProps) =>  {
 					Optimize Images
 				</Button>
 			</div>
-				<ProgressBar progress={60} />
+				<ProgressBar progress={props.compressionListCompletionPercentage} />
 			<div>
 			<VirtualTable
 				cellRenderer={cellRender}
 				data={(props.imageData)}
 				headers={[
-					{ key: 'fileStatus', value: '', className: 'fileListViewer_Column_Selected'  },
+					{ key: 'fileStatus', value: '', className: 'fileListViewer_Column_Selected'},
 					{ key: 'filePath', value: 'Filename', className: 'fileListViewer_Column_File_Name'},
-					{ key: 'originalSize', value: 'Original Size', className: 'fileListViewer_Column_Original_Size' },
-					{ key: 'compressedSize', value: 'Compressed Size', className: 'fileListViewer_Column_Compressed_Size' }
+					{ key: 'originalSize', value: 'Original Size', className: 'fileListViewer_Column_Original_Size'},
+					{ key: 'compressedSize', value: 'Compressed Size', className: 'fileListViewer_Column_Compressed_Size'}
 				]}
 				headersCapitalize='none'
 				striped
