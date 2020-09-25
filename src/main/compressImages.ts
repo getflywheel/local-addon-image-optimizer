@@ -11,7 +11,6 @@ import {
 import { BACKUP_DIR_NAME, IPC_EVENTS } from '../constants';
 import { getFileHash, saveImageDataToDisk } from './utils';
 
-
 /**
  * Takes a list of md5 hashed ids for images that should be compressed and compress them one at a time
  * Each time an image is compressed or fails, will emit an IPC event with the file md5 and the status (success/fail)
@@ -48,8 +47,10 @@ export function compressImagesFactory(serviceContainer: LocalMain.ServiceContain
 			const { filePath } = currentImageData;
 
 			if(!fs.existsSync(filePath)) {
-				serviceContainer.sendIPCEvent(IPC_EVENTS.COMPRESS_IMAGE_FAIL,
-					md5Hash, 'File not found!'
+				serviceContainer.sendIPCEvent(
+					IPC_EVENTS.COMPRESS_IMAGE_FAIL,
+					md5Hash,
+					'File not found!'
 				);
 
 				continue;
@@ -96,9 +97,6 @@ export function compressImagesFactory(serviceContainer: LocalMain.ServiceContain
 				);
 
 				cp.on('close', async (code) => {
-					/**
-					 * @todo test this IPC event
-					 */
 					if (code !== 0) {
 						serviceContainer.sendIPCEvent(IPC_EVENTS.COMPRESS_IMAGE_FAIL, {
 							originalImageHash: md5Hash,
