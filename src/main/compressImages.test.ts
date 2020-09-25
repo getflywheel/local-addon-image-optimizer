@@ -17,44 +17,85 @@ const mockServiceContainer = createMockServiceContainer(sitePath);
 const wpContent = path.join(mockServiceContainer.siteData.paths.webRoot, 'wp-content');
 const backupDir = path.join(sitePath, BACKUP_DIR_NAME);
 
+const siteID = '1234';
+
+const imageOneID = md5('strongbad');
+const imageTwoID = md5('the cheat');
+const imageThreeName = 'homestar runner';
+const imageThreeID = md5(imageThreeName);
+const initialState = {
+	imageData: {
+		[imageOneID]: {
+			filePath: path.join(wpContent, 'uploads', '1.jpeg'),
+			originalImageHash: imageOneID,
+			originalSize: 30000,
+		},
+		[imageTwoID]: {
+			filePath: path.join(wpContent, 'uploads', '2.jpeg'),
+			originalImageHash: imageTwoID,
+			originalSize: 4595856,
+		},
+		[imageThreeID]: {
+			filePath: path.join(wpContent, 'uploads', `${imageThreeName}.jpeg`),
+			originalImageHash: imageThreeID,
+			originalSize: 59030,
+		},
+	},
+};
+
 
 jest.mock('./utils');
 const utils = require('./utils');
 
+utils.getFileHash.mockImplementation((filePath: string) => md5(filePath));
+
 
 jest.mock('fs-extra');
 const fsExtra = require('fs-extra');
+
 fsExtra.statSync.mockImplementation((path: string) => ({
 	size: 1000,
 }));
 
+fsExtra.existsSync.mockImplementation((filePath: string) => {
+	if (filePath.includes(imageThreeName)) {
+		return false;
+	}
+
+	return true;
+});
 
 jest.mock('child_process');
 const childProcess = require('child_process');
-const emitter = new EventEmitter();
+
+const emitters = [];
+let compressedCount = 0;
 childProcess.spawn.mockImplementation((command: string, args: any[]) => {
+	const emitter = new EventEmitter();
+	emitter.on = (channel: string, cb) => {
+		if (channel !== 'close') {
+			return emitter;
+		}
+
+		compressedCount++;
+
+		/**
+		 * simulate a fail on only the second image
+		 */
+		const code = compressedCount === 2 ? 1 : 0;
+
+		cb(code);
+
+		return emitter;
+	};
+	emitters.push(emitter);
 	return emitter;
 });
 
+const imageDataStore = createStore();
+imageDataStore.setStateBySiteID(siteID, initialState as SiteImageData);
 
 describe('compressImages', () => {
-	const siteID = '1234';
-	const imageID = md5('strongbad');
-	const initialState = {
-		[siteID]: {
-			imageData: {
-				[imageID]: {
-					filePath: path.join(wpContent, 'uploads', '1.jpeg'),
-					compressedImageHash: md5('compressed-fake-file'),
-					originalImageHash: imageID,
-					originalSize: 30000,
-				},
-			}
-		} as SiteImageData,
-	};
-
-	const imageDataStore = createStore(initialState);
-
 	const expectedImageDataKeys = [
 		'originalImageHash',
 		'compressedImageHash',
@@ -68,17 +109,11 @@ describe('compressImages', () => {
 		imageDataStore,
 	);
 
-	let res
+	const imageIDs = Object.keys(imageDataStore.getStateBySiteID(siteID).imageData);
 
 	beforeAll(async (done) => {
-		res = compressImages(siteID, Object.keys(imageDataStore.getStateBySiteID(siteID).imageData), fsExtra)
-			.then(() => done());
-
-		/**
-		 * emit "close" with a good status code so that the the promises that compressImages is waiting
-		 * on can resolve
-		 */
-		emitter.emit('close', 0);
+		compressImages(siteID, imageIDs)
+			.then(() => null);
 
 		done();
 	});
@@ -91,8 +126,8 @@ describe('compressImages', () => {
 		expect(fsExtra.ensureDir.mock.calls[0][0]).toEqual(backupDir);
 	});
 
-	it('calls fs.copySync once for each md5 hash (image id) passed in and copies to the correct path in the backup dir', () => {
-		expect(fsExtra.copySync.mock.calls).toBeArrayOfSize(1);
+	it('calls fs.copySync once for each image id passed in that exists on disk and copies to the correct path in the backup dir', () => {
+		expect(fsExtra.copySync.mock.calls).toBeArrayOfSize(2);
 
 		const args = fsExtra.copySync.mock.calls[0];
 
@@ -110,7 +145,7 @@ describe('compressImages', () => {
 		const mock = childProcess.spawn.mock;
 		const cliArgs = [ ...mock.calls[0][1] ];
 
-		expect(mock.calls.length).toEqual(1);
+		expect(mock.calls.length).toEqual(2);
 
 		expect(mock.calls[0][0]).toEqual('jpeg-recompress');
 		expect(cliArgs).toBeArray();
@@ -122,8 +157,49 @@ describe('compressImages', () => {
 	it('calls sendIPCEvent with the correct args when successful', () => {
 		const mock = mockServiceContainer.sendIPCEvent.mock;
 
-		expect(mock.calls[0][0]).toEqual(IPC_EVENTS.COMPRESS_IMAGE_SUCCESS);
-		expect(mock.calls[0][1]).toContainKeys(expectedImageDataKeys);
+		let call = mock.calls[0];
+		expect(call[0]).toEqual(IPC_EVENTS.COMPRESS_IMAGE_STARTED);
+		expect(call[1]).toEqual(imageOneID);
+
+		call = mock.calls[1];
+		expect(call[0]).toEqual(IPC_EVENTS.COMPRESS_IMAGE_SUCCESS);
+		expect(call[1]).toContainKeys(expectedImageDataKeys);
+	});
+
+	it('updates the store correctly when successful', () => {
+		const { imageData: allImageData } = imageDataStore.getStateBySiteID(siteID);
+		let imageData = allImageData[imageOneID];
+
+		expect(imageData).toContainAllKeys(expectedImageDataKeys);
+
+		imageData = allImageData[imageTwoID];
+
+		expect(imageData).toContainAllKeys([
+			'originalImageHash',
+			'filePath',
+			'originalSize',
+		]);
+	});
+
+	it('calls sendIPCEvent with the correct args when unnsuccessful', () => {
+		const { mock } = mockServiceContainer.sendIPCEvent;
+
+		let call = mock.calls[3];
+		expect(call[0]).toEqual(IPC_EVENTS.COMPRESS_IMAGE_FAIL);
+
+		expect(call[1].originalImageHash).toEqual(imageTwoID);
+		expect(call[1].errorMessage).toBeString();
+	});
+
+	it('does not update the store if the file did not successfully compress', () => {
+		const { imageData: allImageData } = imageDataStore.getStateBySiteID(siteID);
+		let imageData = allImageData[imageTwoID];
+
+		expect(imageData).toContainAllKeys([
+			'originalImageHash',
+			'filePath',
+			'originalSize',
+		]);
 	});
 
 	it('calls the saveImageDataToDisk util with the correct args', () => {
@@ -132,5 +208,14 @@ describe('compressImages', () => {
 		expect(mock.calls[0][0]).toEqual(imageDataStore);
 
 		expect(mock.calls[0][1]).toEqual(mockServiceContainer);
+	});
+
+	it('calls fs.existsSync and emits a failed event if fs.existsSync returns false', () => {
+		const { mock } = mockServiceContainer.sendIPCEvent;
+		const call = mock.calls[5];
+
+		expect(call[0]).toEqual(IPC_EVENTS.COMPRESS_IMAGE_FAIL);
+		expect(call[1]).toEqual(imageThreeID);
+		expect(call[2]).toBeString();
 	});
 });
