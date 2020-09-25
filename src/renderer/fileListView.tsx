@@ -8,8 +8,11 @@ import { Button,
 		IVirtualTableCellRendererDataArgs,
 		ProgressBar,
 		TextButton,
+		FlyModal
 	} from '@getflywheel/local-components';
 import { ImageData } from '../types';
+import ReactDOM from 'react-dom';
+import { FileListModal } from './fileListModal'
 
 interface IFileListViewProps {
 	imageData: ImageData[],
@@ -57,9 +60,34 @@ export const FileListView = (props: IFileListViewProps) =>  {
 		}
 	};
 
+	const invokeModal = async () : Promise<{submitted: boolean}> => new Promise((resolve) => {
+
+		const onSubmit = () => {
+			props.getCompressionList();
+
+			resolve({ submitted: true });
+
+			FlyModal.onRequestClose();
+		};
+
+		ReactDOM.render (
+			(
+					<FlyModal
+						contentLabel='Confirm Optimization'
+						onRequestClose={() => resolve({ submitted: false })}
+					>
+						<FileListModal
+							onSubmit={onSubmit}
+						/>
+					</FlyModal>
+			), document.getElementById('popup-container'),
+		);
+});
+
 	return(
 		<div className='fileView_Container'>
 			<div className='fileView_Header'>
+
 
 				<TextButton
 					onClick={() => props.setOverviewSelected(true)}
@@ -69,7 +97,7 @@ export const FileListView = (props: IFileListViewProps) =>  {
 
 				<Button
 					className='fileView_Start_Optimization'
-					onClick={props.getCompressionList}
+					onClick={invokeModal}
 					privateOptions={{
 						color: 'green',
 						form: 'fill'
