@@ -1,5 +1,5 @@
-import { ImageData } from '../types';
-import { RenderedImageData } from './types'
+import { ImageData } from '../../types';
+import { RenderedImageData } from '../types'
 
 interface IAction {
 	type: string,
@@ -11,9 +11,11 @@ export const POPULATE_FILE_LIST = {
 	TOGGLE_CHECKED_ONE: 'toggle_checked_one',
 	TOGGLE_CHECKED_ALL: 'toggle_checked_all',
 	IS_OPTIMIZING: 'is_optimizing',
+	COMPRESS_ALL_IMAGES_COMPLETE: 'compress_all_images_complete',
 	IMAGE_OPTIMIZE_STARTED: 'image_optimize_started',
 	IMAGE_OPTIMIZE_FAIL: 'image_optimize_fail',
 	IMAGE_OPTIMIZE_SUCCESS: 'image_optimize_success',
+	SET_COMPRESSION_TOTAL: 'set_compression_total'
 }
 
 export function fileListReducer(state: RenderedImageData, action: IAction) {
@@ -38,7 +40,7 @@ export function fileListReducer(state: RenderedImageData, action: IAction) {
 							};
 						}, {}),
 				selectAllFilesValue: true,
-				isCurrentlyOptimizing: false,
+				isCurrentlyOptimizing: 'before',
 				compressionListCompletionPercentage: 0,
 			};
 
@@ -67,12 +69,24 @@ export function fileListReducer(state: RenderedImageData, action: IAction) {
 					selectAllFilesValue: action.payload.isChecked,
 			}
 
+		case POPULATE_FILE_LIST.SET_COMPRESSION_TOTAL:
+			return {
+					...state,
+					compressionListTotal: action.payload.compressionListTotal,
+			}
+
 		case POPULATE_FILE_LIST.IS_OPTIMIZING:
 			return {
 					...state,
-					isCurrentlyOptimizing: true,
+					isCurrentlyOptimizing: action.payload.running,
 					compressionListTotal: action.payload.compressionListTotal,
 					compressionListCounter: 0,
+			}
+		
+		case POPULATE_FILE_LIST.COMPRESS_ALL_IMAGES_COMPLETE:
+			return {
+					...state,
+					isCurrentlyOptimizing: action.payload.complete,
 			}
 
 		case POPULATE_FILE_LIST.IMAGE_OPTIMIZE_STARTED:

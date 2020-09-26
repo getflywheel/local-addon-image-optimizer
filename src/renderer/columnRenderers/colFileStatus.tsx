@@ -10,7 +10,7 @@ interface IFileStatusProps {
 	handleCheckBoxChange: (imageID: string) => (isChecked: boolean) => void,
 	toggleSelectAll: (isChecked: boolean) => void,
 	toggleSelectAllValue: boolean,
-	isCurrentlyOptimizing: boolean
+	isCurrentlyOptimizing: string
 }
 
 export const ColFileStatus = (props: IFileStatusProps) =>  {
@@ -26,7 +26,7 @@ export const ColFileStatus = (props: IFileStatusProps) =>  {
 	const checked = dataArgs.isHeader ? toggleSelectAllValue : dataArgs.rowData.isChecked;
 	const onChange = dataArgs.isHeader ? toggleSelectAll : handleCheckBoxChange(dataArgs.rowData.originalImageHash);
 
-	if(!isCurrentlyOptimizing) {
+	if(isCurrentlyOptimizing === 'before') {
 		return(
 			<div>
 				<Checkbox
@@ -47,14 +47,14 @@ export const ColFileStatus = (props: IFileStatusProps) =>  {
 			case 'succeeded':
 				return(
 					<div>
-
+						Succeeded!
 					</div>
 				);
 
 			case 'failed':
 				return(
 					<div>
-
+						Failed!
 					</div>
 				);
 
