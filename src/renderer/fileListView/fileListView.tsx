@@ -1,18 +1,18 @@
 import React, {SetStateAction, useState} from 'react';
-import { ColFileStatus } from './columnRenderers/ColFileStatus';
-import { ColFileName } from './columnRenderers/ColFileName';
-import { ColFileSize } from './columnRenderers/ColFileSize'
-import { Button,
+import { ColFileStatus } from '../columnRenderers/ColFileStatus';
+import { ColFileName } from '../columnRenderers/ColFileName';
+import { ColFileSize } from '../columnRenderers/ColFileSize'
+import {
 		VirtualTable,
 		VirtualTableCellRenderer,
 		IVirtualTableCellRendererDataArgs,
 		ProgressBar,
-		TextButton,
 		FlyModal
 	} from '@getflywheel/local-components';
-import { ImageData } from '../types';
+import { ImageData } from '../../types';
 import ReactDOM from 'react-dom';
 import { FileListModal } from './fileListModal'
+import { FileListHeader } from './fileListHeader'
 
 interface IFileListViewProps {
 	imageData: ImageData[],
@@ -20,7 +20,8 @@ interface IFileListViewProps {
 	toggleSelectAll: (isChecked: boolean) => void,
 	toggleSelectAllValue: boolean,
 	getCompressionList: () => void,
-	isCurrentlyOptimizing: boolean,
+	isCurrentlyOptimizing: string,
+	compressionListTotal: number,
 	compressionListCompletionPercentage: number,
 	setOverviewSelected: (x: boolean) => void,
 }
@@ -42,6 +43,7 @@ export const FileListView = (props: IFileListViewProps) =>  {
 				return (
 					<ColFileName
 						dataArgs={dataArgs}
+						compressionListTotal={props.compressionListTotal}
 					/>
 				);
 			case 'originalSize':
@@ -82,30 +84,15 @@ export const FileListView = (props: IFileListViewProps) =>  {
 					</FlyModal>
 			), document.getElementById('popup-container'),
 		);
-});
+	});
 
 	return(
 		<div className='fileView_Container'>
-			<div className='fileView_Header'>
-
-
-				<TextButton
-					onClick={() => props.setOverviewSelected(true)}
-				>
-					Back To Overview
-				</TextButton>
-
-				<Button
-					className='fileView_Start_Optimization'
-					onClick={invokeModal}
-					privateOptions={{
-						color: 'green',
-						form: 'fill'
-					}}
-				>
-					Optimize Images
-				</Button>
-			</div>
+			<FileListHeader
+				isCurrentlyOptimizing={props.isCurrentlyOptimizing}
+				setOverviewSelected={props.setOverviewSelected}
+				invokeModal={invokeModal}
+			/>
 				<ProgressBar progress={props.compressionListCompletionPercentage} />
 			<div>
 			<VirtualTable

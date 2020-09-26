@@ -61,3 +61,15 @@
 .fileView_Start_Optimization {
 	margin-left: auto;
 }
+
+
+.fileList_Modal_Text {
+	padding-top: 30px;
+}
+
+.fileList_Modal_Checkbox {
+	padding-bottom: 30px;
+	padding-top: 30px;
+	display: flex;
+	justify-content: center;
+}

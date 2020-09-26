@@ -4,6 +4,7 @@ export const IPC_EVENTS = {
 	COMPRESS_IMAGE_STARTED: 'imageOptimizer:image-compress-start',
 	COMPRESS_IMAGE_SUCCESS: 'imageOptimizer:image-compress-success',
 	COMPRESS_IMAGE_FAIL: 'imageOptimizer:image-compress-fail',
+	COMPRESS_ALL_IMAGES_COMPLETE: 'imageOptimizer:image-compress-all-complete',
 	GET_IMAGE_DATA: 'imageOptimizer:get-image-data',
 };
 

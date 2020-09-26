@@ -4,20 +4,27 @@ import { IVirtualTableCellRendererDataArgs } from '@getflywheel/local-components
 
 interface IFileNameProps {
 	dataArgs: IVirtualTableCellRendererDataArgs
+	compressionListTotal: number
 }
 
 export const ColFileName = ( props: IFileNameProps ) =>  {
-	const { dataArgs } = props;
+	const { dataArgs, compressionListTotal } = props;
 
  	const getFileName = () => {
 		return path.basename(dataArgs.cellData)
 	}
 
-	const fileName = dataArgs.isHeader ? dataArgs.cellData : getFileName();
-
+	if (dataArgs.isHeader) {
 		return(
 			<div>
-				{fileName}
+				{compressionListTotal + ' Images Selected'} 
 			</div>
 		);
+	} else {
+		return(
+			<div>
+				{getFileName()}
+			</div>
+		);
+	}
 };

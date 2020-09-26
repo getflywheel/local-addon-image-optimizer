@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useReducer } from 'react';
 import { Overview } from './overview';
-import { FileListView } from './fileListView';
+import { FileListView } from './fileListView/fileListView';
 import { IPC_EVENTS } from '../constants';
 import { ipcRenderer } from 'electron';
 import { RenderedImageData } from './types';
 import { scanImageReducer, initialState, SCAN_IMAGES_ACTIONS } from '../scanImageReducer';
 import * as LocalRenderer from '@getflywheel/local/renderer';
-import { fileListReducer } from './fileListReducer';
-import { POPULATE_FILE_LIST } from './fileListReducer';
+import { fileListReducer } from './fileListView/fileListReducer';
+import { POPULATE_FILE_LIST } from './fileListView/fileListReducer';
 
 
 export const ImageOptimizer = (props) => {
@@ -81,6 +81,17 @@ export const ImageOptimizer = (props) => {
 				);
 			}
 
+			if (!ipcRenderer.listenerCount(IPC_EVENTS.COMPRESS_ALL_IMAGES_COMPLETE)) {
+				ipcRenderer.on(
+					IPC_EVENTS.COMPRESS_ALL_IMAGES_COMPLETE,
+					() => {
+						dispatchSiteImageData({
+							type: POPULATE_FILE_LIST.COMPRESS_ALL_IMAGES_COMPLETE, payload: { complete: 'complete' }
+						});
+					},
+				);
+			}
+
 			return () => {
 				ipcRenderer.removeAllListeners(IPC_EVENTS.COMPRESS_IMAGE_STARTED);
 				ipcRenderer.removeAllListeners(IPC_EVENTS.COMPRESS_IMAGE_FAIL);
@@ -104,6 +115,7 @@ export const ImageOptimizer = (props) => {
 		})
 	};
 
+
 	// todo - split this out into two parts and have it open the confirmation modal
 	// currently it kicks off an optimization job
 	const getCompressionList = () => {
@@ -116,7 +128,7 @@ export const ImageOptimizer = (props) => {
 
 		const compressionListTotal = compressionList.length;
 
-		dispatchSiteImageData({ type: POPULATE_FILE_LIST.IS_OPTIMIZING, payload: {compressionListTotal} });
+		dispatchSiteImageData({ type: POPULATE_FILE_LIST.IS_OPTIMIZING, payload: {compressionListTotal, running: 'running'} });
 
 		ipcRenderer.send(
 			IPC_EVENTS.COMPRESS_IMAGES,
@@ -135,6 +147,7 @@ export const ImageOptimizer = (props) => {
 					toggleSelectAllValue={siteImageData.selectAllFilesValue}
 					getCompressionList={getCompressionList}
 					isCurrentlyOptimizing={siteImageData.isCurrentlyOptimizing}
+					compressionListTotal={siteImageData.compressionListTotal}
 					compressionListCompletionPercentage={siteImageData.compressionListCompletionPercentage}
 					setOverviewSelected={setOverviewSelected}
 				/>

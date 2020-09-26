@@ -131,5 +131,7 @@ export function compressImagesFactory(serviceContainer: LocalMain.ServiceContain
 
 			saveImageDataToDisk(imageDataStore, serviceContainer);
 		}
+
+		serviceContainer.sendIPCEvent(IPC_EVENTS.COMPRESS_ALL_IMAGES_COMPLETE);
 	}
 };
