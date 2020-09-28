@@ -1,5 +1,6 @@
-import { ImageData } from '../../types';
-import { RenderedImageData } from '../types'
+import { FileStatus, ImageData } from '../../types';
+import { OptimizerStatus, RenderedImageData } from '../types'
+
 
 interface IAction {
 	type: string,
@@ -39,7 +40,7 @@ export function fileListReducer(state: RenderedImageData, action: IAction) {
 							};
 						}, {}),
 				selectAllFilesValue: true,
-				isCurrentlyOptimizing: 'before',
+				optimizationStatus: OptimizerStatus.BEFORE,
 				compressionListCompletionPercentage: 0,
 			};
 
@@ -71,7 +72,7 @@ export function fileListReducer(state: RenderedImageData, action: IAction) {
 		case POPULATE_FILE_LIST.IS_OPTIMIZING:
 			return {
 					...state,
-					isCurrentlyOptimizing: action.payload.running,
+					optimizationStatus: action.payload.running,
 					compressionListTotal: action.payload.compressionListTotal,
 					compressionListCounter: 0,
 			}
@@ -79,7 +80,7 @@ export function fileListReducer(state: RenderedImageData, action: IAction) {
 		case POPULATE_FILE_LIST.COMPRESS_ALL_IMAGES_COMPLETE:
 			return {
 					...state,
-					isCurrentlyOptimizing: action.payload.complete,
+					optimizationStatus: action.payload.complete,
 			}
 
 		case POPULATE_FILE_LIST.IMAGE_OPTIMIZE_STARTED:
@@ -89,7 +90,7 @@ export function fileListReducer(state: RenderedImageData, action: IAction) {
 						...state.imageData,
 						[action.payload.md5hash]: {
 							...state.imageData[action.payload.md5hash],
-							fileStatus: 'started',
+							fileStatus: FileStatus.STARTED,
 						}
 					},
 			}
@@ -102,7 +103,7 @@ export function fileListReducer(state: RenderedImageData, action: IAction) {
 						[action.payload.originalImageHash]: {
 							...state.imageData[action.payload.originalImageHash],
 							...action.payload,
-							fileStatus: 'succeeded',
+							fileStatus: FileStatus.SUCCEEDED,
 						}
 					},
 					compressionListCounter: incrementCounter,
@@ -117,7 +118,7 @@ export function fileListReducer(state: RenderedImageData, action: IAction) {
 						[action.payload.originalImageHash]: {
 							...state.imageData[action.payload.originalImageHash],
 							compressedSize: action.payload.errorMessage,
-							fileStatus: 'failed',
+							fileStatus: FileStatus.FAILED,
 						}
 					},
 					compressionListCounter: incrementCounter,

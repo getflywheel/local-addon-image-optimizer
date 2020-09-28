@@ -2,8 +2,14 @@ import { SiteImageData } from "../types";
 
 export interface RenderedImageData extends SiteImageData {
 	selectAllFilesValue?: boolean;
-	isCurrentlyOptimizing?: 'before' | 'running' | 'complete';
+	optimizationStatus?: OptimizerStatus;
 	compressionListTotal?: number;
 	compressionListCounter?: number;
 	compressionListCompletionPercentage?: number;
+}
+
+export enum OptimizerStatus {
+	BEFORE = 'before',
+	RUNNING = 'running',
+	COMPLETE = 'complete'
 }

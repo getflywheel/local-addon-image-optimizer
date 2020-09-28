@@ -4,13 +4,15 @@ import {
 		IVirtualTableCellRendererDataArgs,
 		Spinner,
 	} from '@getflywheel/local-components';
+import { OptimizerStatus } from '../types';
+import { FileStatus } from '../../types';
 
 interface IFileStatusProps {
 	dataArgs: IVirtualTableCellRendererDataArgs,
 	handleCheckBoxChange: (imageID: string) => (isChecked: boolean) => void,
 	toggleSelectAll: (isChecked: boolean) => void,
 	toggleSelectAllValue: boolean,
-	isCurrentlyOptimizing: string
+	optimizationStatus: string
 }
 
 export const ColFileStatus = (props: IFileStatusProps) =>  {
@@ -20,13 +22,13 @@ export const ColFileStatus = (props: IFileStatusProps) =>  {
 		handleCheckBoxChange,
 		toggleSelectAll,
 		toggleSelectAllValue,
-		isCurrentlyOptimizing,
+		optimizationStatus,
 	} = props;
 
 	const onChange = dataArgs.isHeader ? toggleSelectAll : handleCheckBoxChange(dataArgs.rowData.originalImageHash);
 
-	if(isCurrentlyOptimizing === 'before') {
-		return(
+	if (optimizationStatus === OptimizerStatus.BEFORE) {
+		return (
 			<div>
 				{/* TODO: Set the header checkbox to 'unchecked' if not all files are selected */}
 				<Checkbox
@@ -35,35 +37,33 @@ export const ColFileStatus = (props: IFileStatusProps) =>  {
 				/>
 			</div>
 		);
-	} else {
-		switch (dataArgs.rowData.fileStatus) {
-			case 'started':
-				return(
-					<div>
-						<Spinner />
-					</div>
-				);
+	}
+		
+	switch (dataArgs.rowData.fileStatus) {
+		case FileStatus.STARTED:
+			return (
+				<Spinner />
+			);
 
-			case 'succeeded':
-				return(
-					<div>
-						{/*TODO: Add success icon */}
-						Succeeded!
-					</div>
-				);
+		case FileStatus.SUCCEEDED:
+			return (
+				<div>
+					{/*TODO: Add success icon and remove wrapper div (unless needed for styling) */}
+					Succeeded!
+				</div>
+			);
 
-			case 'failed':
-				return(
-					<div>
-						{/*TODO:  Add failure icon */}
-						Failed!
-					</div>
-				);
+		case FileStatus.FAILED:
+			return (
+				<div>
+					{/*TODO:  Add failure icon and remove wrapper div (unless needed for styling)*/}
+					Failed!
+				</div>
+			);
 
-			default:
-				return (
-					null
-				);
-		}
+		default:
+			return (
+				null
+			);
 	}
 };

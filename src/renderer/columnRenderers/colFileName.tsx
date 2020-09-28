@@ -1,10 +1,11 @@
 import React from 'react';
 import path from 'path';
 import { IVirtualTableCellRendererDataArgs } from '@getflywheel/local-components';
+import { OptimizerStatus } from '../types';
 
 interface IFileNameProps {
 	dataArgs: IVirtualTableCellRendererDataArgs
-	isCurrentlyOptimizing: string;
+	optimizationStatus: string;
 }
 
 export const ColFileName = ( props: IFileNameProps ) =>  {
@@ -23,7 +24,7 @@ export const ColFileName = ( props: IFileNameProps ) =>  {
 	if (dataArgs.isHeader) {
 		return(
 			<div>
-				{props.isCurrentlyOptimizing === 'before' ? (getSelectedCount() + ' Images Selected') : 'File Name'} 
+				{props.optimizationStatus === OptimizerStatus.BEFORE ? (getSelectedCount() + ' Images Selected') : 'File Name'} 
 			</div>
 		);
 	} else {

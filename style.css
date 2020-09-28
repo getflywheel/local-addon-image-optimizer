@@ -58,6 +58,12 @@
 	display: flex;
 }
 
+.fileView_Header_Text {
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+
+
 .fileView_Start_Optimization {
 	margin-left: auto;
 }

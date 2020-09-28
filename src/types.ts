@@ -26,3 +26,9 @@ export interface Store {
 	setState: (newState: CachedImageDataBySiteID) => void;
 	setStateBySiteID: (siteID: string, newState: SiteImageData) => void;
 }
+
+export enum FileStatus {
+	STARTED = 'started',
+	SUCCEEDED = 'succeeded',
+	FAILED = 'failed',
+}
