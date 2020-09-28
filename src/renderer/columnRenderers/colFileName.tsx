@@ -4,11 +4,17 @@ import { IVirtualTableCellRendererDataArgs } from '@getflywheel/local-components
 
 interface IFileNameProps {
 	dataArgs: IVirtualTableCellRendererDataArgs
-	compressionListTotal: number
+	isCurrentlyOptimizing: string;
 }
 
 export const ColFileName = ( props: IFileNameProps ) =>  {
-	const { dataArgs, compressionListTotal } = props;
+	const { dataArgs } = props;
+
+	const getSelectedCount = () => {
+		return dataArgs.data.filter(
+			data => data.isChecked
+		).length;
+	}
 
  	const getFileName = () => {
 		return path.basename(dataArgs.cellData)
@@ -17,7 +23,7 @@ export const ColFileName = ( props: IFileNameProps ) =>  {
 	if (dataArgs.isHeader) {
 		return(
 			<div>
-				{compressionListTotal + ' Images Selected'} 
+				{props.isCurrentlyOptimizing === 'before' ? (getSelectedCount() + ' Images Selected') : 'File Name'} 
 			</div>
 		);
 	} else {

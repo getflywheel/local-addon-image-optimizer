@@ -15,7 +15,6 @@ export const POPULATE_FILE_LIST = {
 	IMAGE_OPTIMIZE_STARTED: 'image_optimize_started',
 	IMAGE_OPTIMIZE_FAIL: 'image_optimize_fail',
 	IMAGE_OPTIMIZE_SUCCESS: 'image_optimize_success',
-	SET_COMPRESSION_TOTAL: 'set_compression_total'
 }
 
 export function fileListReducer(state: RenderedImageData, action: IAction) {
@@ -67,12 +66,6 @@ export function fileListReducer(state: RenderedImageData, action: IAction) {
 						return acc;
 					}, {}),
 					selectAllFilesValue: action.payload.isChecked,
-			}
-
-		case POPULATE_FILE_LIST.SET_COMPRESSION_TOTAL:
-			return {
-					...state,
-					compressionListTotal: action.payload.compressionListTotal,
 			}
 
 		case POPULATE_FILE_LIST.IS_OPTIMIZING:

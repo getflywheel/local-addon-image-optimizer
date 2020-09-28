@@ -13,6 +13,12 @@ export const FileListModal = ( props: IFileModalProps ) =>  {
 				<Title size="l" container={{ margin: 'm 0'}}> Confirm Optimization </Title>
 
 				<Divider />
+				{/* TODO: get clarification from design on whether we're hooking up Settings
+				and the checkmark. (Do we actually need this modal?)
+				
+				TODO: get clarification from hifi mock on the padding and margin values for
+				the content in this modal.
+				*/}
 					<div className='fileList_Modal_Text'>
 						Optimizing images will strip metadata and reduce image sizes to improve your site's performance.
 					</div>
