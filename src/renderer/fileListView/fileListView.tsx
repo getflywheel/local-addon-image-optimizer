@@ -13,6 +13,7 @@ import { ImageData } from '../../types';
 import ReactDOM from 'react-dom';
 import { FileListModal } from './fileListModal'
 import { FileListHeader } from './fileListHeader'
+import { OptimizerStatus } from '../types';
 
 interface IFileListViewProps {
 	imageData: ImageData[],
@@ -20,7 +21,7 @@ interface IFileListViewProps {
 	toggleSelectAll: (isChecked: boolean) => void,
 	toggleSelectAllValue: boolean,
 	getCompressionList: () => void,
-	isCurrentlyOptimizing: string,
+	optimizationStatus: string,
 	compressionListTotal: number,
 	compressionListCompletionPercentage: number,
 	setOverviewSelected: (x: boolean) => void,
@@ -36,14 +37,14 @@ export const FileListView = (props: IFileListViewProps) =>  {
 						handleCheckBoxChange={props.handleCheckBoxChange}
 						toggleSelectAll={props.toggleSelectAll}
 						toggleSelectAllValue={props.toggleSelectAllValue}
-						isCurrentlyOptimizing={props.isCurrentlyOptimizing}
+						optimizationStatus={props.optimizationStatus}
 					/>
 				);
 			case 'filePath':
 				return (
 					<ColFileName
 						dataArgs={dataArgs}
-						isCurrentlyOptimizing={props.isCurrentlyOptimizing}
+						optimizationStatus={props.optimizationStatus}
 					/>
 				);
 			case 'originalSize':
@@ -95,7 +96,7 @@ export const FileListView = (props: IFileListViewProps) =>  {
 	return(
 		<div className='fileView_Container'>
 			<FileListHeader
-				isCurrentlyOptimizing={props.isCurrentlyOptimizing}
+				optimizationStatus={props.optimizationStatus}
 				setOverviewSelected={props.setOverviewSelected}
 				invokeModal={invokeModal}
 				getAllChecked={getAllChecked}
@@ -104,7 +105,7 @@ export const FileListView = (props: IFileListViewProps) =>  {
 			<div>
 			<VirtualTable
 				cellRenderer={cellRender}
-				data={props.isCurrentlyOptimizing === 'before' ? props.imageData : getAllChecked()}
+				data={props.optimizationStatus === OptimizerStatus.BEFORE ? props.imageData : getAllChecked()}
 				headers={[
 					{ key: 'fileStatus', value: '', className: 'fileListViewer_Column_Selected'},
 					{ key: 'filePath', value: 'Filename', className: 'fileListViewer_Column_File_Name'},

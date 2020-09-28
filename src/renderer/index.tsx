@@ -3,11 +3,11 @@ import { Overview } from './overview';
 import { FileListView } from './fileListView/fileListView';
 import { IPC_EVENTS } from '../constants';
 import { ipcRenderer } from 'electron';
-import { RenderedImageData } from './types';
-import { scanImageReducer, initialState, SCAN_IMAGES_ACTIONS } from '../scanImageReducer';
+import { RenderedImageData, OptimizerStatus } from './types';
+import { scanImageReducer, initialState, SCAN_IMAGES_ACTIONS } from './reducers/scanImageReducer';
 import * as LocalRenderer from '@getflywheel/local/renderer';
-import { fileListReducer } from './fileListView/fileListReducer';
-import { POPULATE_FILE_LIST } from './fileListView/fileListReducer';
+import { fileListReducer } from './reducers/fileListReducer';
+import { POPULATE_FILE_LIST } from './reducers/fileListReducer';
 
 
 export const ImageOptimizer = (props) => {
@@ -86,7 +86,7 @@ export const ImageOptimizer = (props) => {
 					IPC_EVENTS.COMPRESS_ALL_IMAGES_COMPLETE,
 					() => {
 						dispatchSiteImageData({
-							type: POPULATE_FILE_LIST.COMPRESS_ALL_IMAGES_COMPLETE, payload: { complete: 'complete' }
+							type: POPULATE_FILE_LIST.COMPRESS_ALL_IMAGES_COMPLETE, payload: { complete: OptimizerStatus.COMPLETE }
 						});
 					},
 				);
@@ -124,9 +124,10 @@ export const ImageOptimizer = (props) => {
 			return acc
 		}, [])
 
-		const compressionListTotal = compressionList.length;
-
-		dispatchSiteImageData({ type: POPULATE_FILE_LIST.IS_OPTIMIZING, payload: {compressionListTotal, running: 'running'} });
+		dispatchSiteImageData({ type: POPULATE_FILE_LIST.IS_OPTIMIZING, payload: { 
+			compressionListTotal: compressionList.length,
+			running: OptimizerStatus.RUNNING
+		} });
 
 		ipcRenderer.send(
 			IPC_EVENTS.COMPRESS_IMAGES,
@@ -144,7 +145,7 @@ export const ImageOptimizer = (props) => {
 					toggleSelectAll={toggleSelectAll}
 					toggleSelectAllValue={siteImageData.selectAllFilesValue}
 					getCompressionList={getCompressionList}
-					isCurrentlyOptimizing={siteImageData.isCurrentlyOptimizing}
+					optimizationStatus={siteImageData.optimizationStatus}
 					compressionListTotal={siteImageData.compressionListTotal}
 					compressionListCompletionPercentage={siteImageData.compressionListCompletionPercentage}
 					setOverviewSelected={setOverviewSelected}

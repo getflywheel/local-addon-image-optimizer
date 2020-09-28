@@ -3,9 +3,10 @@ import { Button,
     TextButton,
 } from '@getflywheel/local-components';
 import { ImageData } from '../../types';
+import { OptimizerStatus } from '../types';
 
 interface IFileListHeaderProps {
-    isCurrentlyOptimizing: string;
+    optimizationStatus: string;
     setOverviewSelected: (x: boolean) => void,
     invokeModal: () => Promise<{submitted: boolean}>,
     getAllChecked: () => ImageData[];
@@ -15,7 +16,7 @@ export const FileListHeader = (props: IFileListHeaderProps) => {
 
     const disableButton = props.getAllChecked().length > 0 ? false : true;
 
-    if (props.isCurrentlyOptimizing === 'before') {
+    if (props.optimizationStatus === OptimizerStatus.BEFORE) {
         return (
             <div className='fileView_Header'>
                 <TextButton
@@ -38,7 +39,7 @@ export const FileListHeader = (props: IFileListHeaderProps) => {
                 </Button>
             </div>
         );
-    } else if (props.isCurrentlyOptimizing === 'running') {
+    } else if (props.optimizationStatus === OptimizerStatus.RUNNING) {
         return (
             <div className='fileView_Header'>
                 <div className='fileView_Header_Text'>
@@ -57,12 +58,12 @@ export const FileListHeader = (props: IFileListHeaderProps) => {
                 </Button>
             </div>
         );
-    } else if (props.isCurrentlyOptimizing === 'complete') { 
+    } else if (props.optimizationStatus === OptimizerStatus.COMPLETE) { 
         return (
             <div className='fileView_Header'>
                 <div className='fileView_Header_Text'>
                     {/* TODO: add in variable to show how much space was saved here */}
-                    Optimization Complete! You've saved {} of space.
+                    Optimization complete! You've saved {} of space.
                 </div>
 
                 <Button
