@@ -1,4 +1,4 @@
-import React, {SetStateAction, useState} from 'react';
+import React from 'react';
 import { ColFileStatus } from '../columnRenderers/ColFileStatus';
 import { ColFileName } from '../columnRenderers/ColFileName';
 import { ColFileSize } from '../columnRenderers/ColFileSize'
@@ -43,7 +43,7 @@ export const FileListView = (props: IFileListViewProps) =>  {
 				return (
 					<ColFileName
 						dataArgs={dataArgs}
-						compressionListTotal={props.compressionListTotal}
+						isCurrentlyOptimizing={props.isCurrentlyOptimizing}
 					/>
 				);
 			case 'originalSize':
@@ -61,6 +61,12 @@ export const FileListView = (props: IFileListViewProps) =>  {
 			default: return null;
 		}
 	};
+
+	const getAllChecked = () => {
+		return props.imageData.filter(
+			data => data.isChecked
+		);
+	}
 
 	const invokeModal = async () : Promise<{submitted: boolean}> => new Promise((resolve) => {
 
@@ -92,12 +98,13 @@ export const FileListView = (props: IFileListViewProps) =>  {
 				isCurrentlyOptimizing={props.isCurrentlyOptimizing}
 				setOverviewSelected={props.setOverviewSelected}
 				invokeModal={invokeModal}
+				getAllChecked={getAllChecked}
 			/>
 				<ProgressBar progress={props.compressionListCompletionPercentage} />
 			<div>
 			<VirtualTable
 				cellRenderer={cellRender}
-				data={(props.imageData)}
+				data={props.isCurrentlyOptimizing === 'before' ? props.imageData : getAllChecked()}
 				headers={[
 					{ key: 'fileStatus', value: '', className: 'fileListViewer_Column_Selected'},
 					{ key: 'filePath', value: 'Filename', className: 'fileListViewer_Column_File_Name'},

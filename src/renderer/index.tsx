@@ -115,9 +115,7 @@ export const ImageOptimizer = (props) => {
 		})
 	};
 
-
-	// todo - split this out into two parts and have it open the confirmation modal
-	// currently it kicks off an optimization job
+	// compiles the list of images to be sent to the main thread for compression
 	const getCompressionList = () => {
 		const compressionList = Object.entries(siteImageData.imageData).reduce((acc, [id, data]) => {
 			if (data.isChecked) {

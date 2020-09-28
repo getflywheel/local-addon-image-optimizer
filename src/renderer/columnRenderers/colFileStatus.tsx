@@ -23,14 +23,14 @@ export const ColFileStatus = (props: IFileStatusProps) =>  {
 		isCurrentlyOptimizing,
 	} = props;
 
-	const checked = dataArgs.isHeader ? toggleSelectAllValue : dataArgs.rowData.isChecked;
 	const onChange = dataArgs.isHeader ? toggleSelectAll : handleCheckBoxChange(dataArgs.rowData.originalImageHash);
 
 	if(isCurrentlyOptimizing === 'before') {
 		return(
 			<div>
+				{/* TODO: Set the header checkbox to 'unchecked' if not all files are selected */}
 				<Checkbox
-					checked={ checked }
+					checked={ dataArgs.isHeader ? toggleSelectAllValue : dataArgs.rowData.isChecked }
 					onChange={ onChange }
 				/>
 			</div>
@@ -47,6 +47,7 @@ export const ColFileStatus = (props: IFileStatusProps) =>  {
 			case 'succeeded':
 				return(
 					<div>
+						{/*TODO: Add success icon */}
 						Succeeded!
 					</div>
 				);
@@ -54,6 +55,7 @@ export const ColFileStatus = (props: IFileStatusProps) =>  {
 			case 'failed':
 				return(
 					<div>
+						{/*TODO:  Add failure icon */}
 						Failed!
 					</div>
 				);
