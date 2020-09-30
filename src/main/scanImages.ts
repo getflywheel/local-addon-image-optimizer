@@ -29,14 +29,11 @@ export function scanImagesFactory(serviceContainer: LocalMain.ServiceContainerSe
 		const siteImageData = imageDataStore.getStateBySiteID(siteID);
 		const imageData = siteImageData.imageData || {};
 
-		let totalImagesSize = 0;
-
 		const updatedSiteImageData = await filePaths.reduce(async (
 			imageDataAccumulator: Promise<SiteImageData['imageData']>,
 			filePath: string,
 		) => {
 			const fileSize = fs.statSync(filePath).size;
-			totalImagesSize += fileSize;
 
 			const fileHash = await getFileHash(filePath);
 
@@ -55,23 +52,24 @@ export function scanImagesFactory(serviceContainer: LocalMain.ServiceContainerSe
 					originalSize: fileSize,
 				},
 			};
-		}, Promise.resolve(imageData)) as SiteImageData['imageData'];
+		}, Promise.resolve({})) as SiteImageData['imageData'];
 
+		const totalImagesSize = await Object.values(updatedSiteImageData).reduce(
+			(acc, data) => {
+				return acc + data.originalSize;
+			}, 0
+		);
 
 		const nextSiteImageData = {
-			/**
-			 * these should not be overidden by new data if they already exist so we add them before
-			 * copying in the previous state so that they will get overidden if they already exist
-			 */
+			...siteImageData,
 			originalTotalSize: totalImagesSize,
 			compressedTotalSize: null,
-			...siteImageData,
 			imageData: updatedSiteImageData,
 			lastScan: new Date(),
 			imageCount: filePaths.length,
 		};
 
-		imageDataStore.setStateBySiteID(siteID, nextSiteImageData);
+		await imageDataStore.setStateBySiteID(siteID, nextSiteImageData);
 
 		saveImageDataToDisk(imageDataStore, serviceContainer);
 
