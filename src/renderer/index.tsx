@@ -124,7 +124,7 @@ export const ImageOptimizer = (props) => {
 			return acc
 		}, [])
 
-		dispatchSiteImageData({ type: POPULATE_FILE_LIST.IS_OPTIMIZING, payload: { 
+		dispatchSiteImageData({ type: POPULATE_FILE_LIST.IS_OPTIMIZING, payload: {
 			compressionListTotal: compressionList.length,
 			running: OptimizerStatus.RUNNING
 		} });
