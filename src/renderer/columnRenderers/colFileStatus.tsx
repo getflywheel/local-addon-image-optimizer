@@ -12,7 +12,7 @@ interface IFileStatusProps {
 	handleCheckBoxChange: (imageID: string) => (isChecked: boolean) => void,
 	toggleSelectAll: (isChecked: boolean) => void,
 	toggleSelectAllValue: boolean,
-	optimizationStatus: string
+	optimizationStatus: OptimizerStatus,
 }
 
 export const ColFileStatus = (props: IFileStatusProps) =>  {
@@ -38,7 +38,7 @@ export const ColFileStatus = (props: IFileStatusProps) =>  {
 			</div>
 		);
 	}
-		
+
 	switch (dataArgs.rowData.fileStatus) {
 		case FileStatus.STARTED:
 			return (

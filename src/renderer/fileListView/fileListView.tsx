@@ -21,7 +21,7 @@ interface IFileListViewProps {
 	toggleSelectAll: (isChecked: boolean) => void,
 	toggleSelectAllValue: boolean,
 	getCompressionList: () => void,
-	optimizationStatus: string,
+	optimizationStatus: OptimizerStatus,
 	compressionListTotal: number,
 	compressionListCompletionPercentage: number,
 	setOverviewSelected: (x: boolean) => void,

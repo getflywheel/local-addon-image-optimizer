@@ -5,7 +5,7 @@ import { OptimizerStatus } from '../types';
 
 interface IFileNameProps {
 	dataArgs: IVirtualTableCellRendererDataArgs
-	optimizationStatus: string;
+	optimizationStatus: OptimizerStatus;
 }
 
 export const ColFileName = ( props: IFileNameProps ) =>  {
@@ -24,7 +24,7 @@ export const ColFileName = ( props: IFileNameProps ) =>  {
 	if (dataArgs.isHeader) {
 		return(
 			<div>
-				{props.optimizationStatus === OptimizerStatus.BEFORE ? (getSelectedCount() + ' Images Selected') : 'File Name'} 
+				{props.optimizationStatus === OptimizerStatus.BEFORE ? (getSelectedCount() + ' Images Selected') : 'File Name'}
 			</div>
 		);
 	} else {

@@ -6,7 +6,7 @@ import { ImageData } from '../../types';
 import { OptimizerStatus } from '../types';
 
 interface IFileListHeaderProps {
-    optimizationStatus: string;
+    optimizationStatus: OptimizerStatus;
     setOverviewSelected: (x: boolean) => void,
     invokeModal: () => Promise<{submitted: boolean}>,
     getAllChecked: () => ImageData[];
@@ -58,7 +58,7 @@ export const FileListHeader = (props: IFileListHeaderProps) => {
                 </Button>
             </div>
         );
-    } else if (props.optimizationStatus === OptimizerStatus.COMPLETE) { 
+    } else if (props.optimizationStatus === OptimizerStatus.COMPLETE) {
         return (
             <div className='fileView_Header'>
                 <div className='fileView_Header_Text'>
