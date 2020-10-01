@@ -96,3 +96,28 @@ export async function getImageFilePaths(site: Local.Site) {
 export function hasImageBeenCompressed(fileHash: string, imageData: SiteImageData['imageData']) {
 	return Object.values(imageData).some((data: ImageData) => data.compressedImageHash === fileHash);
 }
+
+export function getFormattedTimestamp(date: Date) {
+	const year = date.getFullYear();
+	const day = date.getDate();
+	const timestamp = date.toLocaleTimeString();
+
+	const months = [
+		'January',
+		'February',
+		'March',
+		'April',
+		'May',
+		'June',
+		'July',
+		'August',
+		'September',
+		'October',
+		'November',
+		'December'
+	]
+
+	const monthName = months[date.getMonth()]
+
+	return monthName + ' ' + day + ', ' + year + ' ' + timestamp;
+}

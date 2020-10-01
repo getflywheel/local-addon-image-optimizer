@@ -20,6 +20,7 @@ export const ImageOptimizer = (props) => {
 		try {
 			dispatchScanImageData({ type: SCAN_IMAGES_ACTIONS.REQUEST });
 			const scannedImages = await LocalRenderer.ipcAsync(IPC_EVENTS.SCAN_FOR_IMAGES, props.match.params.siteID);
+			console.log({ scannedImages });
 			dispatchScanImageData({ type: SCAN_IMAGES_ACTIONS.SUCCESS, payload: scannedImages });
 		} catch (error) {
 			dispatchScanImageData({ type: SCAN_IMAGES_ACTIONS.FAILURE, payload: error });
@@ -31,7 +32,6 @@ export const ImageOptimizer = (props) => {
 		() => {
 			const setSiteImageData = async () => {
 				await scanForImages();
-
 				const mainImageData = await LocalRenderer.ipcAsync(
 					IPC_EVENTS.GET_IMAGE_DATA,
 					props.match.params.siteID,
