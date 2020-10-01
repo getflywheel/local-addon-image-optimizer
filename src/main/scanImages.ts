@@ -6,6 +6,7 @@ import {
 	getImageFilePaths,
 	hasImageBeenCompressed,
 	getFileHash,
+	getFormattedTimestamp,
 } from './utils';
 
 /**
@@ -65,7 +66,7 @@ export function scanImagesFactory(serviceContainer: LocalMain.ServiceContainerSe
 			originalTotalSize: totalImagesSize,
 			compressedTotalSize: null,
 			imageData: updatedSiteImageData,
-			lastScan: new Date(),
+			lastScan: getFormattedTimestamp(new Date()),
 			imageCount: filePaths.length,
 		};
 

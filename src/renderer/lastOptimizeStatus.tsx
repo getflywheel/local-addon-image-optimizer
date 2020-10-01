@@ -11,7 +11,7 @@ interface IProps {
 const LastOptimizeStatus: React.FC<IProps> = (props: IProps) => (
 	<TableList className="lastOptimizeStatus_Table">
 		<TableListRow className="lastOptimizeStatus_Row">
-			<Text className="lastOptimizeStatus_Text">{props.lastUpdated}</Text>
+			<Text className="lastOptimizeStatus_Text"> {'Last updated '} {props.lastUpdated}</Text>
 			<Button className="lastOptimizeStatus_Button">Settings</Button>
 		</TableListRow>
 		<TableListRow className="lastOptimizeStatus_Row">

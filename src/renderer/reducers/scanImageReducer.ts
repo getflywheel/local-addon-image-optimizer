@@ -1,8 +1,6 @@
-import { string } from "prop-types";
-
 interface IScanImageState {
 	scanLoading: boolean,
-	scannedImages: [],
+	scannedImages: {},
 	scanError: GenericObject,
 	lastUpdated: string,
 	totalDeductions: string,
@@ -27,21 +25,26 @@ export const SCAN_IMAGES_ACTIONS = {
 // out of this reduce into an optimizeReducer?
 export const initialState: IScanImageState = {
 	scanLoading: false,
-	scannedImages: [],
+	scannedImages: {},
 	scanError: undefined,
-	lastUpdated: 'Last updated July 12, 2020 4:55 PM',
-	totalDeductions: '23.6%',
-	totalFileSizeDeductions: '42.48 MB',
-	totalImageOptimized: '48/124'
+	lastUpdated: '',
+	totalDeductions: '0%',
+	totalFileSizeDeductions: '0 MB',
+	totalImageOptimized: '0/',
 };
 
 export function scanImageReducer(state: IScanImageState, action: IAction) {
 	switch (action.type) {
 		case SCAN_IMAGES_ACTIONS.REQUEST:
-			return { ...state, scanLoading: true, scannedImages: [] };
+			return { ...state, scanLoading: true };
 
 		case SCAN_IMAGES_ACTIONS.SUCCESS:
-			return { ...state, scanLoading: false, scannedImages: action.payload };
+			console.log(action.payload.lastScan);
+			return { ...state,
+					lastUpdated: action.payload.lastScan,
+					scanLoading: false,
+					scannedImages: action.payload,
+					totalImageOptimized: '0/' + action.payload.imageCount };
 
 		case SCAN_IMAGES_ACTIONS.FAILURE:
 			return { ...state, scanLoading: false, scanError: action.payload };
