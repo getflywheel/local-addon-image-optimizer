@@ -6,10 +6,8 @@ import {
 	getImageFilePaths,
 	getImageIfCompressed,
 	getFileHash,
-	getFormattedTimestamp,
 } from './utils';
-import { number, string } from 'prop-types';
-import { Site } from '@getflywheel/local';
+import { isNumber } from 'lodash';
 
 /**
  * Scans a site's wp-content dir for images
@@ -99,13 +97,13 @@ export function scanImagesFactory(serviceContainer: LocalMain.ServiceContainerSe
 			compressedTotalSize: compressedTotalSize,
 			originalTotalSize: totalImagesSize,
 			imageData: updatedSiteImageData,
-			lastScan: getFormattedTimestamp(new Date()),
+			lastScan: Date.now(),
 			imageCount: filePaths.length,
 			totalCompressedCount: totalCompressedCount,
 			compressedImagesOriginalSize: compressedImagesOriginalSize,
 		};
 
-		await imageDataStore.setStateBySiteID(siteID, nextSiteImageData);
+		imageDataStore.setStateBySiteID(siteID, nextSiteImageData);
 
 		saveImageDataToDisk(imageDataStore, serviceContainer);
 

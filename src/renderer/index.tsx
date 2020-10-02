@@ -33,14 +33,14 @@ export const ImageOptimizer = (props) => {
 		() => {
 			const initialImageScan = async () => {
 				await scanForImages();
-				await setSiteImageData();
+				await fetchImageStateData();
 			}
 			initialImageScan();
 		}, []
 	);
 
 
-	const setSiteImageData = async () => {
+	const fetchImageStateData = async () => {
 		const mainImageData = await LocalRenderer.ipcAsync(
 			IPC_EVENTS.GET_IMAGE_DATA,
 			props.match.params.siteID,
@@ -58,7 +58,6 @@ export const ImageOptimizer = (props) => {
 				ipcRenderer.on(
 					IPC_EVENTS.COMPRESS_IMAGE_SUCCESS,
 					(_, newImageData: ImageData) => {
-						console.log({newImageData});
 						dispatchSiteImageData({
 							type: POPULATE_FILE_LIST.IMAGE_OPTIMIZE_SUCCESS, payload: newImageData
 						});
@@ -171,7 +170,7 @@ export const ImageOptimizer = (props) => {
 					scanImageState={scanImageState}
 					setOverviewSelected={setOverviewSelected}
 					handleScanForImages={scanForImages}
-					setSiteImageData={setSiteImageData}
+					fetchImageStateData={fetchImageStateData}
 				/>
 			);
 	}

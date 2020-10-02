@@ -25,7 +25,7 @@ interface IFileListViewProps {
 	compressionListTotal: number,
 	compressionListCompletionPercentage: number,
 	setOverviewSelected: (x: boolean) => void,
-	totalFileSizeDeductions: string,
+	totalFileSizeDeductions: number,
 }
 
 export const FileListView = (props: IFileListViewProps) =>  {
