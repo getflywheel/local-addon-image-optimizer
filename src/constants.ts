@@ -6,8 +6,16 @@ export const IPC_EVENTS = {
 	COMPRESS_IMAGE_FAIL: 'imageOptimizer:image-compress-fail',
 	COMPRESS_ALL_IMAGES_COMPLETE: 'imageOptimizer:image-compress-all-complete',
 	GET_IMAGE_DATA: 'imageOptimizer:get-image-data',
+	SAVE_PREFERENCES_TO_DISK: 'imageOptimizer:savePreferencesToDisk',
+	READ_PREFERENCES_FROM_DISK: 'imageOptimizer:readPreferencesFromDisk',
 };
 
 export const BACKUP_DIR_NAME = 'backups/addon-image-optimizer';
 
 export const COMPRESSED_IMAGE_DATA_FILE_NAME = 'image-optimizer-plugin-image-data';
+
+export const PREFERENCES_FILE_NAME = 'image-optimizer-plugin-preferences';
+
+export const PREFERENCES_REDUCER_ACTION_TYPES = {
+	META_DATA: 'reducerAction:stripMetaData',
+};

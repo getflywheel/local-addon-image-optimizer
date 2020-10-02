@@ -39,3 +39,7 @@ export enum DatasetType {
 	ONLY_UNCOMPRESSED = 'only_uncompressed_images',
 	ALL_FOUND = 'all_found_images'
 }
+
+export interface Preferences {
+	stripMetaData?: boolean;
+}
