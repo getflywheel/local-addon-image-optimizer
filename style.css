@@ -18,12 +18,21 @@
 	justify-content: space-between;
 }
 
+.lastOptimizeStatus_Header_Row, .lastOptimizeStatus_Header_Row>div {
+	height: 68px !important;
+}
+
 .lastOptimizeStatus_Text {
-	padding: 0 20px;
+	padding: 20px;
+}
+
+.lastOptimizeStatus_Rescan_Button {
+	margin-right: 20px;
 }
 
 .lastOptimizeStatus_Button {
 	margin-right: 15px;
+	margin-left: auto;
 }
 
 .fileView_Container {
@@ -32,8 +41,8 @@
 
 .fileListViewer_Column_Selected {
 	flex: 0 0 16px;
-	margin-right: 20px;
-	margin-left: 10px;
+	margin-right: 31px;
+	margin-left: 20px;
 	align-self: center;
 }
 
@@ -43,7 +52,8 @@
 }
 
 .fileListViewer_Column_Compressed_Size {
-	margin-right: 50px;
+	margin-right: 57px;
+	min-width: 178px;
 }
 
 .fileListViewer_Column_File_Name {
@@ -54,7 +64,7 @@
 }
 
 .fileView_Header {
-	margin: 25px;
+	margin: 18px;
 	display: flex;
 }
 
@@ -70,14 +80,14 @@
 
 
 .fileList_Modal_Text {
-	padding-top: 30px;
+	padding-top: 24px;
+	padding-bottom: 20px;
 }
 
-.fileList_Modal_Checkbox {
-	padding-bottom: 30px;
-	padding-top: 30px;
-	display: flex;
-	justify-content: center;
+.fileList_Modal_Settings_Button {
+	margin-top: 0 !important;
+	padding-top: 0;
+	padding-left: 5px;
 }
 
 .preferences_FlexColumn {
