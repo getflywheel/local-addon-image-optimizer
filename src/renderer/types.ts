@@ -6,6 +6,7 @@ export interface RenderedImageData extends SiteImageData {
 	compressionListTotal?: number;
 	compressionListCounter?: number;
 	compressionListCompletionPercentage?: number;
+	totalFileSizeDeductions?: string;
 }
 
 export enum OptimizerStatus {
