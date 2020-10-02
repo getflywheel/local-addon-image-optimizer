@@ -41,7 +41,7 @@ describe('saveImageDataToDisk', () => {
 	const siteID = '1234asdf';
 	const imageData = {
 		imageData: {},
-		lastScan: 'Bokr Tov',
+		lastScan: 1601675284054,
 		originalTotalSize: 654321,
 		compressedTotalSize: 123456,
 		imageCount: 500,

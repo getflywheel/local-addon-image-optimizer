@@ -1,8 +1,9 @@
 import React from 'react';
-import { Button, Text, SiteInfoInnerPane, TableList, TableListRow } from '@getflywheel/local-components';
+import { Button, Text, TableList, TableListRow } from '@getflywheel/local-components';
+import { getFormattedTimestamp } from './utils';
 
 interface IProps {
-	lastUpdated: string,
+	lastUpdated: number,
 	totalDeductions: string,
 	totalFileSizeDeductions: string,
 	totalImageOptimized: string,
@@ -11,16 +12,18 @@ interface IProps {
 const LastOptimizeStatus: React.FC<IProps> = (props: IProps) => (
 	<TableList className="lastOptimizeStatus_Table">
 		<TableListRow className="lastOptimizeStatus_Row">
-			<Text className="lastOptimizeStatus_Text"> {'Last updated '} {props.lastUpdated}</Text>
+			<Text className="lastOptimizeStatus_Text">
+			Last updated{' '}{getFormattedTimestamp(props.lastUpdated)}
+			</Text>
 			<Button className="lastOptimizeStatus_Button">Settings</Button>
 		</TableListRow>
 		<TableListRow className="lastOptimizeStatus_Row">
 			<Text className="lastOptimizeStatus_Text">Total reductions</Text>
-			<Text className="lastOptimizeStatus_Text">{props.totalDeductions}</Text>
+			<Text className="lastOptimizeStatus_Text">{props.totalDeductions}%</Text>
 		</TableListRow>
 		<TableListRow className="lastOptimizeStatus_Row">
 			<Text className="lastOptimizeStatus_Text">Total file size reductions</Text>
-			<Text className="lastOptimizeStatus_Text">{props.totalFileSizeDeductions}</Text>
+			<Text className="lastOptimizeStatus_Text">{props.totalFileSizeDeductions}{' '}MB</Text>
 		</TableListRow>
 		<TableListRow className="lastOptimizeStatus_Row">
 			<Text className="lastOptimizeStatus_Text">Total images optimized</Text>

@@ -23,8 +23,12 @@ const imageDataStore = createStore(existingImageData);
  *
  * @returns SiteImageData
  */
-export function getImageData(siteID: string, imageDataset: DatasetType): SiteImageData {
+export function getImageData(siteID: string, imageDataset: DatasetType = DatasetType.ALL_FOUND): SiteImageData {
 	const allImages = imageDataStore.getStateBySiteID(siteID);
+
+	if (imageDataset === DatasetType.ALL_FOUND) {
+		return allImages;
+	}
 
 	const onlyUncompressedImages = Object.entries(allImages.imageData).reduce(
 		(acc,[id, data]) => {
@@ -39,10 +43,6 @@ export function getImageData(siteID: string, imageDataset: DatasetType): SiteIma
 			}
 		}, {}
 	);
-
-	if(imageDataset === DatasetType.ALL_FOUND) {
-		return allImages;
-	}
 
 	return {
 		...allImages,

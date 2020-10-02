@@ -4,13 +4,14 @@ import { Button,
 } from '@getflywheel/local-components';
 import { ImageData } from '../../types';
 import { OptimizerStatus } from '../types';
+import { calculateToMb } from '../utils';
 
 interface IFileListHeaderProps {
     optimizationStatus: OptimizerStatus,
     setOverviewSelected: (x: boolean) => void,
     invokeModal: () => Promise<{submitted: boolean}>,
 	getAllChecked: () => ImageData[],
-	totalFileSizeDeductions: string,
+	totalFileSizeDeductions: number,
 }
 
 export const FileListHeader = (props: IFileListHeaderProps) => {
@@ -63,8 +64,7 @@ export const FileListHeader = (props: IFileListHeaderProps) => {
         return (
             <div className='fileView_Header'>
                 <div className='fileView_Header_Text'>
-                    {/* TODO: add in variable to show how much space was saved here */}
-                    Optimization complete! You've saved {props.totalFileSizeDeductions} of space.
+					Optimization complete! You've saved{' '}{calculateToMb(props.totalFileSizeDeductions)}{' '}MB of space.
                 </div>
 
                 <Button
