@@ -10,7 +10,7 @@ import {
 	SiteImageData,
 } from '../types';
 
-import { BACKUP_DIR_NAME, COMPRESSED_IMAGE_DATA_FILE_NAME } from '../constants';
+import { COMPRESSED_IMAGE_DATA_FILE_NAME } from '../constants';
 
 
 export function saveImageDataToDisk(imageDataStore, serviceContainer: LocalMain.ServiceContainerServices): void {
@@ -39,7 +39,7 @@ export function getFileHash(filePath: string): Promise<string> {
 			},
 		);
 	});
-}
+};
 
 /**
  * Get all JPG's recursively given a directly

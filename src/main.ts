@@ -3,8 +3,11 @@ import {
 	scanImages,
 	getImageData,
 	compressImages,
+	readPreferencesFromDisk,
+	savePreferencesToDisk,
 } from './main/index';
 import { IPC_EVENTS } from './constants';
+import { Preferences } from './types';
 
 
 export default function (context) {
@@ -32,6 +35,22 @@ export default function (context) {
 	LocalMain.addIpcAsyncListener(
 		IPC_EVENTS.GET_IMAGE_DATA,
 		getImageData,
+	);
+
+	/**
+	 * Read a Preferences object from disk
+	 */
+	LocalMain.addIpcAsyncListener(
+		IPC_EVENTS.READ_PREFERENCES_FROM_DISK,
+		async () => readPreferencesFromDisk(),
+	);
+
+	/**
+	 * Save a Preferences object to disk
+	 */
+	LocalMain.addIpcAsyncListener(
+		IPC_EVENTS.SAVE_PREFERENCES_TO_DISK,
+		async (preferences: Preferences) => savePreferencesToDisk(preferences),
 	);
 
 	/**

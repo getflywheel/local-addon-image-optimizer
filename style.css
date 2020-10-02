@@ -79,3 +79,29 @@
 	display: flex;
 	justify-content: center;
 }
+
+.preferences_FlexColumn {
+	display: flex;
+	flex-direction: column;
+}
+
+.preferences_FlexRow {
+	display: flex;
+	flex-direction: row;
+}
+
+.preferences_AlignItems_Center {
+	align-items: center;
+}
+
+.preferences_MarginLeft_16px {
+	margin: 0 0 0 16px;
+}
+
+.preferences_MarginBottom_20px {
+	margin: 0 0 20px 0;
+}
+
+.preferences_PaddingBottom_11px {
+	padding: 0 0 11px 0;
+}
