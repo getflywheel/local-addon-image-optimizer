@@ -25,6 +25,7 @@ interface IFileListViewProps {
 	compressionListTotal: number,
 	compressionListCompletionPercentage: number,
 	setOverviewSelected: (x: boolean) => void,
+	compressedTotalSize: number;
 }
 
 export const FileListView = (props: IFileListViewProps) =>  {
@@ -100,6 +101,7 @@ export const FileListView = (props: IFileListViewProps) =>  {
 				setOverviewSelected={props.setOverviewSelected}
 				invokeModal={invokeModal}
 				getAllChecked={getAllChecked}
+				compressedTotalSize={props.compressedTotalSize}
 			/>
 				<ProgressBar progress={props.compressionListCompletionPercentage} />
 			<div>

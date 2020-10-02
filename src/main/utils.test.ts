@@ -12,7 +12,7 @@ import {
 	getFileHash,
 	getImageFilePathsHelper,
 	getImageFilePaths,
-	hasImageBeenCompressed,
+	getImageIfCompressed,
 } from './utils';
 import createStore from './createStore';
 import { COMPRESSED_IMAGE_DATA_FILE_NAME } from '../constants';
@@ -41,7 +41,7 @@ describe('saveImageDataToDisk', () => {
 	const siteID = '1234asdf';
 	const imageData = {
 		imageData: {},
-		lastScan: new Date(),
+		lastScan: 'Bokr Tov',
 		originalTotalSize: 654321,
 		compressedTotalSize: 123456,
 		imageCount: 500,
@@ -167,7 +167,7 @@ describe('hasImageBeenCompressed', () => {
 			},
 		};
 
-		expect(hasImageBeenCompressed(compressedImageHash, imageData)).toBeTruthy();
+		expect(getImageIfCompressed(compressedImageHash, imageData)).toBeTruthy();
 	});
 
 	it('returns false if the file hash is not found in any of the image data under the "compressedImageHash" key', () => {
@@ -180,6 +180,6 @@ describe('hasImageBeenCompressed', () => {
 			},
 		};
 
-		expect(hasImageBeenCompressed(originalImageHash, imageData as SiteImageData['imageData'])).toBeFalsy();
+		expect(getImageIfCompressed(originalImageHash, imageData as SiteImageData['imageData'])).toBeFalsy();
 	});
 });

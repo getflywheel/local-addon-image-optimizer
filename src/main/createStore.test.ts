@@ -26,7 +26,7 @@ describe('createStore', () => {
 	const thirdState: CachedImageDataBySiteID = {
 		[siteIDThree]: {
 			imageData: {},
-			lastScan: new Date(),
+			lastScan: 'Bokr Tov',
 			originalTotalSize: 120303,
 			compressedTotalSize: 494,
 			imageCount: 394,

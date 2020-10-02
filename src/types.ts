@@ -14,6 +14,8 @@ export interface SiteImageData {
 	originalTotalSize?: number;
 	compressedTotalSize?: number;
 	imageCount?: number;
+	totalCompressedCount?: number;
+	compressedImagesOriginalSize?: number;
 }
 
 export interface CachedImageDataBySiteID {
@@ -31,4 +33,9 @@ export enum FileStatus {
 	STARTED = 'started',
 	SUCCEEDED = 'succeeded',
 	FAILED = 'failed',
+}
+
+export enum DatasetType {
+	ONLY_UNCOMPRESSED = 'only_uncompressed_images',
+	ALL_FOUND = 'all_found_images'
 }

@@ -9,7 +9,8 @@ interface IFileListHeaderProps {
     optimizationStatus: OptimizerStatus;
     setOverviewSelected: (x: boolean) => void,
     invokeModal: () => Promise<{submitted: boolean}>,
-    getAllChecked: () => ImageData[];
+	getAllChecked: () => ImageData[];
+	compressedTotalSize: number;
 }
 
 export const FileListHeader = (props: IFileListHeaderProps) => {
@@ -63,7 +64,7 @@ export const FileListHeader = (props: IFileListHeaderProps) => {
             <div className='fileView_Header'>
                 <div className='fileView_Header_Text'>
                     {/* TODO: add in variable to show how much space was saved here */}
-                    Optimization complete! You've saved {} of space.
+                    Optimization complete! You've saved {props.compressedTotalSize} of space.
                 </div>
 
                 <Button

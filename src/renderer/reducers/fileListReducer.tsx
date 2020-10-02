@@ -107,7 +107,7 @@ export function fileListReducer(state: RenderedImageData, action: IAction) {
 						}
 					},
 					compressionListCounter: incrementCounter,
-					compressionListCompletionPercentage: incrementProgress
+					compressionListCompletionPercentage: incrementProgress,
 			}
 
 		case POPULATE_FILE_LIST.IMAGE_OPTIMIZE_FAIL:

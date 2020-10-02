@@ -8,6 +8,7 @@ import { scanImageReducer, initialState, SCAN_IMAGES_ACTIONS } from './reducers/
 import * as LocalRenderer from '@getflywheel/local/renderer';
 import { fileListReducer } from './reducers/fileListReducer';
 import { POPULATE_FILE_LIST } from './reducers/fileListReducer';
+import { DatasetType } from '../types';
 
 
 export const ImageOptimizer = (props) => {
@@ -20,12 +21,12 @@ export const ImageOptimizer = (props) => {
 		try {
 			dispatchScanImageData({ type: SCAN_IMAGES_ACTIONS.REQUEST });
 			const scannedImages = await LocalRenderer.ipcAsync(IPC_EVENTS.SCAN_FOR_IMAGES, props.match.params.siteID);
-			console.log({ scannedImages });
 			dispatchScanImageData({ type: SCAN_IMAGES_ACTIONS.SUCCESS, payload: scannedImages });
 		} catch (error) {
 			dispatchScanImageData({ type: SCAN_IMAGES_ACTIONS.FAILURE, payload: error });
 		}
 	}
+
 
 	// set up initial state for file list view
 	useEffect(
@@ -35,6 +36,7 @@ export const ImageOptimizer = (props) => {
 				const mainImageData = await LocalRenderer.ipcAsync(
 					IPC_EVENTS.GET_IMAGE_DATA,
 					props.match.params.siteID,
+					DatasetType.ONLY_UNCOMPRESSED
 				);
 
 				dispatchSiteImageData({
@@ -51,7 +53,7 @@ export const ImageOptimizer = (props) => {
 			if (!ipcRenderer.listenerCount(IPC_EVENTS.COMPRESS_IMAGE_SUCCESS)) {
 				ipcRenderer.on(
 					IPC_EVENTS.COMPRESS_IMAGE_SUCCESS,
-					(_, newImageData: ImageData) => {
+					(_, newImageData: ImageData, newCompressedTotalSize: number) => {
 						dispatchSiteImageData({
 							type: POPULATE_FILE_LIST.IMAGE_OPTIMIZE_SUCCESS, payload: newImageData
 						});
@@ -84,9 +86,13 @@ export const ImageOptimizer = (props) => {
 			if (!ipcRenderer.listenerCount(IPC_EVENTS.COMPRESS_ALL_IMAGES_COMPLETE)) {
 				ipcRenderer.on(
 					IPC_EVENTS.COMPRESS_ALL_IMAGES_COMPLETE,
-					() => {
+					async () => {
 						dispatchSiteImageData({
 							type: POPULATE_FILE_LIST.COMPRESS_ALL_IMAGES_COMPLETE, payload: { complete: OptimizerStatus.COMPLETE }
+						});
+						const updatedScannedImages = await LocalRenderer.ipcAsync(IPC_EVENTS.SCAN_FOR_IMAGES, props.match.params.siteID);
+						dispatchScanImageData({
+							type: SCAN_IMAGES_ACTIONS.OPTIMIZE_SUCCESS, payload: updatedScannedImages
 						});
 					},
 				);
@@ -149,6 +155,7 @@ export const ImageOptimizer = (props) => {
 					compressionListTotal={siteImageData.compressionListTotal}
 					compressionListCompletionPercentage={siteImageData.compressionListCompletionPercentage}
 					setOverviewSelected={setOverviewSelected}
+					compressedTotalSize={siteImageData.compressionListTotal}
 				/>
 			);
 
