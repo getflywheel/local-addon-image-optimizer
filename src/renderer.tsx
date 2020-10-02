@@ -5,7 +5,7 @@ import { Provider } from 'react-redux';
 import * as LocalRenderer from '@getflywheel/local/renderer';
 import { IPC_EVENTS } from './constants';
 import makeStore from './store';
-import { ImageOptimizer } from './renderer/index';
+import ImageOptimizer from './renderer/index';
 import { MetaDataRow } from './renderer/preferencesRows';
 
 const packageJSON = fs.readJsonSync(path.join(__dirname, '../package.json'));
@@ -35,9 +35,13 @@ export default async function (context) {
 	));
 
 	// Create the route/page of content that will be displayed when the menu option is clicked
-	hooks.addContent('routesSiteInfo', () => <Route key={`${addonID}-addon`} path={`/main/site-info/:siteID/${addonID}`}
-		render={(props) => <ImageOptimizer {...props} />} />);
-
+	hooks.addContent('routesSiteInfo', () => (
+		<Route
+			key={`${addonID}-addon`}
+			path={`/main/site-info/:siteID/${addonID}`}
+			render={withStoreProvider(ImageOptimizer)}
+		/>
+	));
 
 	// Add menu option within the site menu bar
 	hooks.addFilter('siteInfoMoreMenu', function (menu, site) {

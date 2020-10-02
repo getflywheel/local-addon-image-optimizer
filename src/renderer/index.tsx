@@ -1,17 +1,23 @@
 import React, { useState, useEffect, useReducer } from 'react';
+import { connect } from 'react-redux';
 import { Overview } from './overview';
 import { FileListView } from './fileListView/fileListView';
 import { IPC_EVENTS } from '../constants';
 import { ipcRenderer } from 'electron';
 import { RenderedImageData, OptimizerStatus } from './types';
+import { Preferences } from '../types';
 import { scanImageReducer, initialState, SCAN_IMAGES_ACTIONS } from './reducers/scanImageReducer';
 import * as LocalRenderer from '@getflywheel/local/renderer';
 import { fileListReducer } from './reducers/fileListReducer';
 import { POPULATE_FILE_LIST } from './reducers/fileListReducer';
 import { DatasetType } from '../types';
 
+interface IProps {
+	preferences: Preferences;
+	match: { params: { siteID: string; } };
+}
 
-export const ImageOptimizer = (props) => {
+const ImageOptimizer = (props: IProps) => {
 	const [overviewSelected, setOverviewSelected] = useState(true);
 	const initialImageData = {} as RenderedImageData;
 	const [siteImageData, dispatchSiteImageData] = useReducer(fileListReducer, initialImageData);
@@ -144,6 +150,7 @@ export const ImageOptimizer = (props) => {
 			IPC_EVENTS.COMPRESS_IMAGES,
 			props.match.params.siteID,
 			compressionList,
+			props.preferences.stripMetaData,
 		);
 	}
 
@@ -176,3 +183,9 @@ export const ImageOptimizer = (props) => {
 	}
 
 };
+
+export default connect(
+	(state) => ({
+		preferences: state.preferences,
+	}),
+)(ImageOptimizer);
