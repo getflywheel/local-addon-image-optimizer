@@ -7,7 +7,6 @@ import {
 	getImageIfCompressed,
 	getFileHash,
 } from './utils';
-import { isNumber } from 'lodash';
 
 /**
  * Scans a site's wp-content dir for images
