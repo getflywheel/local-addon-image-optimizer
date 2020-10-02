@@ -11,13 +11,18 @@ interface IProps {
 
 export const Overview = (props: IProps) => {
 	const { setOverviewSelected, handleScanForImages, scanImageState } = props;
-	const { scannedImages, lastUpdated, totalDeductions, totalFileSizeDeductions, totalImageOptimized } = scanImageState;
+	const { scannedImages, lastUpdated, totalDeductions, totalFileSizeDeductions, totalImageOptimized, remainingUncompressedImages } = scanImageState;
 	const scannedImagesCount = scannedImages.imageCount || 0;
 
+	const onClickViewImages = () => {
+		setOverviewSelected(false);
+
+	}
+
 	return <div className="overview_Container">
-		{scannedImagesCount > 0 &&
+		{remainingUncompressedImages > 0 &&
 			<Banner variant="warning" icon="warning" buttonText={'View Images'} buttonOnClick={() => setOverviewSelected(false)}>
-				We've found <strong>{scannedImagesCount}</strong>images slowing down your site.
+				We've found <strong>{remainingUncompressedImages}</strong>images slowing down your site.
 			</Banner>
 		}
 

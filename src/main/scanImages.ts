@@ -4,10 +4,12 @@ import { SiteImageData, Store } from '../types';
 import {
 	saveImageDataToDisk,
 	getImageFilePaths,
-	hasImageBeenCompressed,
+	getImageIfCompressed,
 	getFileHash,
 	getFormattedTimestamp,
 } from './utils';
+import { number, string } from 'prop-types';
+import { Site } from '@getflywheel/local';
 
 /**
  * Scans a site's wp-content dir for images
@@ -38,11 +40,12 @@ export function scanImagesFactory(serviceContainer: LocalMain.ServiceContainerSe
 
 			const fileHash = await getFileHash(filePath);
 
-			/**
-			 * We don't need to record new data about a file if we have already compressed it
-			 */
-			if (hasImageBeenCompressed(fileHash, imageData)) {
-				return await imageDataAccumulator;
+			let compressedImage = getImageIfCompressed(fileHash, imageData)
+			if (compressedImage) {
+				return {
+					...(await imageDataAccumulator),
+					[compressedImage.originalImageHash]: compressedImage,
+				}
 			}
 
 			return {
@@ -61,13 +64,45 @@ export function scanImagesFactory(serviceContainer: LocalMain.ServiceContainerSe
 			}, 0
 		);
 
+		const compressedTotalSize = await Object.values(updatedSiteImageData).reduce(
+			(acc, data) => {
+				if (typeof data.compressedSize === 'number') {
+					return acc + data.compressedSize;
+				} else {
+					return acc;
+				}
+			}, 0
+		);
+
+		const totalCompressedCount = await Object.values(updatedSiteImageData).reduce(
+			(acc, data) => {
+				if (data.compressedImageHash) {
+					return acc + 1;
+				} else {
+					return acc;
+				}
+			}, 0
+		);
+
+		const compressedImagesOriginalSize = await Object.values(updatedSiteImageData).reduce(
+			(acc, data) => {
+				if (data.compressedImageHash) {
+					return acc + data.originalSize;
+				} else {
+					return acc;
+				}
+			}, 0
+		);
+
 		const nextSiteImageData = {
 			...siteImageData,
+			compressedTotalSize: compressedTotalSize,
 			originalTotalSize: totalImagesSize,
-			compressedTotalSize: null,
 			imageData: updatedSiteImageData,
 			lastScan: getFormattedTimestamp(new Date()),
 			imageCount: filePaths.length,
+			totalCompressedCount: totalCompressedCount,
+			compressedImagesOriginalSize: compressedImagesOriginalSize,
 		};
 
 		await imageDataStore.setStateBySiteID(siteID, nextSiteImageData);

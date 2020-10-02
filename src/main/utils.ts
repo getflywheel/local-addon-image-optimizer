@@ -93,8 +93,8 @@ export async function getImageFilePaths(site: Local.Site) {
  * @param fileHash
  * @param imageData
  */
-export function hasImageBeenCompressed(fileHash: string, imageData: SiteImageData['imageData']) {
-	return Object.values(imageData).some((data: ImageData) => data.compressedImageHash === fileHash);
+export function getImageIfCompressed(fileHash: string, imageData: SiteImageData['imageData']) {
+	return Object.values(imageData).find((data: ImageData) => data.compressedImageHash === fileHash);
 }
 
 export function getFormattedTimestamp(date: Date) {

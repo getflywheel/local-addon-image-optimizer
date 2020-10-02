@@ -6,6 +6,7 @@ interface IScanImageState {
 	totalDeductions: string,
 	totalFileSizeDeductions: string,
 	totalImageOptimized: string,
+	remainingUncompressedImages: number,
 };
 
 interface IAction {
@@ -31,7 +32,10 @@ export const initialState: IScanImageState = {
 	totalDeductions: '0%',
 	totalFileSizeDeductions: '0 MB',
 	totalImageOptimized: '0/',
+	remainingUncompressedImages: 0,
 };
+
+
 
 export function scanImageReducer(state: IScanImageState, action: IAction) {
 	switch (action.type) {
@@ -39,23 +43,27 @@ export function scanImageReducer(state: IScanImageState, action: IAction) {
 			return { ...state, scanLoading: true };
 
 		case SCAN_IMAGES_ACTIONS.SUCCESS:
-			console.log(action.payload.lastScan);
 			return { ...state,
 					lastUpdated: action.payload.lastScan,
 					scanLoading: false,
 					scannedImages: action.payload,
-					totalImageOptimized: '0/' + action.payload.imageCount };
+					totalImageOptimized: action.payload.totalCompressedCount + '/' + action.payload.imageCount,
+					remainingUncompressedImages: action.payload.imageCount - action.payload.totalCompressedCount,
+				};
 
 		case SCAN_IMAGES_ACTIONS.FAILURE:
 			return { ...state, scanLoading: false, scanError: action.payload };
 
 		case SCAN_IMAGES_ACTIONS.OPTIMIZE_SUCCESS:
+			const totalFileSizeDeductions = action.payload.compressedImagesOriginalSize - action.payload.compressedTotalSize;
+			const totalDeductions = Math.round((action.payload.compressedTotalSize / action.payload.originalTotalSize) * 100);
 			return {
 				...state,
-				lastUpdated: action.payload.lastUpdated,
-				totalDeductions: action.payload.totalDeductions,
-				totalFileSizeDeductions: action.payload.totalFileSizeDeductions,
-				totalImageOptimized: action.payload.totalImageOptimized
+				lastUpdated: action.payload.lastScan,
+				totalDeductions: totalDeductions + '%',
+				totalFileSizeDeductions: (totalFileSizeDeductions / (1024*1024)).toFixed(2) + ' MB',
+				totalImageOptimized: action.payload.totalCompressedCount + '/' + action.payload.imageCount,
+				remainingUncompressedImages: action.payload.imageCount - action.payload.totalCompressedCount,
 			}
 
 		default:

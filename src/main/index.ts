@@ -1,5 +1,5 @@
 import * as LocalMain from '@getflywheel/local/main';
-import { SiteImageData } from '../types';
+import { SiteImageData, DatasetType } from '../types';
 import { COMPRESSED_IMAGE_DATA_FILE_NAME } from '../constants';
 import { scanImagesFactory } from './scanImages';
 import { compressImagesFactory } from './compressImages';
@@ -23,8 +23,32 @@ const imageDataStore = createStore(existingImageData);
  *
  * @returns SiteImageData
  */
-export function getImageData(siteID: string): SiteImageData {
-	return imageDataStore.getStateBySiteID(siteID);
+export function getImageData(siteID: string, imageDataset: DatasetType): SiteImageData {
+	const allImages = imageDataStore.getStateBySiteID(siteID);
+
+	const onlyUncompressedImages = Object.entries(allImages.imageData).reduce(
+		(acc,[id, data]) => {
+			if (data.compressedImageHash) {
+				return acc;
+			}
+			return {
+				...acc,
+				[id]: {
+					...data
+				}
+			}
+		}, {}
+	);
+
+	if(imageDataset === DatasetType.ALL_FOUND) {
+		return allImages;
+	}
+
+	return {
+		...allImages,
+		imageData: onlyUncompressedImages,
+	}
+
 }
 
 export const scanImages = scanImagesFactory(serviceContainer, imageDataStore);
