@@ -7,21 +7,21 @@ interface IProps {
 	setOverviewSelected: (x: boolean) => void,
 	handleScanForImages: () => void,
 	scanImageState: GenericObject,
+	setSiteImageData: () => void,
 }
 
 export const Overview = (props: IProps) => {
 	const { setOverviewSelected, handleScanForImages, scanImageState } = props;
 	const { scannedImages, lastUpdated, totalDeductions, totalFileSizeDeductions, totalImageOptimized, remainingUncompressedImages } = scanImageState;
-	const scannedImagesCount = scannedImages.imageCount || 0;
 
 	const onClickViewImages = () => {
 		setOverviewSelected(false);
-
+		props.setSiteImageData();
 	}
 
 	return <div className="overview_Container">
 		{remainingUncompressedImages > 0 &&
-			<Banner variant="warning" icon="warning" buttonText={'View Images'} buttonOnClick={() => setOverviewSelected(false)}>
+			<Banner variant="warning" icon="warning" buttonText={'View Images'} buttonOnClick={() => onClickViewImages()}>
 				We've found <strong>{remainingUncompressedImages}</strong>images slowing down your site.
 			</Banner>
 		}

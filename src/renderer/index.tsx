@@ -31,29 +31,34 @@ export const ImageOptimizer = (props) => {
 	// set up initial state for file list view
 	useEffect(
 		() => {
-			const setSiteImageData = async () => {
+			const initialImageScan = async () => {
 				await scanForImages();
-				const mainImageData = await LocalRenderer.ipcAsync(
-					IPC_EVENTS.GET_IMAGE_DATA,
-					props.match.params.siteID,
-					DatasetType.ONLY_UNCOMPRESSED
-				);
-
-				dispatchSiteImageData({
-					type: POPULATE_FILE_LIST.SET_IMAGE_DATA, payload: mainImageData
-				});
+				await setSiteImageData();
 			}
-			setSiteImageData();
+			initialImageScan();
 		}, []
 	);
 
+
+	const setSiteImageData = async () => {
+		const mainImageData = await LocalRenderer.ipcAsync(
+			IPC_EVENTS.GET_IMAGE_DATA,
+			props.match.params.siteID,
+			DatasetType.ONLY_UNCOMPRESSED
+		);
+
+		dispatchSiteImageData({
+			type: POPULATE_FILE_LIST.SET_IMAGE_DATA, payload: mainImageData
+		});
+	}
 	// listen for optimization events and update status accordingly
 	useEffect(
 		() => {
 			if (!ipcRenderer.listenerCount(IPC_EVENTS.COMPRESS_IMAGE_SUCCESS)) {
 				ipcRenderer.on(
 					IPC_EVENTS.COMPRESS_IMAGE_SUCCESS,
-					(_, newImageData: ImageData, newCompressedTotalSize: number) => {
+					(_, newImageData: ImageData) => {
+						console.log({newImageData});
 						dispatchSiteImageData({
 							type: POPULATE_FILE_LIST.IMAGE_OPTIMIZE_SUCCESS, payload: newImageData
 						});
@@ -102,6 +107,7 @@ export const ImageOptimizer = (props) => {
 				ipcRenderer.removeAllListeners(IPC_EVENTS.COMPRESS_IMAGE_STARTED);
 				ipcRenderer.removeAllListeners(IPC_EVENTS.COMPRESS_IMAGE_FAIL);
 				ipcRenderer.removeAllListeners(IPC_EVENTS.COMPRESS_IMAGE_SUCCESS);
+				ipcRenderer.removeAllListeners(IPC_EVENTS.COMPRESS_ALL_IMAGES_COMPLETE);
 			}
 		},
 		[siteImageData],
@@ -155,7 +161,7 @@ export const ImageOptimizer = (props) => {
 					compressionListTotal={siteImageData.compressionListTotal}
 					compressionListCompletionPercentage={siteImageData.compressionListCompletionPercentage}
 					setOverviewSelected={setOverviewSelected}
-					compressedTotalSize={siteImageData.compressionListTotal}
+					totalFileSizeDeductions={siteImageData.totalFileSizeDeductions}
 				/>
 			);
 
@@ -165,6 +171,7 @@ export const ImageOptimizer = (props) => {
 					scanImageState={scanImageState}
 					setOverviewSelected={setOverviewSelected}
 					handleScanForImages={scanForImages}
+					setSiteImageData={setSiteImageData}
 				/>
 			);
 	}

@@ -24,8 +24,17 @@ export function fileListReducer(state: RenderedImageData, action: IAction) {
 
 	const incrementProgress = ( incrementCounter / state.compressionListTotal ) * 100;
 
+	let compressedSizeAcc = 0;
+
+	let originalSizeAcc = 0;
+
+	let compressionDiff = '';
+
 	switch (action.type) {
 		case POPULATE_FILE_LIST.SET_IMAGE_DATA:
+			compressionDiff = '';
+			originalSizeAcc = 0;
+			compressedSizeAcc = 0;
 			return {
 				...state,
 				...action.payload,
@@ -42,6 +51,7 @@ export function fileListReducer(state: RenderedImageData, action: IAction) {
 				selectAllFilesValue: true,
 				optimizationStatus: OptimizerStatus.BEFORE,
 				compressionListCompletionPercentage: 0,
+				totalFileSizeDeductions: compressionDiff,
 			};
 
 		case POPULATE_FILE_LIST.TOGGLE_CHECKED_ONE:
@@ -75,8 +85,9 @@ export function fileListReducer(state: RenderedImageData, action: IAction) {
 					optimizationStatus: action.payload.running,
 					compressionListTotal: action.payload.compressionListTotal,
 					compressionListCounter: 0,
+					compressedTotalSize: compressedSizeAcc,
 			}
-		
+
 		case POPULATE_FILE_LIST.COMPRESS_ALL_IMAGES_COMPLETE:
 			return {
 					...state,
@@ -96,6 +107,9 @@ export function fileListReducer(state: RenderedImageData, action: IAction) {
 			}
 
 		case POPULATE_FILE_LIST.IMAGE_OPTIMIZE_SUCCESS:
+			compressedSizeAcc += action.payload.compressedSize;
+			originalSizeAcc += action.payload.originalSize;
+			compressionDiff = ((originalSizeAcc - compressedSizeAcc) / (1024*1024)).toFixed(2) + ' MB';
 			return {
 					...state,
 					imageData: {
@@ -108,6 +122,7 @@ export function fileListReducer(state: RenderedImageData, action: IAction) {
 					},
 					compressionListCounter: incrementCounter,
 					compressionListCompletionPercentage: incrementProgress,
+					totalFileSizeDeductions: compressionDiff,
 			}
 
 		case POPULATE_FILE_LIST.IMAGE_OPTIMIZE_FAIL:
