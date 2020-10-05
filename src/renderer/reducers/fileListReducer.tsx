@@ -28,11 +28,12 @@ export function fileListReducer(state: RenderedImageData, action: IAction) {
 
 	let originalSizeAcc = 0;
 
-	let compressionDiff = 0;
+	const compressionDiff = (originalSizeAcc: number, compressedSizeAcc: number) => {
+		return originalSizeAcc - compressedSizeAcc;
+	};
 
 	switch (action.type) {
 		case POPULATE_FILE_LIST.SET_IMAGE_DATA:
-			compressionDiff = 0;
 			originalSizeAcc = 0;
 			compressedSizeAcc = 0;
 			return {
@@ -109,7 +110,6 @@ export function fileListReducer(state: RenderedImageData, action: IAction) {
 		case POPULATE_FILE_LIST.IMAGE_OPTIMIZE_SUCCESS:
 			compressedSizeAcc += action.payload.compressedSize;
 			originalSizeAcc += action.payload.originalSize;
-			compressionDiff = (originalSizeAcc - compressedSizeAcc);
 			return {
 					...state,
 					imageData: {
@@ -122,7 +122,7 @@ export function fileListReducer(state: RenderedImageData, action: IAction) {
 					},
 					compressionListCounter: incrementCounter,
 					compressionListCompletionPercentage: incrementProgress,
-					totalFileSizeDeductions: compressionDiff,
+					totalFileSizeDeductions: compressionDiff(originalSizeAcc, compressedSizeAcc),
 			}
 
 		case POPULATE_FILE_LIST.IMAGE_OPTIMIZE_FAIL:

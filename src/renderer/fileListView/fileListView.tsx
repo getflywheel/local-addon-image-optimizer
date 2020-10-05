@@ -26,9 +26,10 @@ interface IFileListViewProps {
 	optimizationStatus: OptimizerStatus,
 	compressionListTotal: number,
 	compressionListCompletionPercentage: number,
-	setOverviewSelected: (x: boolean) => void,
+	resetToOverview: () => void,
 	totalFileSizeDeductions: number,
 	onCancel: () => void,
+	setOverviewSelected: (x: boolean) => void,
 }
 
 export const FileListView = (props: IFileListViewProps) =>  {
@@ -107,11 +108,12 @@ export const FileListView = (props: IFileListViewProps) =>  {
 		<div className='fileView_Container'>
 			<FileListHeader
 				optimizationStatus={props.optimizationStatus}
-				setOverviewSelected={props.setOverviewSelected}
+				resetToOverview={props.resetToOverview}
 				invokeModal={invokeModal}
 				getAllChecked={getAllChecked}
 				totalFileSizeDeductions={props.totalFileSizeDeductions}
 				onCancel={props.onCancel}
+				setOverviewSelected={props.setOverviewSelected}
 			/>
 				<ProgressBar progress={props.compressionListCompletionPercentage} />
 			<div>

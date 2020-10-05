@@ -154,6 +154,12 @@ const ImageOptimizer = (props: IProps) => {
 		);
 	}
 
+	// compiles the list of images to be sent to the main thread for compression
+	const resetToOverview = () => {
+		setOverviewSelected(true);
+		scanForImages();
+	}
+
 	// cancel image optimization session
 	const onCancel = () => {
 		ipcRenderer.send(
@@ -173,9 +179,10 @@ const ImageOptimizer = (props: IProps) => {
 					optimizationStatus={siteImageData.optimizationStatus}
 					compressionListTotal={siteImageData.compressionListTotal}
 					compressionListCompletionPercentage={siteImageData.compressionListCompletionPercentage}
-					setOverviewSelected={setOverviewSelected}
+					resetToOverview={resetToOverview}
 					totalFileSizeDeductions={siteImageData.totalFileSizeDeductions}
 					onCancel={onCancel}
+					setOverviewSelected={setOverviewSelected}
 				/>
 			);
 
