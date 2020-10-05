@@ -22,11 +22,20 @@ export interface CachedImageDataBySiteID {
 	[siteID: string]: SiteImageData;
 }
 
+export interface CancelCompression {
+	cancelCompression: boolean;
+}
+
 export interface Store {
 	getState: () => CachedImageDataBySiteID;
 	getStateBySiteID: (siteID: string) => SiteImageData;
 	setState: (newState: CachedImageDataBySiteID) => void;
 	setStateBySiteID: (siteID: string, newState: SiteImageData) => void;
+}
+
+export interface RuntimeStore {
+	getState: () => CancelCompression;
+	setState: (newState: CancelCompression) => void;
 }
 
 export enum FileStatus {

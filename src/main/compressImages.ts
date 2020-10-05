@@ -8,9 +8,11 @@ import * as LocalMain from '@getflywheel/local/main';
 import {
 	SiteImageData,
 	Store,
+	RuntimeStore,
 } from '../types';
 import { BACKUP_DIR_NAME, IPC_EVENTS } from '../constants';
 import { getFileHash, saveImageDataToDisk } from './utils';
+import { updateCancelCompression } from './index';
 
 /**
  * Takes a list of md5 hashed ids for images that should be compressed and compress them one at a time
@@ -19,7 +21,7 @@ import { getFileHash, saveImageDataToDisk } from './utils';
  *
  * @param imageIds
  */
-export function compressImagesFactory(serviceContainer: LocalMain.ServiceContainerServices, imageDataStore: Store) {
+export function compressImagesFactory(serviceContainer: LocalMain.ServiceContainerServices, imageDataStore: Store, createRuntimeStore: RuntimeStore) {
 	return async function(siteID: Local.Site['id'], imageMD5s: string[], stripMetaData?: boolean) {
 		const site = serviceContainer.siteData.getSite(siteID);
 
@@ -56,6 +58,7 @@ export function compressImagesFactory(serviceContainer: LocalMain.ServiceContain
 
 				continue;
 			}
+
 			/**
 			 * We do this step to ensure that image backups are nested under the backup directory in
 			 * the same way as they are nested inside wp-conten
@@ -126,8 +129,12 @@ export function compressImagesFactory(serviceContainer: LocalMain.ServiceContain
 			});
 
 			saveImageDataToDisk(imageDataStore, serviceContainer);
-		}
 
+			if(!createRuntimeStore.getState().cancelCompression) {
+				break;
+			}
+		}
+		updateCancelCompression(true);
 		serviceContainer.sendIPCEvent(IPC_EVENTS.COMPRESS_ALL_IMAGES_COMPLETE);
 	}
 };

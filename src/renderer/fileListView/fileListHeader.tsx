@@ -12,6 +12,7 @@ interface IFileListHeaderProps {
     invokeModal: () => Promise<{submitted: boolean}>,
 	getAllChecked: () => ImageData[],
 	totalFileSizeDeductions: number,
+	onCancel: () => void,
 }
 
 export const FileListHeader = (props: IFileListHeaderProps) => {
@@ -50,7 +51,7 @@ export const FileListHeader = (props: IFileListHeaderProps) => {
 
                 <Button
                     className='fileView_Start_Optimization'
-                    onClick={props.invokeModal}
+					onClick={props.onCancel}
                     privateOptions={{
                         color: 'green',
                         form: 'fill'
