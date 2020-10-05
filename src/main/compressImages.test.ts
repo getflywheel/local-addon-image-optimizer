@@ -5,7 +5,7 @@ import md5 from 'md5';
 import path from 'path';
 import * as LocalMain from '@getflywheel/local/main';
 import { compressImagesFactory } from './compressImages';
-import createStore from './createStore';
+import { createRuntimeStore, createStore } from './createStore';
 import { IPC_EVENTS, BACKUP_DIR_NAME } from '../constants';
 import { SiteImageData } from '../types';
 import { createMockServiceContainer } from '../test/mockCreators';
@@ -107,6 +107,7 @@ describe('compressImages', () => {
 	const compressImages = compressImagesFactory(
 		mockServiceContainer as unknown as LocalMain.ServiceContainerServices,
 		imageDataStore,
+		createRuntimeStore(),
 	);
 
 	const imageIDs = Object.keys(imageDataStore.getStateBySiteID(siteID).imageData);

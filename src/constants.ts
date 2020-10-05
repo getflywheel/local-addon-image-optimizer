@@ -9,6 +9,7 @@ export const IPC_EVENTS = {
 	SAVE_PREFERENCES_TO_DISK: 'imageOptimizer:savePreferencesToDisk',
 	READ_PREFERENCES_FROM_DISK: 'imageOptimizer:readPreferencesFromDisk',
 	GO_TO_PREFERENCES: 'imageOptimizer:go-to-preferences',
+	CANCEL_COMPRESSION: 'imageOptimizer:cancel-compression',
 };
 
 export const BACKUP_DIR_NAME = 'backups/addon-image-optimizer';

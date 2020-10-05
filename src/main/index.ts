@@ -4,7 +4,7 @@ import { COMPRESSED_IMAGE_DATA_FILE_NAME, PREFERENCES_FILE_NAME } from '../const
 import { Preferences } from '../types';
 import { scanImagesFactory } from './scanImages';
 import { compressImagesFactory } from './compressImages';
-import createStore from './createStore';
+import { createStore, createRuntimeStore}  from './createStore';
 
 
 const serviceContainer = LocalMain.getServiceContainer().cradle;
@@ -12,6 +12,8 @@ const serviceContainer = LocalMain.getServiceContainer().cradle;
 const existingImageData = serviceContainer.userData.get(COMPRESSED_IMAGE_DATA_FILE_NAME, {});
 
 const imageDataStore = createStore(existingImageData);
+
+const runtimeStore = createRuntimeStore();
 
 /**
  * Returns images data from a site from a previous scan.
@@ -53,7 +55,11 @@ export function getImageData(siteID: string, imageDataset: DatasetType = Dataset
 }
 
 export const scanImages = scanImagesFactory(serviceContainer, imageDataStore);
-export const compressImages = compressImagesFactory(serviceContainer, imageDataStore);
+export const compressImages = compressImagesFactory(serviceContainer, imageDataStore, runtimeStore);
+
+export const updateCancelCompression = (setCancelCompression: boolean) => {
+	runtimeStore.setState({cancelCompression: setCancelCompression});
+}
 
 export function readPreferencesFromDisk(): Preferences {
 	return serviceContainer.userData.get(PREFERENCES_FILE_NAME, {});

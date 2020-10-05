@@ -28,8 +28,8 @@ export const initialState: IScanImageState = {
 	scannedImages: {},
 	scanError: undefined,
 	lastUpdated: 0,
-	totalDeductions: '-%',
-	totalFileSizeDeductions: '- MB',
+	totalDeductions: '-',
+	totalFileSizeDeductions: '-',
 	totalImageOptimized: '-/-',
 	remainingUncompressedImages: 0,
 };

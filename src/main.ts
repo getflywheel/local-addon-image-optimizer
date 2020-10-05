@@ -5,6 +5,7 @@ import {
 	compressImages,
 	readPreferencesFromDisk,
 	savePreferencesToDisk,
+	updateCancelCompression,
 } from './main/index';
 import { IPC_EVENTS } from './constants';
 import { Preferences } from './types';
@@ -53,11 +54,24 @@ export default function (context) {
 		async (preferences: Preferences) => savePreferencesToDisk(preferences),
 	);
 
+	/**
+	 * Visit the preferences page
+	 */
 	ipcMain.on(
 		IPC_EVENTS.GO_TO_PREFERENCES,
 		() => {
 			const serviceContainer = LocalMain.getServiceContainer().cradle;
 			serviceContainer.sendIPCEvent('goToRoute', '/settings/image-optimizer')
+		},
+	);
+
+	/**
+	 * Cancel any outstanding image compression jobs
+	 */
+	ipcMain.on(
+		IPC_EVENTS.CANCEL_COMPRESSION,
+		() => {
+			updateCancelCompression(false);
 		},
 	);
 

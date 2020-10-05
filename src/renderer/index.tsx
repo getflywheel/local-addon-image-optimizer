@@ -125,11 +125,6 @@ const ImageOptimizer = (props: IProps) => {
 		});
 	};
 
-	// open preferences tab for addon
-	const openPreferences = () => {
-		ipcRenderer.send(IPC_EVENTS.GO_TO_PREFERENCES);
-	}
-
 	// select or deselect all files
 	const toggleSelectAll = (isChecked) => {
 		dispatchSiteImageData({
@@ -159,6 +154,13 @@ const ImageOptimizer = (props: IProps) => {
 		);
 	}
 
+	// cancel image optimization session
+	const onCancel = () => {
+		ipcRenderer.send(
+			IPC_EVENTS.CANCEL_COMPRESSION,
+		);
+	}
+
 	switch (overviewSelected) {
 		case false:
 			return(
@@ -173,6 +175,7 @@ const ImageOptimizer = (props: IProps) => {
 					compressionListCompletionPercentage={siteImageData.compressionListCompletionPercentage}
 					setOverviewSelected={setOverviewSelected}
 					totalFileSizeDeductions={siteImageData.totalFileSizeDeductions}
+					onCancel={onCancel}
 				/>
 			);
 
