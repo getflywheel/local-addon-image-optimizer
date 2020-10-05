@@ -1,6 +1,5 @@
 import fs from 'fs-extra';
 import path from 'path';
-import React from 'react';
 import { Provider } from 'react-redux';
 import * as LocalRenderer from '@getflywheel/local/renderer';
 import { IPC_EVENTS } from './constants';
@@ -9,7 +8,6 @@ import ImageOptimizer from './renderer/index';
 import { MetaDataRow } from './renderer/preferencesRows';
 
 const packageJSON = fs.readJsonSync(path.join(__dirname, '../package.json'));
-const addonName = packageJSON['productName'];
 const addonID = packageJSON['slug'];
 const stylesheetPath = path.resolve(__dirname, '../style.css');
 
