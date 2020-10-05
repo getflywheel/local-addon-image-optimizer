@@ -8,11 +8,12 @@ import { calculateToMb } from '../utils';
 
 interface IFileListHeaderProps {
     optimizationStatus: OptimizerStatus,
-    setOverviewSelected: (x: boolean) => void,
+	setOverviewSelected: (x: boolean) => void,
     invokeModal: () => Promise<{submitted: boolean}>,
 	getAllChecked: () => ImageData[],
 	totalFileSizeDeductions: number,
 	onCancel: () => void,
+	resetToOverview: () => void,
 }
 
 export const FileListHeader = (props: IFileListHeaderProps) => {
@@ -30,7 +31,7 @@ export const FileListHeader = (props: IFileListHeaderProps) => {
                 </TextButton>
 
                 <Button
-                    className='fileView_Start_Optimization'
+                    className='fileView_Button_Optimization'
                     onClick={props.invokeModal}
                     privateOptions={{
                         color: 'green',
@@ -50,7 +51,7 @@ export const FileListHeader = (props: IFileListHeaderProps) => {
                 </div>
 
                 <Button
-                    className='fileView_Start_Optimization'
+                    className='fileView_Button_Optimization'
 					onClick={props.onCancel}
                     privateOptions={{
                         color: 'green',
@@ -69,8 +70,8 @@ export const FileListHeader = (props: IFileListHeaderProps) => {
                 </div>
 
                 <Button
-                    className='fileView_Start_Optimization'
-                    onClick={() => props.setOverviewSelected(true)}
+                    className='fileView_Button_Optimization'
+                    onClick={() => props.resetToOverview()}
                     privateOptions={{
                         color: 'green',
                         form: 'fill'
