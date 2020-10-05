@@ -14,6 +14,8 @@ import ReactDOM from 'react-dom';
 import { FileListModal } from './fileListModal'
 import { FileListHeader } from './fileListHeader'
 import { OptimizerStatus } from '../types';
+import { ipcRenderer } from 'electron';
+import { IPC_EVENTS } from '../../constants'
 
 interface IFileListViewProps {
 	imageData: ImageData[],
@@ -70,6 +72,11 @@ export const FileListView = (props: IFileListViewProps) =>  {
 		);
 	}
 
+	const openPreferencesModal = () => {
+		FlyModal.onRequestClose();
+		ipcRenderer.send(IPC_EVENTS.GO_TO_PREFERENCES);
+	}
+
 	const invokeModal = async () : Promise<{submitted: boolean}> => new Promise((resolve) => {
 
 		const onSubmit = () => {
@@ -88,6 +95,7 @@ export const FileListView = (props: IFileListViewProps) =>  {
 					>
 						<FileListModal
 							onSubmit={onSubmit}
+							openPreferences={openPreferencesModal}
 						/>
 					</FlyModal>
 			), document.getElementById('popup-container'),

@@ -3,10 +3,11 @@ import { PrimaryButton, TextButton, Checkbox, Divider, Title } from '@getflywhee
 
 interface IFileModalProps {
 	onSubmit: () => void
+	openPreferences: () => void
 }
 
 export const FileListModal = ( props: IFileModalProps ) =>  {
-	const { onSubmit } = props;
+	const { onSubmit, openPreferences } = props;
 
 		return (
 			<div className='fileList_Modal'>
@@ -20,6 +21,7 @@ export const FileListModal = ( props: IFileModalProps ) =>  {
 						Optimizing images will strip metadata and reduce image sizes to improve your site's performance.
 						<TextButton
 							className="fileList_Modal_Settings_Button"
+							onClick={openPreferences}
 						>
 							View Settings
 						</TextButton>

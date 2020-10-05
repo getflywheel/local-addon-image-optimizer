@@ -125,6 +125,11 @@ const ImageOptimizer = (props: IProps) => {
 		});
 	};
 
+	// open preferences tab for addon
+	const openPreferences = () => {
+		ipcRenderer.send(IPC_EVENTS.GO_TO_PREFERENCES);
+	}
+
 	// select or deselect all files
 	const toggleSelectAll = (isChecked) => {
 		dispatchSiteImageData({
