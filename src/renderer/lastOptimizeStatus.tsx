@@ -2,6 +2,8 @@ import React from 'react';
 import { getFormattedTimestamp } from './utils';
 import {Button, Text, TableList, TableListRow, TextButton } from '@getflywheel/local-components';
 import classnames from 'classnames';
+import { ipcRenderer } from 'electron';
+import { IPC_EVENTS } from '../constants'
 
 interface IProps {
 	lastUpdated: number,
@@ -10,6 +12,11 @@ interface IProps {
 	totalImageOptimized: string,
 	handleScanForImages: () => void,
 	scanImageState: GenericObject,
+}
+
+// open preferences tab for addon
+const openPreferences = () => {
+	ipcRenderer.send(IPC_EVENTS.GO_TO_PREFERENCES);
 }
 
 const LastOptimizeStatus: React.FC<IProps> = (props: IProps) => (
@@ -23,8 +30,8 @@ const LastOptimizeStatus: React.FC<IProps> = (props: IProps) => (
 			privateOptions={{
 				fontWeight: "bold"
 			}}
-			> {'Last updated '} {props.lastUpdated}</Text>
-			<TextButton className="lastOptimizeStatus_Button">
+			> {'Last updated '} {getFormattedTimestamp(props.lastUpdated)}</Text>
+			<TextButton className="lastOptimizeStatus_Button" onClick={openPreferences}>
 				Settings
 			</TextButton>
 			<Button

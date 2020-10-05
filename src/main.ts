@@ -53,6 +53,14 @@ export default function (context) {
 		async (preferences: Preferences) => savePreferencesToDisk(preferences),
 	);
 
+	ipcMain.on(
+		IPC_EVENTS.GO_TO_PREFERENCES,
+		() => {
+			const serviceContainer = LocalMain.getServiceContainer().cradle;
+			serviceContainer.sendIPCEvent('goToRoute', '/settings/image-optimizer')
+		},
+	);
+
 	/**
 	 * Compress a list of images associated with a site by their md5 has unique ids
 	 */
