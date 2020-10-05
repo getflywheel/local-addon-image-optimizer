@@ -38,22 +38,16 @@ export default async function (context) {
 	hooks.addContent('routesSiteInfo', () => (
 		<Route
 			key={`${addonID}-addon`}
-			path={`/main/site-info/:siteID/${addonID}`}
+			path={`/main/site-info/:siteID/imageOptimizer`}
 			render={withStoreProvider(ImageOptimizer)}
 		/>
 	));
 
-	// Add menu option within the site menu bar
-	hooks.addFilter('siteInfoMoreMenu', function (menu, site) {
-		menu.push({
-			label: `${addonName}`,
-			enabled: true,
-			click: () => {
-				context.events.send('goToRoute', `/main/site-info/${site.id}/${addonID}`);
-			}
-		});
-
-		return menu;
+	hooks.addContent('imageOptimizer', function (props) {
+		const EnhancedImageOptimizer = withStoreProvider(ImageOptimizer);
+		return (
+			<EnhancedImageOptimizer {...props} />
+		);
 	});
 
 	hooks.addFilter(
