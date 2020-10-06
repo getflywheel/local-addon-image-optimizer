@@ -9,7 +9,6 @@ import {
 		ProgressBar,
 		FlyModal
 	} from '@getflywheel/local-components';
-import { ImageData, SiteImageData } from '../../types';
 import ReactDOM from 'react-dom';
 import { FileListModal } from './fileListModal'
 import { FileListHeader } from './fileListHeader'
@@ -86,13 +85,10 @@ export const FileListView = (props: IFileListViewProps) =>  {
 		ipcRenderer.send(IPC_EVENTS.GO_TO_PREFERENCES);
 	}
 
-	const invokeModal = async () : Promise<{submitted: boolean}> => new Promise((resolve) => {
+	const invokeModal = () =>  {
 
 		const onSubmit = () => {
 			getCompressionList();
-
-			resolve({ submitted: true });
-
 			FlyModal.onRequestClose();
 		};
 
@@ -100,7 +96,6 @@ export const FileListView = (props: IFileListViewProps) =>  {
 			(
 					<FlyModal
 						contentLabel='Confirm Optimization'
-						onRequestClose={() => resolve({ submitted: false })}
 					>
 						<FileListModal
 							onSubmit={onSubmit}
@@ -109,7 +104,7 @@ export const FileListView = (props: IFileListViewProps) =>  {
 					</FlyModal>
 			), document.getElementById('popup-container'),
 		);
-	});
+	};
 
 	return(
 		<div className='fileView_Container'>
