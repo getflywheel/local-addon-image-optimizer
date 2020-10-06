@@ -23,13 +23,13 @@ export const ColFileName = ( props: IFileNameProps ) =>  {
 
 	if (dataArgs.isHeader) {
 		return(
-			<div>
+			<div className='fileList_File_Name_Header'>
 				{props.optimizationStatus === OptimizerStatus.BEFORE ? (getSelectedCount() + ' Images Selected') : 'File Name'}
 			</div>
 		);
 	} else {
 		return(
-			<div>
+			<div className='fileList_File_Name_Row'>
 				{getFileName()}
 			</div>
 		);

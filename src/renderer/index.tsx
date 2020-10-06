@@ -38,13 +38,11 @@ const ImageOptimizer = (props: IProps) => {
 	useEffect(
 		() => {
 			const initialImageScan = async () => {
-				await scanForImages();
 				await fetchImageStateData();
 			}
 			initialImageScan();
 		}, []
 	);
-
 
 	const fetchImageStateData = async () => {
 		const mainImageData = await LocalRenderer.ipcAsync(

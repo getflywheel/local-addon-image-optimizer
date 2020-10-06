@@ -1,6 +1,6 @@
 import 'jest-extended';
 
-import createStore from './createStore';
+import { createStore } from './createStore';
 import {
 	CachedImageDataBySiteID,
 	SiteImageData

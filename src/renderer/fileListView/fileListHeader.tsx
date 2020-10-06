@@ -5,6 +5,8 @@ import { Button,
 import { ImageData } from '../../types';
 import { OptimizerStatus } from '../types';
 import { calculateToMb } from '../utils';
+import CaretSVG from '../_assets/svg/caret.svg';
+import ChevronArrowSVG from '../_assets/svg/chevron-arrow-right.svg';
 
 interface IFileListHeaderProps {
     optimizationStatus: OptimizerStatus,
@@ -24,9 +26,10 @@ export const FileListHeader = (props: IFileListHeaderProps) => {
         return (
             <div className='fileView_Header'>
                 <TextButton
-                    onClick={() => props.setOverviewSelected(true)}
+					onClick={() => props.setOverviewSelected(true)}
+					className='fileView_Header_Back_Button'
                 >
-                    {/* TODO: Add left arrow icon here */}
+					<ChevronArrowSVG className='caret-svg' />
                     Back To Overview
                 </TextButton>
 

@@ -52,7 +52,7 @@ export function fileListReducer(state: RenderedImageData, action: IAction) {
 				selectAllFilesValue: true,
 				optimizationStatus: OptimizerStatus.BEFORE,
 				compressionListCompletionPercentage: 0,
-				totalFileSizeDeductions: compressionDiff,
+				totalFileSizeDeductions: 0,
 			};
 
 		case POPULATE_FILE_LIST.TOGGLE_CHECKED_ONE:
