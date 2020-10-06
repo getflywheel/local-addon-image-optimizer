@@ -24,18 +24,8 @@ export function fileListReducer(state: RenderedImageData, action: IAction) {
 
 	const incrementProgress = ( incrementCounter / state.compressionListTotal ) * 100;
 
-	let compressedSizeAcc = 0;
-
-	let originalSizeAcc = 0;
-
-	const compressionDiff = (originalSizeAcc: number, compressedSizeAcc: number) => {
-		return originalSizeAcc - compressedSizeAcc;
-	};
-
 	switch (action.type) {
 		case POPULATE_FILE_LIST.SET_IMAGE_DATA:
-			originalSizeAcc = 0;
-			compressedSizeAcc = 0;
 			return {
 				...state,
 				...action.payload,
@@ -52,7 +42,9 @@ export function fileListReducer(state: RenderedImageData, action: IAction) {
 				selectAllFilesValue: true,
 				optimizationStatus: OptimizerStatus.BEFORE,
 				compressionListCompletionPercentage: 0,
-				totalFileSizeDeductions: 0,
+				originalTotalSize: 0,
+				compressedImagesOriginalSize: 0,
+				compressedTotalSize: 0,
 			};
 
 		case POPULATE_FILE_LIST.TOGGLE_CHECKED_ONE:
@@ -86,7 +78,8 @@ export function fileListReducer(state: RenderedImageData, action: IAction) {
 					optimizationStatus: action.payload.running,
 					compressionListTotal: action.payload.compressionListTotal,
 					compressionListCounter: 0,
-					compressedTotalSize: compressedSizeAcc,
+					compressedImagesOriginalSize: 0,
+					compressedTotalSize: 0,
 			}
 
 		case POPULATE_FILE_LIST.COMPRESS_ALL_IMAGES_COMPLETE:
@@ -108,8 +101,6 @@ export function fileListReducer(state: RenderedImageData, action: IAction) {
 			}
 
 		case POPULATE_FILE_LIST.IMAGE_OPTIMIZE_SUCCESS:
-			compressedSizeAcc += action.payload.compressedSize;
-			originalSizeAcc += action.payload.originalSize;
 			return {
 					...state,
 					imageData: {
@@ -122,7 +113,8 @@ export function fileListReducer(state: RenderedImageData, action: IAction) {
 					},
 					compressionListCounter: incrementCounter,
 					compressionListCompletionPercentage: incrementProgress,
-					totalFileSizeDeductions: compressionDiff(originalSizeAcc, compressedSizeAcc),
+					compressedImagesOriginalSize: state.compressedImagesOriginalSize += action.payload.originalSize,
+					compressedTotalSize: state.compressedTotalSize += action.payload.compressedSize,
 			}
 
 		case POPULATE_FILE_LIST.IMAGE_OPTIMIZE_FAIL:
