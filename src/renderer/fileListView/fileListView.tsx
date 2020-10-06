@@ -9,47 +9,54 @@ import {
 		ProgressBar,
 		FlyModal
 	} from '@getflywheel/local-components';
-import { ImageData } from '../../types';
+import { ImageData, SiteImageData } from '../../types';
 import ReactDOM from 'react-dom';
 import { FileListModal } from './fileListModal'
 import { FileListHeader } from './fileListHeader'
-import { OptimizerStatus } from '../types';
+import { OptimizerStatus, RenderedImageData } from '../types';
 import { ipcRenderer } from 'electron';
 import { IPC_EVENTS } from '../../constants'
 
 interface IFileListViewProps {
-	imageData: ImageData[],
+	siteImageData: RenderedImageData,
 	handleCheckBoxChange: (imageID: string) => (isChecked: boolean) => void,
 	toggleSelectAll: (isChecked: boolean) => void,
-	toggleSelectAllValue: boolean,
 	getCompressionList: () => void,
-	optimizationStatus: OptimizerStatus,
-	compressionListTotal: number,
-	compressionListCompletionPercentage: number,
 	resetToOverview: () => void,
-	totalFileSizeDeductions: number,
 	onCancel: () => void,
 	setOverviewSelected: (x: boolean) => void,
 }
 
 export const FileListView = (props: IFileListViewProps) =>  {
+	const {
+		siteImageData,
+		handleCheckBoxChange,
+		toggleSelectAll,
+		getCompressionList,
+		resetToOverview,
+		onCancel,
+		setOverviewSelected,
+	} = props;
+
+	const imageData = Object.values(siteImageData.imageData);
+
 	const cellRender: VirtualTableCellRenderer = (dataArgs: IVirtualTableCellRendererDataArgs) => {
 		switch (dataArgs.colKey) {
 			case 'fileStatus':
 				return (
 					<ColFileStatus
 						dataArgs={dataArgs}
-						handleCheckBoxChange={props.handleCheckBoxChange}
-						toggleSelectAll={props.toggleSelectAll}
-						toggleSelectAllValue={props.toggleSelectAllValue}
-						optimizationStatus={props.optimizationStatus}
+						handleCheckBoxChange={handleCheckBoxChange}
+						toggleSelectAll={toggleSelectAll}
+						toggleSelectAllValue={siteImageData.selectAllFilesValue}
+						optimizationStatus={siteImageData.optimizationStatus}
 					/>
 				);
 			case 'filePath':
 				return (
 					<ColFileName
 						dataArgs={dataArgs}
-						optimizationStatus={props.optimizationStatus}
+						optimizationStatus={siteImageData.optimizationStatus}
 					/>
 				);
 			case 'originalSize':
@@ -69,7 +76,7 @@ export const FileListView = (props: IFileListViewProps) =>  {
 	};
 
 	const getAllChecked = () => {
-		return props.imageData.filter(
+		return imageData.filter(
 			data => data.isChecked
 		);
 	}
@@ -82,7 +89,7 @@ export const FileListView = (props: IFileListViewProps) =>  {
 	const invokeModal = async () : Promise<{submitted: boolean}> => new Promise((resolve) => {
 
 		const onSubmit = () => {
-			props.getCompressionList();
+			getCompressionList();
 
 			resolve({ submitted: true });
 
@@ -107,20 +114,19 @@ export const FileListView = (props: IFileListViewProps) =>  {
 	return(
 		<div className='fileView_Container'>
 			<FileListHeader
-				optimizationStatus={props.optimizationStatus}
-				resetToOverview={props.resetToOverview}
+				siteImageData={siteImageData}
+				resetToOverview={resetToOverview}
 				invokeModal={invokeModal}
 				getAllChecked={getAllChecked}
-				totalFileSizeDeductions={props.totalFileSizeDeductions}
-				onCancel={props.onCancel}
-				setOverviewSelected={props.setOverviewSelected}
+				onCancel={onCancel}
+				setOverviewSelected={setOverviewSelected}
 			/>
-				<ProgressBar progress={props.compressionListCompletionPercentage} />
+				<ProgressBar progress={siteImageData.compressionListCompletionPercentage} />
 			<div>
 			<VirtualTable
 				rowClassName='fileList_Virtual_Table_Row'
 				cellRenderer={cellRender}
-				data={props.optimizationStatus === OptimizerStatus.BEFORE ? props.imageData : getAllChecked()}
+				data={siteImageData.optimizationStatus === OptimizerStatus.BEFORE ? imageData : getAllChecked()}
 				headers={[
 					{ key: 'fileStatus', value: '', className: 'fileListViewer_Column_Selected'},
 					{ key: 'filePath', value: 'Filename', className: 'fileListViewer_Column_File_Name'},

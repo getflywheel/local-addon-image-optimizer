@@ -1,14 +1,13 @@
-import {calculateToMb, calculateCompressedPercentage} from '../utils';
-
 interface IScanImageState {
 	scanLoading: boolean,
 	scannedImages: {},
 	scanError: GenericObject,
 	lastUpdated: number,
-	totalDeductions: string,
-	totalFileSizeDeductions: string,
 	totalImageOptimized: string,
 	remainingUncompressedImages: number,
+	originalTotalSize: number,
+	compressedImagesOriginalSize?: number,
+	compressedImagesNewSize?: number,
 };
 
 interface IAction {
@@ -28,10 +27,11 @@ export const initialState: IScanImageState = {
 	scannedImages: {},
 	scanError: undefined,
 	lastUpdated: 0,
-	totalDeductions: '-',
-	totalFileSizeDeductions: '-',
 	totalImageOptimized: '-/-',
 	remainingUncompressedImages: 0,
+	originalTotalSize: 0,
+	compressedImagesOriginalSize: 0,
+	compressedImagesNewSize: 0,
 };
 
 
@@ -49,8 +49,9 @@ export function scanImageReducer(state: IScanImageState, action: IAction) {
 				scannedImages: action.payload,
 				totalImageOptimized: action.payload.totalCompressedCount + '/' + action.payload.imageCount,
 				remainingUncompressedImages: action.payload.imageCount - action.payload.totalCompressedCount,
-				totalDeductions: calculateCompressedPercentage(action.payload.compressedImagesOriginalSize, action.payload.compressedTotalSize),
-				totalFileSizeDeductions: calculateToMb(action.payload.compressedImagesOriginalSize - action.payload.compressedTotalSize),
+				originalTotalSize: action.payload.originalTotalSize,
+				compressedImagesOriginalSize: action.payload.compressedImagesOriginalSize,
+				compressedImagesNewSize: action.payload.compressedTotalSize,
 			};
 
 		case SCAN_IMAGES_ACTIONS.FAILURE:
@@ -60,10 +61,11 @@ export function scanImageReducer(state: IScanImageState, action: IAction) {
 			return {
 				...state,
 				lastUpdated: action.payload.lastScan,
-				totalDeductions: calculateCompressedPercentage(action.payload.compressedImagesOriginalSize, action.payload.compressedTotalSize),
-				totalFileSizeDeductions: calculateToMb(action.payload.compressedImagesOriginalSize - action.payload.compressedTotalSize),
 				totalImageOptimized: action.payload.totalCompressedCount + '/' + action.payload.imageCount,
 				remainingUncompressedImages: action.payload.imageCount - action.payload.totalCompressedCount,
+				originalTotalSize: action.payload.originalTotalSize,
+				compressedImagesOriginalSize: action.payload.compressedImagesOriginalSize,
+				compressedImagesNewSize: action.payload.compressedTotalSize,
 			}
 
 		default:

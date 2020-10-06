@@ -169,16 +169,11 @@ const ImageOptimizer = (props: IProps) => {
 		case false:
 			return(
 				<FileListView
-					imageData={Object.values(siteImageData.imageData)}
+					siteImageData={siteImageData}
 					handleCheckBoxChange={handleCheckBoxChange}
 					toggleSelectAll={toggleSelectAll}
-					toggleSelectAllValue={siteImageData.selectAllFilesValue}
 					getCompressionList={getCompressionList}
-					optimizationStatus={siteImageData.optimizationStatus}
-					compressionListTotal={siteImageData.compressionListTotal}
-					compressionListCompletionPercentage={siteImageData.compressionListCompletionPercentage}
 					resetToOverview={resetToOverview}
-					totalFileSizeDeductions={siteImageData.totalFileSizeDeductions}
 					onCancel={onCancel}
 					setOverviewSelected={setOverviewSelected}
 				/>

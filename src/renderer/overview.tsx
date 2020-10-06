@@ -11,7 +11,14 @@ interface IProps {
 
 export const Overview = (props: IProps) => {
 	const { setOverviewSelected, handleScanForImages, scanImageState } = props;
-	const { lastUpdated, totalDeductions, totalFileSizeDeductions, totalImageOptimized, remainingUncompressedImages } = scanImageState;
+	const {
+		lastUpdated,
+		totalImageOptimized,
+		remainingUncompressedImages,
+		originalTotalSize,
+		compressedImagesOriginalSize,
+		compressedImagesNewSize,
+	} = scanImageState;
 
 	const onClickViewImages = () => {
 		setOverviewSelected(false);
@@ -27,11 +34,12 @@ export const Overview = (props: IProps) => {
 
 		<LastOptimizeStatus
 			lastUpdated={lastUpdated}
-			totalDeductions={totalDeductions}
-			totalFileSizeDeductions={totalFileSizeDeductions}
 			totalImageOptimized={totalImageOptimized}
 			handleScanForImages={handleScanForImages}
 			scanImageState={scanImageState}
+			originalTotalSize={originalTotalSize}
+			compressedImagesOriginalSize={compressedImagesOriginalSize}
+			compressedImagesNewSize={compressedImagesNewSize}
 		/>
 	</div>
 }

@@ -1,5 +1,5 @@
-export function calculateCompressedPercentage (originalSize: number, newSize: number) {
-	return Math.round(((originalSize - newSize)/ originalSize) * 100)
+export function calculateCompressedPercentage (num: number) {
+	return Math.round(num * 100)
 }
 
 export function calculateToMb (num: number) {

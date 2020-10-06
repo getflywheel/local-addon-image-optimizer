@@ -3,30 +3,37 @@ import { Button,
     TextButton,
 } from '@getflywheel/local-components';
 import { ImageData } from '../../types';
-import { OptimizerStatus } from '../types';
+import { OptimizerStatus, RenderedImageData } from '../types';
 import { calculateToMb } from '../utils';
-import CaretSVG from '../_assets/svg/caret.svg';
 import ChevronArrowSVG from '../_assets/svg/chevron-arrow-right.svg';
 
 interface IFileListHeaderProps {
-    optimizationStatus: OptimizerStatus,
+    siteImageData: RenderedImageData,
 	setOverviewSelected: (x: boolean) => void,
     invokeModal: () => Promise<{submitted: boolean}>,
 	getAllChecked: () => ImageData[],
-	totalFileSizeDeductions: number,
 	onCancel: () => void,
 	resetToOverview: () => void,
 }
 
 export const FileListHeader = (props: IFileListHeaderProps) => {
 
-    const disableButton = props.getAllChecked().length > 0 ? false : true;
+	const {
+		siteImageData,
+		setOverviewSelected,
+		invokeModal,
+		getAllChecked,
+		onCancel,
+		resetToOverview,
+	} = props;
 
-    if (props.optimizationStatus === OptimizerStatus.BEFORE) {
+    const disableButton = getAllChecked().length > 0 ? false : true;
+
+    if (siteImageData.optimizationStatus === OptimizerStatus.BEFORE) {
         return (
             <div className='fileView_Header'>
                 <TextButton
-					onClick={() => props.setOverviewSelected(true)}
+					onClick={() => setOverviewSelected(true)}
 					className='fileView_Header_Back_Button'
                 >
 					<ChevronArrowSVG className='caret-svg' />
@@ -35,7 +42,7 @@ export const FileListHeader = (props: IFileListHeaderProps) => {
 
                 <Button
                     className='fileView_Button_Optimization'
-                    onClick={props.invokeModal}
+                    onClick={invokeModal}
                     privateOptions={{
                         color: 'green',
                         form: 'fill'
@@ -46,7 +53,7 @@ export const FileListHeader = (props: IFileListHeaderProps) => {
                 </Button>
             </div>
         );
-    } else if (props.optimizationStatus === OptimizerStatus.RUNNING) {
+    } else if (siteImageData.optimizationStatus === OptimizerStatus.RUNNING) {
         return (
             <div className='fileView_Header'>
                 <div className='fileView_Header_Text'>
@@ -55,7 +62,7 @@ export const FileListHeader = (props: IFileListHeaderProps) => {
 
                 <Button
                     className='fileView_Button_Optimization'
-					onClick={props.onCancel}
+					onClick={onCancel}
                     privateOptions={{
                         color: 'green',
                         form: 'fill'
@@ -65,16 +72,16 @@ export const FileListHeader = (props: IFileListHeaderProps) => {
                 </Button>
             </div>
         );
-    } else if (props.optimizationStatus === OptimizerStatus.COMPLETE) {
+    } else if (siteImageData.optimizationStatus === OptimizerStatus.COMPLETE) {
         return (
             <div className='fileView_Header'>
                 <div className='fileView_Header_Text'>
-					Optimization complete! You've saved{' '}{calculateToMb(props.totalFileSizeDeductions)}{' '}MB of space.
+					Optimization complete! You've saved{' '}{calculateToMb(siteImageData.compressedImagesOriginalSize-siteImageData.compressedTotalSize)}{' '}MB of space.
                 </div>
 
                 <Button
                     className='fileView_Button_Optimization'
-                    onClick={() => props.resetToOverview()}
+                    onClick={() => resetToOverview()}
                     privateOptions={{
                         color: 'green',
                         form: 'fill'

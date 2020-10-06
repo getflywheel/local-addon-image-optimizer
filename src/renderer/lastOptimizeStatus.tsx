@@ -3,15 +3,17 @@ import { getFormattedTimestamp } from './utils';
 import {Button, Text, TableList, TableListRow, TextButton } from '@getflywheel/local-components';
 import classnames from 'classnames';
 import { ipcRenderer } from 'electron';
-import { IPC_EVENTS } from '../constants'
+import { IPC_EVENTS } from '../constants';
+import { calculateCompressedPercentage, calculateToMb } from './utils';
 
 interface IProps {
 	lastUpdated: number,
-	totalDeductions: string,
-	totalFileSizeDeductions: string,
 	totalImageOptimized: string,
 	handleScanForImages: () => void,
 	scanImageState: GenericObject,
+	originalTotalSize: number,
+	compressedImagesOriginalSize: number,
+	compressedImagesNewSize: number,
 }
 
 // open preferences tab for addon
@@ -48,11 +50,16 @@ const LastOptimizeStatus: React.FC<IProps> = (props: IProps) => (
 		</TableListRow>
 		<TableListRow className="lastOptimizeStatus_Row">
 			<Text className="lastOptimizeStatus_Text">Total reductions</Text>
-			<Text className="lastOptimizeStatus_Text">{props.totalDeductions}%</Text>
+			<Text className="lastOptimizeStatus_Text">
+				{
+					props.originalTotalSize === 0
+					? '0'
+					: calculateCompressedPercentage((props.compressedImagesOriginalSize - props.compressedImagesNewSize)/props.originalTotalSize)
+				}%</Text>
 		</TableListRow>
 		<TableListRow className="lastOptimizeStatus_Row">
 			<Text className="lastOptimizeStatus_Text">Total file size reductions</Text>
-			<Text className="lastOptimizeStatus_Text">{props.totalFileSizeDeductions}{' '}MB</Text>
+			<Text className="lastOptimizeStatus_Text">{calculateToMb(props.compressedImagesOriginalSize - props.compressedImagesNewSize)}{' '}MB</Text>
 		</TableListRow>
 		<TableListRow className="lastOptimizeStatus_Row">
 			<Text className="lastOptimizeStatus_Text">Total images optimized</Text>
