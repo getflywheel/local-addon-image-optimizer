@@ -1,16 +1,17 @@
 const path = require('path');
 
 module.exports = {
-	entry: [
-		path.join(__dirname, 'src', 'renderer.tsx'),
-	],
+	entry: {
+		renderer: path.join(__dirname, 'src', 'renderer.tsx'),
+		main: path.join(__dirname, 'src', 'main.ts'),
+	},
 	externals: [
 		'@getflywheel/local/renderer',
+		'@getflywheel/local/main',
 		'react',
 		'@getflywheel/local-components',
 		'react-dom',
 	],
-	devtool: 'source-map',
 	target: 'electron-renderer',
 	module: {
 		rules: [
@@ -59,7 +60,7 @@ module.exports = {
 		extensions: ['.tsx', '.ts', '.jsx', '.js'],
 	},
 	output: {
-		filename: 'renderer.js',
+		filename: '[name].js',
 		path: path.join(__dirname, 'lib'),
 		libraryTarget: 'commonjs2',
 	},

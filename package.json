@@ -24,10 +24,10 @@
   },
   "license": "MIT",
   "scripts": {
-	"build": "tsc && yarn webpack --config webpack.config.js",
+	"build": "yarn webpack --config webpack.config.js",
 	"clean": "rm -rf lib node_modules",
-    "prepare": "yarn run build",
-    "watch-renderer": "yarn run build --watch",
+    "prepare": "yarn build",
+    "watch": "yarn run build --watch",
     "test": "yarn jest src/**/*.test.ts",
     "test:watch": "yarn test --watch"
   },
