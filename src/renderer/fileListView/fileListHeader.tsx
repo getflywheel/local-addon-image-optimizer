@@ -1,6 +1,7 @@
 import React from 'react';
-import { Button,
-    TextButton,
+import {
+	Button,
+	TextButton,
 } from '@getflywheel/local-components';
 import { ImageData } from '../../types';
 import { OptimizerStatus, RenderedImageData } from '../types';
@@ -10,7 +11,7 @@ import ChevronArrowSVG from '../_assets/svg/chevron-arrow-right.svg';
 interface IFileListHeaderProps {
     siteImageData: RenderedImageData,
 	setOverviewSelected: (x: boolean) => void,
-    invokeModal: () => Promise<{submitted: boolean}>,
+    invokeModal: () => void,
 	getAllChecked: () => ImageData[],
 	onCancel: () => void,
 	resetToOverview: () => void,

@@ -1,5 +1,5 @@
 import React from 'react';
-import { PrimaryButton, TextButton, Checkbox, Divider, Title } from '@getflywheel/local-components';
+import { PrimaryButton, TextButton, Divider, Title } from '@getflywheel/local-components';
 
 interface IFileModalProps {
 	onSubmit: () => void

@@ -32,7 +32,7 @@ const LastOptimizeStatus: React.FC<IProps> = (props: IProps) => (
 			privateOptions={{
 				fontWeight: "bold"
 			}}
-			> {'Last updated '} {getFormattedTimestamp(props.lastUpdated)}</Text>
+			> {'Last updated: '} {props.lastUpdated === 0 ? '--' : getFormattedTimestamp(props.lastUpdated)}</Text>
 			<TextButton className="lastOptimizeStatus_Button" onClick={openPreferences}>
 				Settings
 			</TextButton>
