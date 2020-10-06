@@ -101,10 +101,19 @@
 	padding-bottom: 4px;
 }
 
+/* This is a hacky way to set height, but it's necessary to get a scroll bar to show up.
+*	Further work needs to be done here to set a specific height property on the Tertiary_Content div in Local.
+*/
+
+.fileListViewer_File_List {
+	max-height: calc(100vh - 340px);
+	overflow-y: auto;
+}
+
 /* File List View Header */
 
 .fileView_Header {
-	margin: 18px;
+	margin: 20px;
 	display: flex;
 }
 

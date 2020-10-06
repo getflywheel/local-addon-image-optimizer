@@ -117,22 +117,22 @@ export const FileListView = (props: IFileListViewProps) =>  {
 				setOverviewSelected={setOverviewSelected}
 			/>
 				<ProgressBar progress={siteImageData.compressionListCompletionPercentage} />
-			<div>
-			<VirtualTable
-				rowClassName='fileList_Virtual_Table_Row'
-				cellRenderer={cellRender}
-				data={siteImageData.optimizationStatus === OptimizerStatus.BEFORE ? imageData : getAllChecked()}
-				headers={[
-					{ key: 'fileStatus', value: '', className: 'fileListViewer_Column_Selected'},
-					{ key: 'filePath', value: 'Filename', className: 'fileListViewer_Column_File_Name'},
-					{ key: 'originalSize', value: 'Original Size', className: 'fileListViewer_Column_Original_Size'},
-					{ key: 'compressedSize', value: 'Compressed Size', className: 'fileListViewer_Column_Compressed_Size'}
-				]}
-				headersCapitalize='none'
-				striped
-				rowHeightSize="s"
-				rowHeaderHeightSize="m"
-			/>
+			<div className='fileListViewer_File_List'>
+				<VirtualTable
+					rowClassName='fileList_Virtual_Table_Row'
+					cellRenderer={cellRender}
+					data={siteImageData.optimizationStatus === OptimizerStatus.BEFORE ? imageData : getAllChecked()}
+					headers={[
+						{ key: 'fileStatus', value: '', className: 'fileListViewer_Column_Selected'},
+						{ key: 'filePath', value: 'Filename', className: 'fileListViewer_Column_File_Name'},
+						{ key: 'originalSize', value: 'Original Size', className: 'fileListViewer_Column_Original_Size'},
+						{ key: 'compressedSize', value: 'Compressed Size', className: 'fileListViewer_Column_Compressed_Size'}
+					]}
+					headersCapitalize='none'
+					striped
+					rowHeightSize="s"
+					rowHeaderHeightSize="m"
+				/>
 			</div>
 		</div>
 	);
