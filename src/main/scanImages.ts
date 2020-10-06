@@ -1,5 +1,5 @@
 import fs from 'fs-extra';
-import * as LocalMain from '@getflywheel/local/main';
+import type LocalMain from '@getflywheel/local/main';
 import { SiteImageData, Store } from '../types';
 import {
 	saveImageDataToDisk,

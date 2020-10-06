@@ -6,6 +6,13 @@ import {
 	} from '@getflywheel/local-components';
 import { OptimizerStatus } from '../types';
 import { FileStatus } from '../../types';
+import CaretSVG from '../_assets/svg/caret.svg';
+import WarningSVG from '../_assets/svg/warning.svg';
+import ExclamationSVG from '../_assets/svg/exclamation--circle.svg';
+import ArrowRightSVG from '../_assets/svg/magic-sync-arrow-right.svg';
+import ChevronArrowSVG from '../_assets/svg/chevron-arrow-right.svg';
+import CheckmarkSmallSVG from '../_assets/svg/checkmark--sm.svg';
+
 
 interface IFileStatusProps {
 	dataArgs: IVirtualTableCellRendererDataArgs,
@@ -42,22 +49,18 @@ export const ColFileStatus = (props: IFileStatusProps) =>  {
 	switch (dataArgs.rowData.fileStatus) {
 		case FileStatus.STARTED:
 			return (
-				<Spinner />
+				<Spinner className='spinner-svg' />
 			);
 
 		case FileStatus.SUCCEEDED:
 			return (
-				<div>
-					{/*TODO: Add success icon and remove wrapper div (unless needed for styling) */}
-					Succeeded!
-				</div>
+				<CheckmarkSmallSVG />
 			);
 
 		case FileStatus.FAILED:
 			return (
-				<div>
-					{/*TODO:  Add failure icon and remove wrapper div (unless needed for styling)*/}
-					Failed!
+				<div className='warning-svg'>
+					<WarningSVG />
 				</div>
 			);
 

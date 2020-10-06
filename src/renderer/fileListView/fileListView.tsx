@@ -118,6 +118,7 @@ export const FileListView = (props: IFileListViewProps) =>  {
 				<ProgressBar progress={props.compressionListCompletionPercentage} />
 			<div>
 			<VirtualTable
+				rowClassName='fileList_Virtual_Table_Row'
 				cellRenderer={cellRender}
 				data={props.optimizationStatus === OptimizerStatus.BEFORE ? props.imageData : getAllChecked()}
 				headers={[

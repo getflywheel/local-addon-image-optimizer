@@ -4,7 +4,7 @@ import md5 from 'md5';
 import * as LocalMain from '@getflywheel/local/main';
 import { createMockServiceContainer } from '../test/mockCreators';
 import { scanImagesFactory } from './scanImages';
-import createStore from './createStore';
+import { createStore } from './createStore';
 
 const sitePath = '/Users/cool-man-joe/Local Sites/twice-baked-potato';
 const serviceContainer = createMockServiceContainer(sitePath);

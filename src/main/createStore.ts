@@ -1,7 +1,7 @@
 import {
 	SiteImageData,
 	CachedImageDataBySiteID,
-	Store, CancelCompression,, RuntimeStore
+	Store, CancelCompression, RuntimeStore
 } from '../types';
 
 export function createStore(initialState: CachedImageDataBySiteID = {}): Store {
