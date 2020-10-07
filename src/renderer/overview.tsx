@@ -2,11 +2,12 @@ import React from 'react';
 import { Banner } from '@getflywheel/local-components';
 import LastOptimizeStatus from './lastOptimizeStatus';
 import { calculateRemainingUncompressed } from './utils';
+import { CombinedStateData } from '../types';
 
 interface IProps {
 	setOverviewSelected: (x: boolean) => void,
 	handleScanForImages: () => void,
-	combinedStateData: GenericObject,
+	combinedStateData: CombinedStateData,
 	fetchImageStateData: () => void,
 }
 

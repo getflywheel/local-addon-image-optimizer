@@ -5,10 +5,11 @@ import classnames from 'classnames';
 import { ipcRenderer } from 'electron';
 import { IPC_EVENTS } from '../constants';
 import { formatCompressedPercentage, calculateToMb } from './utils';
+import { CombinedStateData } from '../types';
 
 interface IProps {
 	handleScanForImages: () => void,
-	combinedStateData: GenericObject,
+	combinedStateData: CombinedStateData,
 }
 
 // open preferences tab for addon
@@ -37,12 +38,16 @@ const LastOptimizeStatus: React.FC<IProps> = (props: IProps) => {
 						"lastOptimizeStatus_Row",
 						"lastOptimizeStatus_Header_Row",
 					)}>
-				<Text
-				className="lastOptimizeStatus_Text"
-				privateOptions={{
-					fontWeight: "bold"
-				}}
-				> {'Last updated: '} {lastUpdated === 0 ? '--' : getFormattedTimestamp(lastUpdated)}</Text>
+				{lastUpdated !== 0
+				? <Text
+						className="lastOptimizeStatus_Text"
+						privateOptions={{
+							fontWeight: "bold"
+						}}
+					>
+						{'Last updated: '}{getFormattedTimestamp(lastUpdated)}
+					</Text>
+				: null}
 				<TextButton className="lastOptimizeStatus_Button" onClick={openPreferences}>
 					Settings
 				</TextButton>

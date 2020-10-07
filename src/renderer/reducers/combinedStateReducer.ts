@@ -5,6 +5,17 @@ interface IAction {
 	payload?: GenericObject
 };
 
+export const initialState: CombinedStateData = {
+	imageData: {},
+	scanLoading: false,
+	originalTotalSize: 0,
+	compressedTotalSize: 0,
+	lastUpdated: 0,
+	imageCount: 0,
+	totalCompressedCount: 0,
+	compressedImagesOriginalSize: 0,
+}
+
 export const STATE_UPDATE_ACTIONS = {
 	SCAN_REQUEST: 'scan:request',
 	SCAN_SUCCESS: 'scan:success',

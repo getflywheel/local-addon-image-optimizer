@@ -71,8 +71,8 @@ export interface CombinedStateData {
 
 	// Total decrease from one optimization session
 	// File list view header
-	sessionTotalOriginalSize: number,
-	sessionTotalCompressedSize: number,
+	sessionTotalOriginalSize?: number,
+	sessionTotalCompressedSize?: number,
 }
 
 export interface CachedImageDataBySiteID {

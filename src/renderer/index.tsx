@@ -6,7 +6,7 @@ import { IPC_EVENTS } from '../constants';
 import { ipcRenderer } from 'electron';
 import { Preferences } from '../types';
 import * as LocalRenderer from '@getflywheel/local/renderer';
-import { combinedStateReducer, STATE_UPDATE_ACTIONS } from './reducers/combinedStateReducer';
+import { combinedStateReducer, STATE_UPDATE_ACTIONS, initialState } from './reducers/combinedStateReducer';
 import { DatasetType } from '../types';
 import { CombinedStateData, ImageData } from '../types'
 
@@ -17,8 +17,7 @@ interface IProps {
 
 const ImageOptimizer = (props: IProps) => {
 	const [overviewSelected, setOverviewSelected] = useState(true);
-	const initialCombinedState = {} as CombinedStateData;
-	const [combinedStateData, dispatchCombinedStateData] = useReducer(combinedStateReducer, initialCombinedState);
+	const [combinedStateData, dispatchCombinedStateData] = useReducer(combinedStateReducer, initialState);
 
 	const scanForImages = async () => {
 		try {
