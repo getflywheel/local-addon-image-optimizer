@@ -4,7 +4,7 @@
   "local": {
     "hidden": true
   },
-  "version": "0.0.4",
+  "version": "0.0.5",
   "author": "Local Team",
   "keywords": [
     "local-addon"
@@ -26,7 +26,7 @@
   "scripts": {
 	"build": "tsc && yarn webpack --config webpack.config.js",
 	"clean": "rm -rf lib node_modules",
-    "prepare": "tsc",
+    "prepare": "yarn run build",
     "watch-renderer": "yarn run build --watch",
     "test": "yarn jest src/**/*.test.ts",
     "test:watch": "yarn test --watch"
