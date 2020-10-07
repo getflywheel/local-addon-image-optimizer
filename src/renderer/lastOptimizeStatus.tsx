@@ -4,7 +4,7 @@ import {Button, Text, TableList, TableListRow, TextButton } from '@getflywheel/l
 import classnames from 'classnames';
 import { ipcRenderer } from 'electron';
 import { IPC_EVENTS } from '../constants';
-import { calculateCompressedPercentage, calculateToMb } from './utils';
+import { formatCompressedPercentage, calculateToMb } from './utils';
 
 interface IProps {
 	lastUpdated: number,
@@ -27,12 +27,16 @@ const LastOptimizeStatus: React.FC<IProps> = (props: IProps) => (
 					"lastOptimizeStatus_Row",
 					"lastOptimizeStatus_Header_Row",
 				)}>
-			<Text
-			className="lastOptimizeStatus_Text"
-			privateOptions={{
-				fontWeight: "bold"
-			}}
-			> {'Last updated: '} {props.lastUpdated === 0 ? '--' : getFormattedTimestamp(props.lastUpdated)}</Text>
+			 {props.lastUpdated !== 0
+			 ? <Text
+					className="lastOptimizeStatus_Text"
+					privateOptions={{
+						fontWeight: "bold"
+					}}
+				>
+					{'Last updated: '}{getFormattedTimestamp(props.lastUpdated)}
+				</Text>
+			 : null}
 			<TextButton className="lastOptimizeStatus_Button" onClick={openPreferences}>
 				Settings
 			</TextButton>
@@ -54,7 +58,7 @@ const LastOptimizeStatus: React.FC<IProps> = (props: IProps) => (
 				{
 					props.originalTotalSize === 0
 					? '0'
-					: calculateCompressedPercentage((props.compressedImagesOriginalSize - props.compressedImagesNewSize)/props.originalTotalSize)
+					: formatCompressedPercentage((props.compressedImagesOriginalSize - props.compressedImagesNewSize)/props.originalTotalSize)
 				}%</Text>
 		</TableListRow>
 		<TableListRow className="lastOptimizeStatus_Row">
