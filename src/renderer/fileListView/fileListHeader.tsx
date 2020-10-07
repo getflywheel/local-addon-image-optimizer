@@ -9,7 +9,7 @@ import { calculateToMb } from '../utils';
 import ChevronArrowSVG from '../_assets/svg/chevron-arrow-right.svg';
 
 interface IFileListHeaderProps {
-    siteImageData: RenderedImageData,
+	siteImageData: RenderedImageData,
 	setOverviewSelected: (x: boolean) => void,
     invokeModal: () => void,
 	getAllChecked: () => ImageData[],
@@ -18,7 +18,6 @@ interface IFileListHeaderProps {
 }
 
 export const FileListHeader = (props: IFileListHeaderProps) => {
-
 	const {
 		siteImageData,
 		setOverviewSelected,

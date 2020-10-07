@@ -57,7 +57,6 @@ export function createStore(initialState: CachedImageDataBySiteID = {}): Store {
 
 export function createRuntimeStore(initialState: CancelCompression = {cancelCompression: true}): RuntimeStore {
 	let state = initialState;
-	console.log({state});
 	return {
 		/**
 		 * returns the current state
