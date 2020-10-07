@@ -6,7 +6,7 @@ import cloneDeep from 'lodash/cloneDeep';
 import * as Local from '@getflywheel/local';
 import * as LocalMain from '@getflywheel/local/main';
 import {
-	SiteImageData,
+	CombinedStateData,
 	Store,
 	RuntimeStore,
 } from '../types';
@@ -39,9 +39,9 @@ export function compressImagesFactory(serviceContainer: LocalMain.ServiceContain
 		/**
 		 * deep clone this so that the existing store doesn not get corrupted and remains intact until we explicity update it
 		 */
-		const siteImageData: SiteImageData = cloneDeep(imageDataStore.getStateBySiteID(siteID));
+		const siteImageData: CombinedStateData = cloneDeep(imageDataStore.getStateBySiteID(siteID));
 
-		const updatedImageData: SiteImageData['imageData'] = {};
+		const updatedImageData: CombinedStateData['imageData'] = {};
 
 		for (const md5Hash of imageMD5s) {
 			serviceContainer.sendIPCEvent(IPC_EVENTS.COMPRESS_IMAGE_STARTED, md5Hash);

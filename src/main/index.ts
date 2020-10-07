@@ -1,5 +1,5 @@
 import * as LocalMain from '@getflywheel/local/main';
-import { SiteImageData, DatasetType } from '../types';
+import { CombinedStateData, DatasetType } from '../types';
 import { COMPRESSED_IMAGE_DATA_FILE_NAME, PREFERENCES_FILE_NAME } from '../constants';
 import { Preferences } from '../types';
 import { scanImagesFactory } from './scanImages';
@@ -20,13 +20,13 @@ const runtimeStore = createRuntimeStore();
  * This can be from a scan that has since been written/read to disk or from a scan that has happened during
  * the current runtime.
  *
- * Will return an empty SiteImageData object if none is found
+ * Will return an empty CombinedStateData object if none is found
  *
  * @param siteID
  *
- * @returns SiteImageData
+ * @returns CombinedStateData
  */
-export function getImageData(siteID: string, imageDataset: DatasetType = DatasetType.ALL_FOUND): SiteImageData {
+export function getImageData(siteID: string, imageDataset: DatasetType = DatasetType.ALL_FOUND): CombinedStateData {
 	const allImages = imageDataStore.getStateBySiteID(siteID);
 
 	if (imageDataset === DatasetType.ALL_FOUND) {

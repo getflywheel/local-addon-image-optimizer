@@ -4,13 +4,9 @@ import {
 		IVirtualTableCellRendererDataArgs,
 		Spinner,
 	} from '@getflywheel/local-components';
-import { OptimizerStatus } from '../types';
+import { OptimizerStatus } from '../../types';
 import { FileStatus } from '../../types';
-import CaretSVG from '../_assets/svg/caret.svg';
 import WarningSVG from '../_assets/svg/warning.svg';
-import ExclamationSVG from '../_assets/svg/exclamation--circle.svg';
-import ArrowRightSVG from '../_assets/svg/magic-sync-arrow-right.svg';
-import ChevronArrowSVG from '../_assets/svg/chevron-arrow-right.svg';
 import CheckmarkSmallSVG from '../_assets/svg/checkmark--sm.svg';
 
 

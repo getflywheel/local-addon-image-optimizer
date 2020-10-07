@@ -3,7 +3,7 @@ import 'jest-extended';
 import { createStore } from './createStore';
 import {
 	CachedImageDataBySiteID,
-	SiteImageData
+	CombinedStateData
 } from '../types';
 
 describe('createStore', () => {
@@ -16,21 +16,22 @@ describe('createStore', () => {
 	const initialState: CachedImageDataBySiteID = {
 		[siteIDOne]: {
 			imageData: {},
-		} as SiteImageData,
+		} as CombinedStateData,
 	};
 
 	const secondState: CachedImageDataBySiteID = {
-		[siteIDTwo]: {} as SiteImageData,
+		[siteIDTwo]: {} as CombinedStateData,
 	};
 
 	const thirdState: CachedImageDataBySiteID = {
 		[siteIDThree]: {
 			imageData: {},
+			scanLoading: false,
 			lastScan: 1601675284054,
 			originalTotalSize: 120303,
 			compressedTotalSize: 494,
 			imageCount: 394,
-		} as SiteImageData,
+		} as CombinedStateData,
 	}
 
 	beforeAll(() => {
@@ -89,7 +90,7 @@ describe('createStore', () => {
 			...newSiteThreeState,
 		});
 
-		expect(siteThreeState.lastScan).not.toEqual(thirdState[siteIDThree].lastScan);
+		expect(siteThreeState.lastScan).not.toEqual(thirdState[siteIDThree].lastUpdated);
 		expect(siteThreeState.lastScan).toEqual(newSiteThreeState.lastScan);
 	 });
 });

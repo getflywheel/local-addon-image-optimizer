@@ -5,7 +5,7 @@ import md5 from 'md5';
 import * as Local from '@getflywheel/local';
 import * as LocalMain from '@getflywheel/local/main';
 import {
-	SiteImageData,
+	CombinedStateData,
 } from '../types';
 import {
 	saveImageDataToDisk,
@@ -41,6 +41,7 @@ describe('saveImageDataToDisk', () => {
 	const siteID = '1234asdf';
 	const imageData = {
 		imageData: {},
+		scanLoading: false,
 		lastScan: 1601675284054,
 		originalTotalSize: 654321,
 		compressedTotalSize: 123456,
@@ -180,6 +181,6 @@ describe('hasImageBeenCompressed', () => {
 			},
 		};
 
-		expect(getImageIfCompressed(originalImageHash, imageData as SiteImageData['imageData'])).toBeFalsy();
+		expect(getImageIfCompressed(originalImageHash, imageData as CombinedStateData['imageData'])).toBeFalsy();
 	});
 });

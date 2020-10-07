@@ -4,12 +4,12 @@ import {
 	TextButton,
 } from '@getflywheel/local-components';
 import { ImageData } from '../../types';
-import { OptimizerStatus, RenderedImageData } from '../types';
+import { OptimizerStatus, CombinedStateData } from '../../types';
 import { calculateToMb } from '../utils';
 import ChevronArrowSVG from '../_assets/svg/chevron-arrow-right.svg';
 
 interface IFileListHeaderProps {
-	siteImageData: RenderedImageData,
+	combinedStateData: CombinedStateData,
 	setOverviewSelected: (x: boolean) => void,
     invokeModal: () => void,
 	getAllChecked: () => ImageData[],
@@ -19,7 +19,7 @@ interface IFileListHeaderProps {
 
 export const FileListHeader = (props: IFileListHeaderProps) => {
 	const {
-		siteImageData,
+		combinedStateData,
 		setOverviewSelected,
 		invokeModal,
 		getAllChecked,
@@ -29,7 +29,7 @@ export const FileListHeader = (props: IFileListHeaderProps) => {
 
     const disableButton = getAllChecked().length > 0 ? false : true;
 
-    if (siteImageData.optimizationStatus === OptimizerStatus.BEFORE) {
+    if (combinedStateData.optimizationStatus === OptimizerStatus.BEFORE) {
         return (
             <div className='fileView_Header'>
                 <TextButton
@@ -53,7 +53,7 @@ export const FileListHeader = (props: IFileListHeaderProps) => {
                 </Button>
             </div>
         );
-    } else if (siteImageData.optimizationStatus === OptimizerStatus.RUNNING) {
+    } else if (combinedStateData.optimizationStatus === OptimizerStatus.RUNNING) {
         return (
             <div className='fileView_Header'>
                 <div className='fileView_Header_Text'>
@@ -72,11 +72,11 @@ export const FileListHeader = (props: IFileListHeaderProps) => {
                 </Button>
             </div>
         );
-    } else if (siteImageData.optimizationStatus === OptimizerStatus.COMPLETE) {
+    } else if (combinedStateData.optimizationStatus === OptimizerStatus.COMPLETE) {
         return (
             <div className='fileView_Header'>
                 <div className='fileView_Header_Text'>
-					Optimization complete! You've saved{' '}{calculateToMb(siteImageData.compressedImagesOriginalSize-siteImageData.compressedTotalSize)}{' '}MB of space.
+					Optimization complete! You've saved{' '}{calculateToMb(combinedStateData.compressedImagesOriginalSize-combinedStateData.compressedTotalSize)}{' '}MB of space.
                 </div>
 
                 <Button

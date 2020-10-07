@@ -7,8 +7,8 @@ import * as LocalMain from '@getflywheel/local/main';
 import { compressImagesFactory } from './compressImages';
 import { createRuntimeStore, createStore } from './createStore';
 import { IPC_EVENTS, BACKUP_DIR_NAME } from '../constants';
-import { SiteImageData } from '../types';
 import { createMockServiceContainer } from '../test/mockCreators';
+import { CombinedStateData } from '../types';
 
 
 const sitePath = '/Users/cool-man-joe/Local Sites/twice-baked-potato';
@@ -93,7 +93,7 @@ childProcess.spawn.mockImplementation((command: string, args: any[]) => {
 });
 
 const imageDataStore = createStore();
-imageDataStore.setStateBySiteID(siteID, initialState as SiteImageData);
+imageDataStore.setStateBySiteID(siteID, initialState as CombinedStateData);
 
 describe('compressImages', () => {
 	const expectedImageDataKeys = [

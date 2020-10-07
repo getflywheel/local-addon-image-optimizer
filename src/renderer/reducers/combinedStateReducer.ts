@@ -1,6 +1,4 @@
-import { FileStatus, ImageData } from '../../types';
-import { OptimizerStatus, RenderedImageData } from '../types'
-
+import { OptimizerStatus, CombinedStateData, FileStatus, ImageData } from '../../types'
 
 interface IAction {
 	type: string,
@@ -18,14 +16,59 @@ export const POPULATE_FILE_LIST = {
 	IMAGE_OPTIMIZE_SUCCESS: 'image_optimize_success',
 }
 
-export function fileListReducer(state: RenderedImageData, action: IAction) {
+export const STATE_UPDATE_ACTIONS = {
+	SCAN_REQUEST: 'scan:request',
+	SCAN_SUCCESS: 'scan:success',
+	SCAN_FAILURE: 'scan:failure',
+	ON_OPTIMIZE_SUCCESS: 'scan:optimizeSuccess',
 
+	SET_UNCOMPRESSED_IMAGE_DATA: 'set_image_data',
+	TOGGLE_SELECT_ONE_IMAGE: 'toggle_checked_one',
+	TOGGLE_SELECT_ALL_IMAGES: 'toggle_checked_all',
+	IS_OPTIMIZING: 'is_optimizing',
+	COMPRESS_ALL_IMAGES_COMPLETE: 'compress_all_images_complete',
+	IMAGE_OPTIMIZE_STARTED: 'image_optimize_started',
+	IMAGE_OPTIMIZE_FAIL: 'image_optimize_fail',
+	IMAGE_OPTIMIZE_SUCCESS: 'image_optimize_success',
+}
+
+export function combinedStateReducer(state: CombinedStateData, action: IAction ) {
 	const incrementCounter = (state.compressionListCounter + 1);
 
 	const incrementProgress = ( incrementCounter / state.compressionListTotal ) * 100;
 
 	switch (action.type) {
-		case POPULATE_FILE_LIST.SET_IMAGE_DATA:
+		case STATE_UPDATE_ACTIONS.SCAN_REQUEST:
+			return { ...state, scanLoading: true };
+
+		case STATE_UPDATE_ACTIONS.SCAN_FAILURE:
+			return { ...state, scanLoading: false, scanError: action.payload };
+
+		case STATE_UPDATE_ACTIONS.SCAN_SUCCESS:
+			return {
+				...state,
+				imageData: action.payload.imageData,
+				scanLoading: false,
+				originalTotalSize: action.payload.originalTotalSize,
+				compressedTotalSize: action.payload.compressedTotalSize,
+				lastUpdated: action.payload.lastUpdated,
+				imageCount: action.payload.imageCount,
+				totalCompressedCount: action.payload.totalCompressedCount,
+				compressedImagesOriginalSize: action.payload.compressedImagesOriginalSize,
+			};
+
+		case STATE_UPDATE_ACTIONS.ON_OPTIMIZE_SUCCESS:
+			return {
+				...state,
+				originalTotalSize: action.payload.originalTotalSize,
+				compressedTotalSize: action.payload.compressedTotalSize,
+				lastUpdated: action.payload.lastUpdated,
+				imageCount: action.payload.imageCount,
+				totalCompressedCount: action.payload.totalCompressedCount,
+				compressedImagesOriginalSize: action.payload.compressedImagesOriginalSize,
+			}
+
+		case STATE_UPDATE_ACTIONS.SET_UNCOMPRESSED_IMAGE_DATA:
 			return {
 				...state,
 				...action.payload,
@@ -47,7 +90,7 @@ export function fileListReducer(state: RenderedImageData, action: IAction) {
 				compressedTotalSize: 0,
 			};
 
-		case POPULATE_FILE_LIST.TOGGLE_CHECKED_ONE:
+		case STATE_UPDATE_ACTIONS.TOGGLE_SELECT_ONE_IMAGE:
 			return {
 				...state,
 				imageData: {
@@ -59,7 +102,7 @@ export function fileListReducer(state: RenderedImageData, action: IAction) {
 				},
 			}
 
-		case POPULATE_FILE_LIST.TOGGLE_CHECKED_ALL:
+		case STATE_UPDATE_ACTIONS.TOGGLE_SELECT_ALL_IMAGES:
 			return {
 					...state,
 					imageData: Object.entries(state.imageData).reduce((acc, [id, data]) => {
@@ -72,23 +115,23 @@ export function fileListReducer(state: RenderedImageData, action: IAction) {
 					selectAllFilesValue: action.payload.isChecked,
 			}
 
-		case POPULATE_FILE_LIST.IS_OPTIMIZING:
+		case STATE_UPDATE_ACTIONS.IS_OPTIMIZING:
 			return {
 					...state,
-					optimizationStatus: action.payload.running,
+					optimizationStatus: OptimizerStatus.RUNNING,
 					compressionListTotal: action.payload.compressionListTotal,
 					compressionListCounter: 0,
 					compressedImagesOriginalSize: 0,
 					compressedTotalSize: 0,
 			}
 
-		case POPULATE_FILE_LIST.COMPRESS_ALL_IMAGES_COMPLETE:
+		case STATE_UPDATE_ACTIONS.COMPRESS_ALL_IMAGES_COMPLETE:
 			return {
 					...state,
-					optimizationStatus: action.payload.complete,
+					optimizationStatus: OptimizerStatus.COMPLETE,
 			}
 
-		case POPULATE_FILE_LIST.IMAGE_OPTIMIZE_STARTED:
+		case STATE_UPDATE_ACTIONS.IMAGE_OPTIMIZE_STARTED:
 			return {
 					...state,
 					imageData: {
@@ -100,7 +143,7 @@ export function fileListReducer(state: RenderedImageData, action: IAction) {
 					},
 			}
 
-		case POPULATE_FILE_LIST.IMAGE_OPTIMIZE_SUCCESS:
+		case STATE_UPDATE_ACTIONS.IMAGE_OPTIMIZE_SUCCESS:
 			return {
 					...state,
 					imageData: {

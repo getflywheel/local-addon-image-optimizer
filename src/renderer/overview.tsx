@@ -1,29 +1,28 @@
 import React from 'react';
 import { Banner } from '@getflywheel/local-components';
 import LastOptimizeStatus from './lastOptimizeStatus';
+import { calculateRemainingUncompressed } from './utils';
 
 interface IProps {
 	setOverviewSelected: (x: boolean) => void,
 	handleScanForImages: () => void,
-	scanImageState: GenericObject,
+	combinedStateData: GenericObject,
 	fetchImageStateData: () => void,
 }
 
 export const Overview = (props: IProps) => {
-	const { setOverviewSelected, handleScanForImages, scanImageState } = props;
+	const { setOverviewSelected, handleScanForImages, combinedStateData } = props;
 	const {
-		lastUpdated,
-		totalImageOptimized,
-		remainingUncompressedImages,
-		originalTotalSize,
-		compressedImagesOriginalSize,
-		compressedImagesNewSize,
-	} = scanImageState;
+		imageCount,
+		totalCompressedCount,
+	} = combinedStateData;
 
 	const onClickViewImages = () => {
 		setOverviewSelected(false);
 		props.fetchImageStateData();
 	}
+
+	const remainingUncompressedImages = calculateRemainingUncompressed(imageCount, totalCompressedCount);
 
 	return <div className="overview_Container">
 		{remainingUncompressedImages > 0 &&
@@ -33,13 +32,8 @@ export const Overview = (props: IProps) => {
 		}
 
 		<LastOptimizeStatus
-			lastUpdated={lastUpdated}
-			totalImageOptimized={totalImageOptimized}
 			handleScanForImages={handleScanForImages}
-			scanImageState={scanImageState}
-			originalTotalSize={originalTotalSize}
-			compressedImagesOriginalSize={compressedImagesOriginalSize}
-			compressedImagesNewSize={compressedImagesNewSize}
+			combinedStateData={combinedStateData}
 		/>
 	</div>
 }

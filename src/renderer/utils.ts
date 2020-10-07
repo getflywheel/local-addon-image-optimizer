@@ -2,6 +2,10 @@ export function formatCompressedPercentage (num: number) {
 	return Math.round(num * 100)
 }
 
+export function calculateRemainingUncompressed (numOne: number, numTwo: number) {
+	return numOne - numTwo;
+}
+
 export function calculateToMb (num: number) {
 	return (num / (1024*1024)).toFixed(2)
 }

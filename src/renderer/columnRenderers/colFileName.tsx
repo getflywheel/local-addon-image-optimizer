@@ -1,7 +1,7 @@
 import React from 'react';
 import path from 'path';
 import { IVirtualTableCellRendererDataArgs } from '@getflywheel/local-components';
-import { OptimizerStatus } from '../types';
+import { OptimizerStatus } from '../../types';
 
 interface IFileNameProps {
 	dataArgs: IVirtualTableCellRendererDataArgs

@@ -1,5 +1,5 @@
 import {
-	SiteImageData,
+	CombinedStateData,
 	CachedImageDataBySiteID,
 	Store, CancelCompression, RuntimeStore
 } from '../types';
@@ -20,8 +20,8 @@ export function createStore(initialState: CachedImageDataBySiteID = {}): Store {
 		 *
 		 * @param siteID
 		 */
-		getStateBySiteID(siteID: string): SiteImageData {
-			return state[siteID] || ({} as SiteImageData);
+		getStateBySiteID(siteID: string): CombinedStateData {
+			return state[siteID] || ({} as CombinedStateData);
 		},
 
 		/**
@@ -37,17 +37,17 @@ export function createStore(initialState: CachedImageDataBySiteID = {}): Store {
 		},
 
 		/**
-		 * Merges in new SiteImageData with existing SiteImageData or
-		 * creates a new entry for that SiteImageData
+		 * Merges in new CombinedStateData with existing CombinedStateData or
+		 * creates a new entry for that CombinedStateData
 		 *
 		 * @param siteID
 		 * @param newState
 		 */
-		setStateBySiteID(siteID: string, newState: SiteImageData): void {
+		setStateBySiteID(siteID: string, newState: CombinedStateData): void {
 			state = {
 				...state,
 				[siteID]: {
-					...(state[siteID] || {} as SiteImageData),
+					...(state[siteID] || {} as CombinedStateData),
 					...newState,
 				}
 			};

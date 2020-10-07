@@ -1,6 +1,6 @@
 import fs from 'fs-extra';
 import type LocalMain from '@getflywheel/local/main';
-import { SiteImageData, Store } from '../types';
+import { CombinedStateData, Store } from '../types';
 import {
 	saveImageDataToDisk,
 	getImageFilePaths,
@@ -17,7 +17,7 @@ import {
  * @returns ImageData[]
  */
 export function scanImagesFactory(serviceContainer: LocalMain.ServiceContainerServices, imageDataStore: Store) {
-	return async function(siteID: string): Promise<SiteImageData> {
+	return async function(siteID: string): Promise<CombinedStateData> {
 		const site = serviceContainer.siteData.getSite(siteID);
 
 		if (!site) {
@@ -30,14 +30,14 @@ export function scanImagesFactory(serviceContainer: LocalMain.ServiceContainerSe
 		const imageData = siteImageData.imageData || {};
 
 		const updatedSiteImageData = await filePaths.reduce(async (
-			imageDataAccumulator: Promise<SiteImageData['imageData']>,
+			imageDataAccumulator: Promise<CombinedStateData['imageData']>,
 			filePath: string,
 		) => {
 			const fileSize = fs.statSync(filePath).size;
 
 			const fileHash = await getFileHash(filePath);
 
-			let compressedImage = getImageIfCompressed(fileHash, imageData)
+			let compressedImage = getImageIfCompressed(fileHash, imageData);
 			if (compressedImage) {
 				return {
 					...(await imageDataAccumulator),
@@ -53,7 +53,7 @@ export function scanImagesFactory(serviceContainer: LocalMain.ServiceContainerSe
 					originalSize: fileSize,
 				},
 			};
-		}, Promise.resolve({})) as SiteImageData['imageData'];
+		}, Promise.resolve({})) as CombinedStateData['imageData'];
 
 		const totalImagesSize = await Object.values(updatedSiteImageData).reduce(
 			(acc, data) => {
@@ -93,10 +93,10 @@ export function scanImagesFactory(serviceContainer: LocalMain.ServiceContainerSe
 
 		const nextSiteImageData = {
 			...siteImageData,
-			compressedTotalSize: compressedTotalSize,
-			originalTotalSize: totalImagesSize,
 			imageData: updatedSiteImageData,
-			lastScan: Date.now(),
+			originalTotalSize: totalImagesSize,
+			compressedTotalSize: compressedTotalSize,
+			lastUpdated: Date.now(),
 			imageCount: filePaths.length,
 			totalCompressedCount: totalCompressedCount,
 			compressedImagesOriginalSize: compressedImagesOriginalSize,

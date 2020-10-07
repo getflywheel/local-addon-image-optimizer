@@ -12,12 +12,12 @@ import {
 import ReactDOM from 'react-dom';
 import { FileListModal } from './fileListModal'
 import { FileListHeader } from './fileListHeader'
-import { OptimizerStatus, RenderedImageData } from '../types';
+import { OptimizerStatus, CombinedStateData } from '../../types';
 import { ipcRenderer } from 'electron';
 import { IPC_EVENTS } from '../../constants'
 
 interface IFileListViewProps {
-	siteImageData: RenderedImageData,
+	combinedStateData: CombinedStateData,
 	handleCheckBoxChange: (imageID: string) => (isChecked: boolean) => void,
 	toggleSelectAll: (isChecked: boolean) => void,
 	getCompressionList: () => void,
@@ -28,7 +28,7 @@ interface IFileListViewProps {
 
 export const FileListView = (props: IFileListViewProps) =>  {
 	const {
-		siteImageData,
+		combinedStateData,
 		handleCheckBoxChange,
 		toggleSelectAll,
 		getCompressionList,
@@ -37,7 +37,7 @@ export const FileListView = (props: IFileListViewProps) =>  {
 		setOverviewSelected,
 	} = props;
 
-	const imageData = Object.values(siteImageData.imageData);
+	const imageData = Object.values(combinedStateData.imageData);
 
 	const cellRender: VirtualTableCellRenderer = (dataArgs: IVirtualTableCellRendererDataArgs) => {
 		switch (dataArgs.colKey) {
@@ -47,15 +47,15 @@ export const FileListView = (props: IFileListViewProps) =>  {
 						dataArgs={dataArgs}
 						handleCheckBoxChange={handleCheckBoxChange}
 						toggleSelectAll={toggleSelectAll}
-						toggleSelectAllValue={siteImageData.selectAllFilesValue}
-						optimizationStatus={siteImageData.optimizationStatus}
+						toggleSelectAllValue={combinedStateData.selectAllFilesValue}
+						optimizationStatus={combinedStateData.optimizationStatus}
 					/>
 				);
 			case 'filePath':
 				return (
 					<ColFileName
 						dataArgs={dataArgs}
-						optimizationStatus={siteImageData.optimizationStatus}
+						optimizationStatus={combinedStateData.optimizationStatus}
 					/>
 				);
 			case 'originalSize':
@@ -86,7 +86,6 @@ export const FileListView = (props: IFileListViewProps) =>  {
 	}
 
 	const invokeModal = () =>  {
-
 		const onSubmit = () => {
 			getCompressionList();
 			FlyModal.onRequestClose();
@@ -109,19 +108,19 @@ export const FileListView = (props: IFileListViewProps) =>  {
 	return(
 		<div className='fileView_Container'>
 			<FileListHeader
-				siteImageData={siteImageData}
+				combinedStateData={combinedStateData}
 				resetToOverview={resetToOverview}
 				invokeModal={invokeModal}
 				getAllChecked={getAllChecked}
 				onCancel={onCancel}
 				setOverviewSelected={setOverviewSelected}
 			/>
-				<ProgressBar progress={siteImageData.compressionListCompletionPercentage} />
+				<ProgressBar progress={combinedStateData.compressionListCompletionPercentage} />
 			<div className='fileListViewer_File_List'>
 				<VirtualTable
 					rowClassName='fileList_Virtual_Table_Row'
 					cellRenderer={cellRender}
-					data={siteImageData.optimizationStatus === OptimizerStatus.BEFORE ? imageData : getAllChecked()}
+					data={combinedStateData.optimizationStatus === OptimizerStatus.BEFORE ? imageData : getAllChecked()}
 					headers={[
 						{ key: 'fileStatus', value: '', className: 'fileListViewer_Column_Selected'},
 						{ key: 'filePath', value: 'Filename', className: 'fileListViewer_Column_File_Name'},
