@@ -58,14 +58,21 @@ export interface CombinedStateData {
 	// File list view
 	optimizationStatus?: OptimizerStatus;
 
-	// Calculate percentage of completed optimization job
+	// Percentage of completed optimization job
+	// File list view header
 	compressionListTotal?: number;
 	compressionListCounter?: number;
 	compressionListCompletionPercentage?: number;
 
-	// Calculate total decrease from one optimization session
+	// Total decrease from all optimization sessions
+	// Overview page
 	compressedImagesOriginalSize?: number,
 	compressedImagesNewSize?: number,
+
+	// Total decrease from one optimization session
+	// File list view header
+	sessionTotalOriginalSize: number,
+	sessionTotalCompressedSize: number,
 }
 
 export interface CachedImageDataBySiteID {

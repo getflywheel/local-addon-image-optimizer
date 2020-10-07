@@ -76,7 +76,7 @@ export const FileListHeader = (props: IFileListHeaderProps) => {
         return (
             <div className='fileView_Header'>
                 <div className='fileView_Header_Text'>
-					Optimization complete! You've saved{' '}{calculateToMb(combinedStateData.compressedImagesOriginalSize-combinedStateData.compressedTotalSize)}{' '}MB of space.
+					Optimization complete! You've saved{' '}{calculateToMb(combinedStateData.sessionTotalOriginalSize-combinedStateData.sessionTotalCompressedSize)}{' '}MB of space.
                 </div>
 
                 <Button

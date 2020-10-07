@@ -131,8 +131,9 @@ const ImageOptimizer = (props: IProps) => {
 
 	// compiles the list of images to be sent to the main thread for compression
 	const getCompressionList = () => {
-		const compressionList = Object.entries(combinedStateData.imageData).reduce((acc, [id, data]) => {
+		const compressionList: [string, ImageData][] = Object.entries(combinedStateData.imageData);
 
+		const compressionListTotal = compressionList.reduce((acc, [id, data]) => {
 			if (data.isChecked) {
 				acc.push(id);
 			}
@@ -140,13 +141,13 @@ const ImageOptimizer = (props: IProps) => {
 		}, [])
 
 		dispatchCombinedStateData({ type: STATE_UPDATE_ACTIONS.IS_OPTIMIZING, payload: {
-			compressionListTotal: compressionList.length
+			compressionListTotal: compressionListTotal.length
 		} });
 
 		ipcRenderer.send(
 			IPC_EVENTS.COMPRESS_IMAGES,
 			props.match.params.siteID,
-			compressionList,
+			compressionListTotal,
 			props.preferences.stripMetaData,
 		);
 	}

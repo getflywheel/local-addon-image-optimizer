@@ -5,23 +5,11 @@ interface IAction {
 	payload?: GenericObject
 };
 
-export const POPULATE_FILE_LIST = {
-	SET_IMAGE_DATA: 'get_image_data',
-	TOGGLE_CHECKED_ONE: 'toggle_checked_one',
-	TOGGLE_CHECKED_ALL: 'toggle_checked_all',
-	IS_OPTIMIZING: 'is_optimizing',
-	COMPRESS_ALL_IMAGES_COMPLETE: 'compress_all_images_complete',
-	IMAGE_OPTIMIZE_STARTED: 'image_optimize_started',
-	IMAGE_OPTIMIZE_FAIL: 'image_optimize_fail',
-	IMAGE_OPTIMIZE_SUCCESS: 'image_optimize_success',
-}
-
 export const STATE_UPDATE_ACTIONS = {
 	SCAN_REQUEST: 'scan:request',
 	SCAN_SUCCESS: 'scan:success',
 	SCAN_FAILURE: 'scan:failure',
 	ON_OPTIMIZE_SUCCESS: 'scan:optimizeSuccess',
-
 	SET_UNCOMPRESSED_IMAGE_DATA: 'set_image_data',
 	TOGGLE_SELECT_ONE_IMAGE: 'toggle_checked_one',
 	TOGGLE_SELECT_ALL_IMAGES: 'toggle_checked_all',
@@ -84,10 +72,10 @@ export function combinedStateReducer(state: CombinedStateData, action: IAction )
 						}, {}),
 				selectAllFilesValue: true,
 				optimizationStatus: OptimizerStatus.BEFORE,
+				compressionListCounter: 0,
 				compressionListCompletionPercentage: 0,
-				originalTotalSize: 0,
-				compressedImagesOriginalSize: 0,
-				compressedTotalSize: 0,
+				sessionTotalOriginalSize: 0,
+				sessionTotalCompressedSize: 0,
 			};
 
 		case STATE_UPDATE_ACTIONS.TOGGLE_SELECT_ONE_IMAGE:
@@ -120,9 +108,6 @@ export function combinedStateReducer(state: CombinedStateData, action: IAction )
 					...state,
 					optimizationStatus: OptimizerStatus.RUNNING,
 					compressionListTotal: action.payload.compressionListTotal,
-					compressionListCounter: 0,
-					compressedImagesOriginalSize: 0,
-					compressedTotalSize: 0,
 			}
 
 		case STATE_UPDATE_ACTIONS.COMPRESS_ALL_IMAGES_COMPLETE:
@@ -156,11 +141,11 @@ export function combinedStateReducer(state: CombinedStateData, action: IAction )
 					},
 					compressionListCounter: incrementCounter,
 					compressionListCompletionPercentage: incrementProgress,
-					compressedImagesOriginalSize: state.compressedImagesOriginalSize += action.payload.originalSize,
-					compressedTotalSize: state.compressedTotalSize += action.payload.compressedSize,
+					sessionTotalOriginalSize: state.sessionTotalOriginalSize += action.payload.originalSize,
+					sessionTotalCompressedSize: state.sessionTotalCompressedSize += action.payload.compressedSize,
 			}
 
-		case POPULATE_FILE_LIST.IMAGE_OPTIMIZE_FAIL:
+		case STATE_UPDATE_ACTIONS.IMAGE_OPTIMIZE_FAIL:
 			return {
 					...state,
 					imageData: {
