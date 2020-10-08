@@ -80,9 +80,9 @@ export async function getImageFilePathsHelper(contentPath: string): Promise<stri
  *
  * @param site
  */
-export async function getImageFilePaths(site: Local.Site) {
+export async function getImageFilePaths(webRoot: Local.Site['paths']['webRoot']) {
 	return getImageFilePathsHelper(
-		path.join(site.paths.webRoot, 'wp-content', 'uploads'),
+		path.join(webRoot, 'wp-content', 'uploads'),
 	);
 }
 
