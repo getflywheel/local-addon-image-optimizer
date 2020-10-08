@@ -1,17 +1,17 @@
 import {
 	CombinedStateData,
-	CachedImageDataBySiteID,
+	CachedStateBySiteID,
 	Store, CancelCompression, RuntimeStore
 } from '../types';
 
-export function createStore(initialState: CachedImageDataBySiteID = {}): Store {
+export function createStore(initialState: CachedStateBySiteID = {}): Store {
 	let state = initialState;
 
 	return {
 		/**
 		 * returns the current state
 		 */
-		getState(): CachedImageDataBySiteID {
+		getState(): CachedStateBySiteID {
 			return state;
 		},
 
@@ -29,7 +29,7 @@ export function createStore(initialState: CachedImageDataBySiteID = {}): Store {
 		 *
 		 * @param update new state
 		 */
-		setState(newState: CachedImageDataBySiteID): void {
+		setState(newState: CachedStateBySiteID): void {
 			state = {
 				...state,
 				...newState,

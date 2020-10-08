@@ -75,7 +75,7 @@ export interface CombinedStateData {
 	sessionTotalCompressedSize?: number,
 }
 
-export interface CachedImageDataBySiteID {
+export interface CachedStateBySiteID {
 	[siteID: string]: CombinedStateData;
 }
 
@@ -84,9 +84,9 @@ export interface CancelCompression {
 }
 
 export interface Store {
-	getState: () => CachedImageDataBySiteID;
+	getState: () => CachedStateBySiteID;
 	getStateBySiteID: (siteID: string) => CombinedStateData;
-	setState: (newState: CachedImageDataBySiteID) => void;
+	setState: (newState: CachedStateBySiteID) => void;
 	setStateBySiteID: (siteID: string, newState: CombinedStateData) => void;
 }
 
