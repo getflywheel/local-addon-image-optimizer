@@ -21,7 +21,7 @@ export function createStore(initialState: CachedImageDataBySiteID = {}): Store {
 		 * @param siteID
 		 */
 		getStateBySiteID(siteID: string): SiteImageData {
-			return state[siteID] || ({} as SiteImageData);
+			return state[siteID] || ({ imageData: {}} as SiteImageData);
 		},
 
 		/**
