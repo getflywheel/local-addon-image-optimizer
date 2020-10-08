@@ -146,7 +146,7 @@ describe('getImageFilePaths', () => {
 
 		const mockSite = { paths: { webRoot } };
 
-		await getImageFilePaths(mockSite as Local.Site);
+		await getImageFilePaths(mockSite.paths.webRoot);
 
 		const contentPathArg = recursiveReaddir.mock.calls[1][0];
 

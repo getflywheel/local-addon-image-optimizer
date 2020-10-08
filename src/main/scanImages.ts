@@ -1,12 +1,8 @@
-import fs from 'fs-extra';
-import type LocalMain from '@getflywheel/local/main';
+import path from 'path';
+import * as LocalMain from '@getflywheel/local/main';
 import { SiteImageData, Store } from '../types';
-import {
-	saveImageDataToDisk,
-	getImageFilePaths,
-	getImageIfCompressed,
-	getFileHash,
-} from './utils';
+import { saveImageDataToDisk } from './utils';
+
 
 /**
  * Scans a site's wp-content dir for images
@@ -24,44 +20,46 @@ export function scanImagesFactory(serviceContainer: LocalMain.ServiceContainerSe
 			return new Promise((resolve, reject) => reject(new Error('Site not found!')));
 		}
 
-		const filePaths = await getImageFilePaths(site);
+		// @ts-ignore
+		const childProcess = LocalMain.workerFork(
+			path.join(__dirname, 'scanImagesProcess'),
+		);
 
-		const siteImageData = imageDataStore.getStateBySiteID(siteID);
-		const imageData = siteImageData.imageData || {};
+		// @ts-ignore
+		const processMessageHelper: (name: string, payload?: any) => any = LocalMain.childProcessMessagePromiseFactory(childProcess);
 
-		const updatedSiteImageData = await filePaths.reduce(async (
-			imageDataAccumulator: Promise<SiteImageData['imageData']>,
-			filePath: string,
-		) => {
-			const fileSize = fs.statSync(filePath).size;
+		// @ts-ignore
+		const filePaths = await processMessageHelper<string[]>(
+			'get-file-paths',
+			{
+				webRoot: site.paths.webRoot,
+			},
+		);
 
-			const fileHash = await getFileHash(filePath);
+		const siteData = imageDataStore.getStateBySiteID(siteID);
+		const imageData = siteData.imageData || {};
 
-			let compressedImage = getImageIfCompressed(fileHash, imageData)
-			if (compressedImage) {
-				return {
-					...(await imageDataAccumulator),
-					[compressedImage.originalImageHash]: compressedImage,
-				}
-			}
+		// @ts-ignore
+		const updatedImageData = await processMessageHelper<SiteImageData['imageData']>(
+			'get-image-stats',
+			{
+				filePaths,
+				imageData,
+			},
+			/**
+			 * @todo
+			 *
+			 * kill the type casting once this is exposed in Local API
+			 */
+		) as SiteImageData['imageData'];
 
-			return {
-				...(await imageDataAccumulator),
-				[fileHash]: {
-					originalImageHash: fileHash,
-					filePath,
-					originalSize: fileSize,
-				},
-			};
-		}, Promise.resolve({})) as SiteImageData['imageData'];
-
-		const totalImagesSize = await Object.values(updatedSiteImageData).reduce(
+		const totalImagesSize = await Object.values(updatedImageData).reduce(
 			(acc, data) => {
 				return acc + data.originalSize;
 			}, 0
 		);
 
-		const compressedTotalSize = await Object.values(updatedSiteImageData).reduce(
+		const compressedTotalSize = await Object.values(updatedImageData).reduce(
 			(acc, data) => {
 				if (typeof data.compressedSize === 'number') {
 					return acc + data.compressedSize;
@@ -71,7 +69,7 @@ export function scanImagesFactory(serviceContainer: LocalMain.ServiceContainerSe
 			}, 0
 		);
 
-		const totalCompressedCount = await Object.values(updatedSiteImageData).reduce(
+		const totalCompressedCount = await Object.values(updatedImageData).reduce(
 			(acc, data) => {
 				if (data.compressedImageHash) {
 					return acc + 1;
@@ -81,7 +79,7 @@ export function scanImagesFactory(serviceContainer: LocalMain.ServiceContainerSe
 			}, 0
 		);
 
-		const compressedImagesOriginalSize = await Object.values(updatedSiteImageData).reduce(
+		const compressedImagesOriginalSize = await Object.values(updatedImageData).reduce(
 			(acc, data) => {
 				if (data.compressedImageHash) {
 					return acc + data.originalSize;
@@ -92,10 +90,10 @@ export function scanImagesFactory(serviceContainer: LocalMain.ServiceContainerSe
 		);
 
 		const nextSiteImageData = {
-			...siteImageData,
+			...siteData,
 			compressedTotalSize: compressedTotalSize,
 			originalTotalSize: totalImagesSize,
-			imageData: updatedSiteImageData,
+			imageData: updatedImageData,
 			lastScan: Date.now(),
 			imageCount: filePaths.length,
 			totalCompressedCount: totalCompressedCount,
