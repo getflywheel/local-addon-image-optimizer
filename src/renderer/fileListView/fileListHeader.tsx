@@ -5,7 +5,7 @@ import {
 } from '@getflywheel/local-components';
 import { ImageData } from '../../types';
 import { OptimizerStatus, CombinedStateData } from '../../types';
-import { calculateToMb } from '../utils';
+import { bytesToMB } from '../utils';
 import ChevronArrowSVG from '../_assets/svg/chevron-arrow-right.svg';
 
 interface IFileListHeaderProps {
@@ -76,7 +76,7 @@ export const FileListHeader = (props: IFileListHeaderProps) => {
         return (
             <div className='fileView_Header'>
                 <div className='fileView_Header_Text'>
-					Optimization complete! You've saved{' '}{calculateToMb(combinedStateData.sessionTotalOriginalSize-combinedStateData.sessionTotalCompressedSize)}{' '}MB of space.
+					Optimization complete! You've saved{' '}{bytesToMB(combinedStateData.sessionTotalOriginalSize-combinedStateData.sessionTotalCompressedSize)}{' '}MB of space.
                 </div>
 
                 <Button

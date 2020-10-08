@@ -4,7 +4,7 @@ import {Button, Text, TableList, TableListRow, TextButton } from '@getflywheel/l
 import classnames from 'classnames';
 import { ipcRenderer } from 'electron';
 import { IPC_EVENTS } from '../constants';
-import { formatCompressedPercentage, calculateToMb } from './utils';
+import { formatCompressedPercentage, bytesToMB } from './utils';
 import { CombinedStateData } from '../types';
 
 interface IProps {
@@ -74,7 +74,7 @@ const LastOptimizeStatus: React.FC<IProps> = (props: IProps) => {
 			</TableListRow>
 			<TableListRow className="lastOptimizeStatus_Row">
 				<Text className="lastOptimizeStatus_Text">Total file size reductions</Text>
-				<Text className="lastOptimizeStatus_Text">{calculateToMb(compressedImagesOriginalSize - compressedTotalSize)}{' '}MB</Text>
+				<Text className="lastOptimizeStatus_Text">{bytesToMB(compressedImagesOriginalSize - compressedTotalSize)}{' '}MB</Text>
 			</TableListRow>
 			<TableListRow className="lastOptimizeStatus_Row">
 				<Text className="lastOptimizeStatus_Text">Total images optimized</Text>

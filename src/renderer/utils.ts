@@ -6,8 +6,8 @@ export function calculateRemainingUncompressed (numOne: number, numTwo: number) 
 	return numOne - numTwo;
 }
 
-export function calculateToMb (num: number) {
-	return (num / (1024*1024)).toFixed(2)
+export function bytesToMB (bytes: number) {
+	return (bytes / (1024*1024)).toFixed(2)
 }
 
 export function getFormattedTimestamp(date: number) {
