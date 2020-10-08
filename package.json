@@ -24,8 +24,8 @@
   },
   "license": "MIT",
   "scripts": {
-	"build": "yarn webpack --config webpack.config.js",
-	"clean": "rm -rf lib node_modules",
+    "build": "yarn webpack --config webpack.config.js",
+    "clean": "rm -rf lib node_modules",
     "prepare": "yarn build",
     "watch": "yarn run build --watch",
     "test": "yarn jest src/**/*.test.ts",
@@ -50,7 +50,8 @@
     "ts-loader": "^8.0.4",
     "typescript": "^4.0.2",
     "webpack": "^4.44.2",
-    "webpack-cli": "^3.3.12"
+    "webpack-cli": "^3.3.12",
+    "webpack-merge": "^5.2.0"
   },
   "peerDependencies": {
     "react": ">= 16.4.0",
