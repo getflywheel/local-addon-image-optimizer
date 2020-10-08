@@ -1,4 +1,5 @@
 const path = require('path');
+const { merge } = require('webpack-merge');
 
 const commonConfig = {
 	node: {
@@ -82,4 +83,4 @@ module.exports = [
 			],
 		},
 	},
-].map(c => ({ ...commonConfig, ...c }));
+].map(c => merge(commonConfig, c));
