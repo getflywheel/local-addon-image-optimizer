@@ -1,7 +1,7 @@
 import { createStore, combineReducers } from 'redux';
 import * as LocalRenderer from '@getflywheel/local/renderer';
-import { IPC_EVENTS } from './constants';
-import { Preferences } from './types';
+import { IPC_EVENTS } from '../constants';
+import { Preferences } from '../types';
 import { preferencesReducer } from './reducers'
 
 
