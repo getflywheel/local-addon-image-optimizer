@@ -3,7 +3,7 @@ import path from 'path';
 import { Provider } from 'react-redux';
 import * as LocalRenderer from '@getflywheel/local/renderer';
 import { IPC_EVENTS } from './constants';
-import makeStore from './store';
+import makeStore from './renderer/store';
 import ImageOptimizer from './renderer/index';
 import { MetaDataRow } from './renderer/preferencesRows';
 

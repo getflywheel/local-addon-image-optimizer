@@ -18,7 +18,10 @@
 		"target": "es2015"
 	},
 	"exclude": [
-		"node_modules"
+		"src/**/*.test.ts",
+		"src/test",
+		"src/renderer",
+		"src/renderer.tsx"
 	],
 	"include": [
 		"src"
