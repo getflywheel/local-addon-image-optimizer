@@ -20,14 +20,23 @@ export function scanImagesFactory(serviceContainer: LocalMain.ServiceContainerSe
 			return new Promise((resolve, reject) => reject(new Error('Site not found!')));
 		}
 
+		/**
+		 * @todo - remove @ts-ignore once the new Local api changes are published
+		 */
 		// @ts-ignore
 		const childProcess = LocalMain.workerFork(
 			path.join(__dirname, 'scanImagesProcess'),
 		);
 
+		/**
+		 * @todo - remove @ts-ignore once the new Local api changes are published
+		 */
 		// @ts-ignore
 		const processMessageHelper: (name: string, payload?: any) => any = LocalMain.childProcessMessagePromiseFactory(childProcess);
 
+		/**
+		 * @todo - remove @ts-ignore once the new Local api changes are published
+		 */
 		// @ts-ignore
 		const filePaths = await processMessageHelper<string[]>(
 			'get-file-paths',
@@ -39,6 +48,9 @@ export function scanImagesFactory(serviceContainer: LocalMain.ServiceContainerSe
 		const siteData = imageDataStore.getStateBySiteID(siteID);
 		const imageData = siteData.imageData || {};
 
+		/**
+		 * @todo - remove @ts-ignore once the new Local api changes are published
+		 */
 		// @ts-ignore
 		const updatedImageData = await processMessageHelper<SiteImageData['imageData']>(
 			'get-image-stats',
@@ -47,9 +59,7 @@ export function scanImagesFactory(serviceContainer: LocalMain.ServiceContainerSe
 				imageData,
 			},
 			/**
-			 * @todo
-			 *
-			 * kill the type casting once this is exposed in Local API
+			 * @todo - kill the type casting once this is exposed in Local API
 			 */
 		) as SiteImageData['imageData'];
 
