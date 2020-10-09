@@ -32,20 +32,24 @@ export default async function (context) {
 		/>
 	));
 
-	// Create the route/page of content that will be displayed when the menu option is clicked
 	hooks.addContent('routesSiteInfo', () => (
 		<Route
 			key={`${addonID}-addon`}
-			path={`/main/site-info/:siteID/imageOptimizer`}
+			path={`/main/site-info/:siteID/${addonID}`}
 			render={withStoreProvider(ImageOptimizer)}
 		/>
 	));
 
-	hooks.addContent('imageOptimizer', function (props) {
-		const EnhancedImageOptimizer = withStoreProvider(ImageOptimizer);
-		return (
-			<EnhancedImageOptimizer {...props} />
-		);
+	hooks.addFilter('siteInfoMoreMenu', function (menu, site) {
+		menu.push({
+			label: 'Image Optimizer',
+			enabled: true,
+			click: () => {
+				context.events.send('goToRoute', `/main/site-info/${site.id}/${addonID}`);
+			}
+		});
+
+		return menu;
 	});
 
 	hooks.addFilter(
