@@ -17,8 +17,8 @@ export const ColFileName = ( props: IFileNameProps ) =>  {
 		).length;
 	}
 
- 	const getFileName = () => {
-		return dataArgs.cellData.replace(/^.*public/g, '.');
+ 	const formatFileName = () => {
+		return dataArgs.cellData.replace(/^.*Local\sSites.*public/g, '.');
 	}
 
 	if (dataArgs.isHeader) {
@@ -30,7 +30,7 @@ export const ColFileName = ( props: IFileNameProps ) =>  {
 	} else {
 		return(
 			<div className='fileList_File_Name_Row'>
-				{getFileName()}
+				{formatFileName()}
 			</div>
 		);
 	}
