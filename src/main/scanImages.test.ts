@@ -56,12 +56,10 @@ describe('scanImages', () => {
 
 	it('calls getImageFilePaths once with the correct args', () => {
 		expect(utils.getImageFilePaths.mock.calls).toBeArrayOfSize(1);
-		/**
-		 * @todo
-		 *
-		 * confirm this assertion is good to go with the getImageFilePaths function signature change
-		 */
-		expect(utils.getImageFilePaths.mock.calls[0][0]).toEqual(serviceContainer.siteData.getSite.mock.results[0][0])
+
+		expect(utils.getImageFilePaths.mock.calls[0][0]).toEqual(
+			serviceContainer.siteData.getSite.mock.results[0].value.paths.webRoot
+		);
 	});
 
 	it('calls getFileHash once for each file ', () => {
