@@ -18,7 +18,7 @@ export const ColFileName = ( props: IFileNameProps ) =>  {
 	}
 
  	const getFileName = () => {
-		return path.basename(dataArgs.cellData)
+		return dataArgs.cellData.replace(/^.*public/g, '.');
 	}
 
 	if (dataArgs.isHeader) {
