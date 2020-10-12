@@ -18,7 +18,7 @@ export const ColFileName = ( props: IFileNameProps ) =>  {
 	}
 
  	const formatFileName = () => {
-		return dataArgs.cellData.replace(/^.*Local\sSites.*public/g, '.');
+		return dataArgs.cellData.replace(/^.*Local.*public/g, '.');
 	}
 
 	if (dataArgs.isHeader) {
