@@ -4,7 +4,7 @@ import { Overview } from './overview';
 import { FileListView } from './fileListView/fileListView';
 import { IPC_EVENTS } from '../constants';
 import { ipcRenderer } from 'electron';
-import { RenderedImageData, OptimizerStatus } from './types';
+import { SiteImageData, OptimizerStatus } from '../types';
 import { Preferences } from '../types';
 import { scanImageReducer, initialState, SCAN_IMAGES_ACTIONS } from './reducers/scanImageReducer';
 import * as LocalRenderer from '@getflywheel/local/renderer';
@@ -19,7 +19,7 @@ interface IProps {
 
 const ImageOptimizer = (props: IProps) => {
 	const [overviewSelected, setOverviewSelected] = useState(true);
-	const initialImageData = {} as RenderedImageData;
+	const initialImageData = {} as SiteImageData;
 	const [siteImageData, dispatchSiteImageData] = useReducer(fileListReducer, initialImageData);
 	const [scanImageState, dispatchScanImageData] = useReducer(scanImageReducer, initialState);
 
@@ -50,6 +50,8 @@ const ImageOptimizer = (props: IProps) => {
 			props.match.params.siteID,
 			DatasetType.ONLY_UNCOMPRESSED
 		);
+
+		dispatchScanImageData({ type: SCAN_IMAGES_ACTIONS.SUCCESS, payload: mainImageData });
 
 		dispatchSiteImageData({
 			type: POPULATE_FILE_LIST.SET_IMAGE_DATA, payload: mainImageData

@@ -101,10 +101,10 @@ export function scanImagesFactory(serviceContainer: LocalMain.ServiceContainerSe
 
 		const nextSiteImageData = {
 			...siteData,
-			compressedTotalSize: compressedTotalSize,
-			originalTotalSize: totalImagesSize,
 			imageData: updatedImageData,
 			lastScan: Date.now(),
+			originalTotalSize: totalImagesSize,
+			compressedTotalSize: compressedTotalSize,
 			imageCount: filePaths.length,
 			totalCompressedCount: totalCompressedCount,
 			compressedImagesOriginalSize: compressedImagesOriginalSize,

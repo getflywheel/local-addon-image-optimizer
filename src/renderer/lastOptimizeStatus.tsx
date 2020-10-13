@@ -5,15 +5,11 @@ import classnames from 'classnames';
 import { ipcRenderer } from 'electron';
 import { IPC_EVENTS } from '../constants';
 import { formatCompressedPercentage, calculateToMb } from './utils';
+import { SiteImageData } from '../types';
 
 interface IProps {
-	lastUpdated: number,
-	totalImageOptimized: string,
+	scanImageState: SiteImageData,
 	handleScanForImages: () => void,
-	scanImageState: GenericObject,
-	originalTotalSize: number,
-	compressedImagesOriginalSize: number,
-	compressedImagesNewSize: number,
 }
 
 // open preferences tab for addon
@@ -21,55 +17,68 @@ const openPreferences = () => {
 	ipcRenderer.send(IPC_EVENTS.GO_TO_PREFERENCES);
 }
 
-const LastOptimizeStatus: React.FC<IProps> = (props: IProps) => (
-	<TableList className="lastOptimizeStatus_Table">
-		<TableListRow className={classnames(
-					"lastOptimizeStatus_Row",
-					"lastOptimizeStatus_Header_Row",
-				)}>
-			 {props.lastUpdated !== 0
-			 ? <Text
-					className="lastOptimizeStatus_Text"
-					privateOptions={{
-						fontWeight: "bold"
-					}}
-				>
-					{'Last updated: '}{getFormattedTimestamp(props.lastUpdated)}
-				</Text>
-			 : null}
-			<TextButton className="lastOptimizeStatus_Button" onClick={openPreferences}>
-				Settings
-			</TextButton>
-			<Button
-					className="lastOptimizeStatus_Rescan_Button"
-                    onClick={() => props.handleScanForImages()}
-                    privateOptions={{
-                        color: 'green',
-                        form: 'fill'
-					}}
-					disabled={props.scanImageState.scanLoading}
-                >
-                    {props.scanImageState.scanLoading ? 'Scanning...' : 'Scan'}
-                </Button>
-		</TableListRow>
-		<TableListRow className="lastOptimizeStatus_Row">
-			<Text className="lastOptimizeStatus_Text">Total reductions</Text>
-			<Text className="lastOptimizeStatus_Text">
-				{
-					props.originalTotalSize === 0
-					? '0'
-					: formatCompressedPercentage((props.compressedImagesOriginalSize - props.compressedImagesNewSize)/props.originalTotalSize)
-				}%</Text>
-		</TableListRow>
-		<TableListRow className="lastOptimizeStatus_Row">
-			<Text className="lastOptimizeStatus_Text">Total file size reductions</Text>
-			<Text className="lastOptimizeStatus_Text">{calculateToMb(props.compressedImagesOriginalSize - props.compressedImagesNewSize)}{' '}MB</Text>
-		</TableListRow>
-		<TableListRow className="lastOptimizeStatus_Row">
-			<Text className="lastOptimizeStatus_Text">Total images optimized</Text>
-			<Text className="lastOptimizeStatus_Text">{props.totalImageOptimized}</Text>
-		</TableListRow>
-	</TableList>
-);
+const LastOptimizeStatus: React.FC<IProps> = (props: IProps) => {
+	const {
+		lastScan,
+		originalTotalSize,
+		compressedImagesOriginalSize,
+		compressedImagesNewSize,
+		totalCompressedCount,
+		imageCount,
+	} = props.scanImageState;
+
+	const totalImageOptimized = `${totalCompressedCount}/${imageCount}`;
+
+	return (
+		<TableList className="lastOptimizeStatus_Table">
+			<TableListRow className={classnames(
+						"lastOptimizeStatus_Row",
+						"lastOptimizeStatus_Header_Row",
+					)}>
+				{lastScan !== 0
+				? <Text
+						className="lastOptimizeStatus_Text"
+						privateOptions={{
+							fontWeight: "bold"
+						}}
+					>
+						{'Last updated: '}{getFormattedTimestamp(lastScan)}
+					</Text>
+				: null}
+				<TextButton className="lastOptimizeStatus_Button" onClick={openPreferences}>
+					Settings
+				</TextButton>
+				<Button
+						className="lastOptimizeStatus_Rescan_Button"
+						onClick={() => props.handleScanForImages()}
+						privateOptions={{
+							color: 'green',
+							form: 'fill'
+						}}
+						disabled={props.scanImageState.scanLoading}
+					>
+						{props.scanImageState.scanLoading ? 'Scanning...' : 'Scan'}
+					</Button>
+			</TableListRow>
+			<TableListRow className="lastOptimizeStatus_Row">
+				<Text className="lastOptimizeStatus_Text">Total reductions</Text>
+				<Text className="lastOptimizeStatus_Text">
+					{
+						originalTotalSize === 0
+						? '0'
+						: formatCompressedPercentage((compressedImagesOriginalSize - compressedImagesNewSize)/originalTotalSize)
+					}%</Text>
+			</TableListRow>
+			<TableListRow className="lastOptimizeStatus_Row">
+				<Text className="lastOptimizeStatus_Text">Total file size reductions</Text>
+				<Text className="lastOptimizeStatus_Text">{calculateToMb(compressedImagesOriginalSize - compressedImagesNewSize)}{' '}MB</Text>
+			</TableListRow>
+			<TableListRow className="lastOptimizeStatus_Row">
+				<Text className="lastOptimizeStatus_Text">Total images optimized</Text>
+				<Text className="lastOptimizeStatus_Text">{totalImageOptimized}</Text>
+			</TableListRow>
+		</TableList>
+	);
+}
 
 export default LastOptimizeStatus;

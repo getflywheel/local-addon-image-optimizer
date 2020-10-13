@@ -12,12 +12,12 @@ import {
 import ReactDOM from 'react-dom';
 import { FileListModal } from './fileListModal'
 import { FileListHeader } from './fileListHeader'
-import { OptimizerStatus, RenderedImageData } from '../types';
+import { OptimizerStatus, SiteImageData } from '../../types';
 import { ipcRenderer } from 'electron';
 import { IPC_EVENTS } from '../../constants'
 
 interface IFileListViewProps {
-	siteImageData: RenderedImageData,
+	siteImageData: SiteImageData,
 	handleCheckBoxChange: (imageID: string) => (isChecked: boolean) => void,
 	toggleSelectAll: (isChecked: boolean) => void,
 	getCompressionList: () => void,

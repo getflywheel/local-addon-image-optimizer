@@ -4,12 +4,12 @@ import {
 	TextButton,
 } from '@getflywheel/local-components';
 import { ImageData } from '../../types';
-import { OptimizerStatus, RenderedImageData } from '../types';
+import { OptimizerStatus, SiteImageData } from '../../types';
 import { calculateToMb } from '../utils';
 import ChevronArrowSVG from '../_assets/svg/chevron-arrow-right.svg';
 
 interface IFileListHeaderProps {
-	siteImageData: RenderedImageData,
+	siteImageData: SiteImageData,
 	setOverviewSelected: (x: boolean) => void,
     invokeModal: () => void,
 	getAllChecked: () => ImageData[],
