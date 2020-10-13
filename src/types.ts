@@ -21,18 +21,14 @@ export interface SiteImageData {
 	compressedTotalSize?: number;
 	imageCount?: number;
 	totalCompressedCount?: number;
-	scanLoading?: boolean,
-	scanError?: GenericObject,
-	remainingUncompressedImages?: number,
+	scanLoading?: boolean;
+	scanError?: GenericObject;
 	selectAllFilesValue?: boolean;
 	optimizationStatus?: OptimizerStatus;
 	compressionListTotal?: number;
 	compressionListCounter?: number;
 	compressionListCompletionPercentage?: number;
 	compressedImagesOriginalSize?: number;
-	compressedImagesNewSize?: number,
-	sessionTotalOriginalSize?: number,
-	sessionTotalCompressedSize?: number,
 }
 
 
