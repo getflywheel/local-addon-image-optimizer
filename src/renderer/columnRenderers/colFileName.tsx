@@ -18,7 +18,7 @@ export const ColFileName = ( props: IFileNameProps ) =>  {
 	}
 
  	const formatFileName = () => {
-		return dataArgs.cellData.replace(/^.*Local.*public/g, '.');
+		return dataArgs.cellData.replace(/^.*\/app\/public\/wp-content/g, `.${path.sep}wp-content`);
 	}
 
 	if (dataArgs.isHeader) {
