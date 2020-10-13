@@ -66,7 +66,17 @@ export function compressImagesFactory(serviceContainer: LocalMain.ServiceContain
 			 * We still include "uploads" in this new file path even though that is the "base" from which we scan
 			 * for images so that we can easily expand this to scan other directories within wp-content in the future
 			 */
-			const backupPath = filePath.replace(path.join(site.paths.webRoot, 'wp-content'), backupDirPath);
+			let backupPath = filePath.replace(path.join(site.paths.webRoot, 'wp-content'), backupDirPath);
+			const { dir, name, ext } = path.parse(backupPath);
+
+			let deDupeCounter = 1;
+
+			while (fs.existsSync(backupPath)) {
+				const tempName = `${name} (${deDupeCounter})${ext}`;
+				backupPath = path.join(dir, tempName);
+
+				deDupeCounter++;
+			}
 
 			fs.copySync(filePath, backupPath);
 
@@ -138,3 +148,4 @@ export function compressImagesFactory(serviceContainer: LocalMain.ServiceContain
 		serviceContainer.sendIPCEvent(IPC_EVENTS.COMPRESS_ALL_IMAGES_COMPLETE);
 	}
 };
+
