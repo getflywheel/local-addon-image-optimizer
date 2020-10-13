@@ -1,3 +1,5 @@
+import { SiteImageData } from "../../types";
+
 interface IScanImageState {
 	scanLoading: boolean,
 	scannedImages: {},
@@ -22,13 +24,11 @@ export const SCAN_IMAGES_ACTIONS = {
 	OPTIMIZE_SUCCESS: 'optimizeSuccess'
 }
 
-export const initialState: IScanImageState = {
+export const initialState: SiteImageData = {
+	imageData: {},
 	scanLoading: false,
-	scannedImages: {},
 	scanError: undefined,
-	lastUpdated: 0,
-	totalImageOptimized: '-/-',
-	remainingUncompressedImages: 0,
+	lastScan: 0,
 	originalTotalSize: 0,
 	compressedImagesOriginalSize: 0,
 	compressedImagesNewSize: 0,
@@ -36,22 +36,19 @@ export const initialState: IScanImageState = {
 
 
 
-export function scanImageReducer(state: IScanImageState, action: IAction) {
+export function scanImageReducer(state: SiteImageData, action: IAction) {
 	switch (action.type) {
 		case SCAN_IMAGES_ACTIONS.REQUEST:
-			return { ...state, scanLoading: true };
+			return {
+				...state,
+				scanLoading: true
+			};
 
 		case SCAN_IMAGES_ACTIONS.SUCCESS:
 			return {
 				...state,
-				lastUpdated: action.payload.lastScan,
+				...action.payload,
 				scanLoading: false,
-				scannedImages: action.payload,
-				totalImageOptimized: action.payload.totalCompressedCount + '/' + action.payload.imageCount,
-				remainingUncompressedImages: action.payload.imageCount - action.payload.totalCompressedCount,
-				originalTotalSize: action.payload.originalTotalSize,
-				compressedImagesOriginalSize: action.payload.compressedImagesOriginalSize,
-				compressedImagesNewSize: action.payload.compressedTotalSize,
 			};
 
 		case SCAN_IMAGES_ACTIONS.FAILURE:
@@ -60,12 +57,7 @@ export function scanImageReducer(state: IScanImageState, action: IAction) {
 		case SCAN_IMAGES_ACTIONS.OPTIMIZE_SUCCESS:
 			return {
 				...state,
-				lastUpdated: action.payload.lastScan,
-				totalImageOptimized: action.payload.totalCompressedCount + '/' + action.payload.imageCount,
-				remainingUncompressedImages: action.payload.imageCount - action.payload.totalCompressedCount,
-				originalTotalSize: action.payload.originalTotalSize,
-				compressedImagesOriginalSize: action.payload.compressedImagesOriginalSize,
-				compressedImagesNewSize: action.payload.compressedTotalSize,
+				...action.payload,
 			}
 
 		default:

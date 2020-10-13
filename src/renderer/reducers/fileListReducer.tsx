@@ -1,5 +1,5 @@
 import { FileStatus, ImageData } from '../../types';
-import { OptimizerStatus, RenderedImageData } from '../types'
+import { OptimizerStatus, SiteImageData } from '../../types'
 
 
 interface IAction {
@@ -18,7 +18,7 @@ export const POPULATE_FILE_LIST = {
 	IMAGE_OPTIMIZE_SUCCESS: 'image_optimize_success',
 }
 
-export function fileListReducer(state: RenderedImageData, action: IAction) {
+export function fileListReducer(state: SiteImageData, action: IAction) {
 
 	const incrementCounter = (state.compressionListCounter + 1);
 

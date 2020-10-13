@@ -8,6 +8,12 @@ export interface ImageData {
 	isChecked?: boolean;
 }
 
+export enum OptimizerStatus {
+	BEFORE = 'before',
+	RUNNING = 'running',
+	COMPLETE = 'complete'
+}
+
 export interface SiteImageData {
 	imageData: { [imageID: string]: ImageData };
 	lastScan?: number;
@@ -15,8 +21,20 @@ export interface SiteImageData {
 	compressedTotalSize?: number;
 	imageCount?: number;
 	totalCompressedCount?: number;
+	scanLoading?: boolean,
+	scanError?: GenericObject,
+	remainingUncompressedImages?: number,
+	selectAllFilesValue?: boolean;
+	optimizationStatus?: OptimizerStatus;
+	compressionListTotal?: number;
+	compressionListCounter?: number;
+	compressionListCompletionPercentage?: number;
 	compressedImagesOriginalSize?: number;
+	compressedImagesNewSize?: number,
+	sessionTotalOriginalSize?: number,
+	sessionTotalCompressedSize?: number,
 }
+
 
 export interface CachedImageDataBySiteID {
 	[siteID: string]: SiteImageData;
