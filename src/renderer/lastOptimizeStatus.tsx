@@ -22,7 +22,7 @@ const LastOptimizeStatus: React.FC<IProps> = (props: IProps) => {
 		lastScan,
 		originalTotalSize,
 		compressedImagesOriginalSize,
-		compressedImagesNewSize,
+		compressedTotalSize,
 		totalCompressedCount,
 		imageCount,
 	} = props.scanImageState;
@@ -66,12 +66,12 @@ const LastOptimizeStatus: React.FC<IProps> = (props: IProps) => {
 					{
 						originalTotalSize === 0
 						? '0'
-						: formatCompressedPercentage((compressedImagesOriginalSize - compressedImagesNewSize)/originalTotalSize)
+						: formatCompressedPercentage((compressedImagesOriginalSize - compressedTotalSize)/originalTotalSize)
 					}%</Text>
 			</TableListRow>
 			<TableListRow className="lastOptimizeStatus_Row">
 				<Text className="lastOptimizeStatus_Text">Total file size reductions</Text>
-				<Text className="lastOptimizeStatus_Text">{calculateToMb(compressedImagesOriginalSize - compressedImagesNewSize)}{' '}MB</Text>
+				<Text className="lastOptimizeStatus_Text">{calculateToMb(compressedImagesOriginalSize - compressedTotalSize)}{' '}MB</Text>
 			</TableListRow>
 			<TableListRow className="lastOptimizeStatus_Row">
 				<Text className="lastOptimizeStatus_Text">Total images optimized</Text>

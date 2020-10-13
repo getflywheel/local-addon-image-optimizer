@@ -99,7 +99,7 @@ const ImageOptimizer = (props: IProps) => {
 						});
 						const updatedScannedImages = await LocalRenderer.ipcAsync(IPC_EVENTS.SCAN_FOR_IMAGES, props.match.params.siteID);
 						dispatchScanImageData({
-							type: SCAN_IMAGES_ACTIONS.OPTIMIZE_SUCCESS, payload: updatedScannedImages
+							type: SCAN_IMAGES_ACTIONS.SUCCESS, payload: updatedScannedImages
 						});
 					},
 				);
@@ -110,7 +110,7 @@ const ImageOptimizer = (props: IProps) => {
 					IPC_EVENTS.SCAN_IMAGES_COMPLETE,
 					(_, scanImageState) => {
 						dispatchScanImageData({
-							type: SCAN_IMAGES_ACTIONS.OPTIMIZE_SUCCESS, payload: scanImageState
+							type: SCAN_IMAGES_ACTIONS.SUCCESS, payload: scanImageState
 						});
 					},
 				);

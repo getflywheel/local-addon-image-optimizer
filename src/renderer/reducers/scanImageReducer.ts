@@ -1,17 +1,5 @@
 import { SiteImageData } from "../../types";
 
-interface IScanImageState {
-	scanLoading: boolean,
-	scannedImages: {},
-	scanError: GenericObject,
-	lastUpdated: number,
-	totalImageOptimized: string,
-	remainingUncompressedImages: number,
-	originalTotalSize: number,
-	compressedImagesOriginalSize?: number,
-	compressedImagesNewSize?: number,
-};
-
 interface IAction {
 	type: string,
 	payload?: GenericObject
@@ -21,7 +9,6 @@ export const SCAN_IMAGES_ACTIONS = {
 	REQUEST: 'request',
 	SUCCESS: 'success',
 	FAILURE: 'failure',
-	OPTIMIZE_SUCCESS: 'optimizeSuccess'
 }
 
 export const initialState: SiteImageData = {
@@ -31,12 +18,10 @@ export const initialState: SiteImageData = {
 	lastScan: 0,
 	originalTotalSize: 0,
 	compressedImagesOriginalSize: 0,
-	compressedImagesNewSize: 0,
+	compressedTotalSize: 0,
 	imageCount: 0,
 	totalCompressedCount: 0,
 };
-
-
 
 export function scanImageReducer(state: SiteImageData, action: IAction) {
 	switch (action.type) {
@@ -54,12 +39,6 @@ export function scanImageReducer(state: SiteImageData, action: IAction) {
 
 		case SCAN_IMAGES_ACTIONS.FAILURE:
 			return { ...state, scanLoading: false, scanError: action.payload };
-
-		case SCAN_IMAGES_ACTIONS.OPTIMIZE_SUCCESS:
-			return {
-				...state,
-				...action.payload,
-			}
 
 		default:
 			return state;
