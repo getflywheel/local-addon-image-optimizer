@@ -2,6 +2,7 @@ import path from 'path';
 import * as LocalMain from '@getflywheel/local/main';
 import { SiteImageData, Store } from '../types';
 import { saveImageDataToDisk } from './utils';
+import { IPC_EVENTS } from '../constants';
 
 
 /**
@@ -13,12 +14,25 @@ import { saveImageDataToDisk } from './utils';
  * @returns ImageData[]
  */
 export function scanImagesFactory(serviceContainer: LocalMain.ServiceContainerServices, imageDataStore: Store) {
-	return async function(siteID: string): Promise<SiteImageData> {
+	return async function(siteID: string) {
 		const site = serviceContainer.siteData.getSite(siteID);
+		let siteData = imageDataStore.getStateBySiteID(siteID);
+		const imageData = siteData.imageData || {};
 
 		if (!site) {
-			return new Promise((resolve, reject) => reject(new Error('Site not found!')));
+			serviceContainer.sendIPCEvent(IPC_EVENTS.SCAN_IMAGES_FAILURE, new Error('Site not found!'));
 		}
+
+		const scanningSiteImageData = {
+			...siteData,
+			scanLoading: true,
+		};
+
+		imageDataStore.setStateBySiteID(siteID, scanningSiteImageData);
+
+		saveImageDataToDisk(imageDataStore, serviceContainer);
+
+		siteData = imageDataStore.getStateBySiteID(siteID);
 
 		/**
 		 * @todo - remove @ts-ignore once the new Local api changes are published
@@ -44,9 +58,6 @@ export function scanImagesFactory(serviceContainer: LocalMain.ServiceContainerSe
 				webRoot: site.paths.webRoot,
 			},
 		);
-
-		const siteData = imageDataStore.getStateBySiteID(siteID);
-		const imageData = siteData.imageData || {};
 
 		/**
 		 * @todo - remove @ts-ignore once the new Local api changes are published
@@ -102,6 +113,7 @@ export function scanImagesFactory(serviceContainer: LocalMain.ServiceContainerSe
 		const nextSiteImageData = {
 			...siteData,
 			imageData: updatedImageData,
+			scanLoading: false,
 			lastScan: Date.now(),
 			originalTotalSize: totalImagesSize,
 			compressedTotalSize: compressedTotalSize,
@@ -114,6 +126,6 @@ export function scanImagesFactory(serviceContainer: LocalMain.ServiceContainerSe
 
 		saveImageDataToDisk(imageDataStore, serviceContainer);
 
-		return nextSiteImageData;
+		serviceContainer.sendIPCEvent(IPC_EVENTS.SCAN_IMAGES_COMPLETE, nextSiteImageData);
 	}
 };

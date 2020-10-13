@@ -32,6 +32,8 @@ export const initialState: SiteImageData = {
 	originalTotalSize: 0,
 	compressedImagesOriginalSize: 0,
 	compressedImagesNewSize: 0,
+	imageCount: 0,
+	totalCompressedCount: 0,
 };
 
 
@@ -48,7 +50,6 @@ export function scanImageReducer(state: SiteImageData, action: IAction) {
 			return {
 				...state,
 				...action.payload,
-				scanLoading: false,
 			};
 
 		case SCAN_IMAGES_ACTIONS.FAILURE:

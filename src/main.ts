@@ -25,9 +25,9 @@ export default function (context) {
 	/**
 	 * Scan a site for images and return the list of all images found
 	 */
-	LocalMain.addIpcAsyncListener(
+	ipcMain.on(
 		IPC_EVENTS.SCAN_FOR_IMAGES,
-		async (siteID: string) => scanImages(siteID),
+		async (_, siteID: string) => scanImages(siteID),
 	);
 
 	/**

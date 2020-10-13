@@ -23,16 +23,13 @@ const ImageOptimizer = (props: IProps) => {
 	const [siteImageData, dispatchSiteImageData] = useReducer(fileListReducer, initialImageData);
 	const [scanImageState, dispatchScanImageData] = useReducer(scanImageReducer, initialState);
 
-	const scanForImages = async () => {
-		try {
-			dispatchScanImageData({ type: SCAN_IMAGES_ACTIONS.REQUEST });
-			const scannedImages = await LocalRenderer.ipcAsync(IPC_EVENTS.SCAN_FOR_IMAGES, props.match.params.siteID);
-			dispatchScanImageData({ type: SCAN_IMAGES_ACTIONS.SUCCESS, payload: scannedImages });
-		} catch (error) {
-			dispatchScanImageData({ type: SCAN_IMAGES_ACTIONS.FAILURE, payload: error });
-		}
+	const scanForImages = () => {
+		dispatchScanImageData({ type: SCAN_IMAGES_ACTIONS.REQUEST });
+		ipcRenderer.send(
+			IPC_EVENTS.SCAN_FOR_IMAGES,
+			props.match.params.siteID
+		);
 	}
-
 
 	// set up initial state for file list view
 	useEffect(
@@ -108,11 +105,35 @@ const ImageOptimizer = (props: IProps) => {
 				);
 			}
 
+			if (!ipcRenderer.listenerCount(IPC_EVENTS.SCAN_IMAGES_COMPLETE)) {
+				ipcRenderer.on(
+					IPC_EVENTS.SCAN_IMAGES_COMPLETE,
+					(_, scanImageState) => {
+						dispatchScanImageData({
+							type: SCAN_IMAGES_ACTIONS.OPTIMIZE_SUCCESS, payload: scanImageState
+						});
+					},
+				);
+			}
+
+			if (!ipcRenderer.listenerCount(IPC_EVENTS.SCAN_IMAGES_FAILURE)) {
+				ipcRenderer.on(
+					IPC_EVENTS.SCAN_IMAGES_COMPLETE,
+					(_, error) => {
+						dispatchScanImageData({
+							type: SCAN_IMAGES_ACTIONS.FAILURE, payload: error
+						});
+					},
+				);
+			}
+
 			return () => {
 				ipcRenderer.removeAllListeners(IPC_EVENTS.COMPRESS_IMAGE_STARTED);
 				ipcRenderer.removeAllListeners(IPC_EVENTS.COMPRESS_IMAGE_FAIL);
 				ipcRenderer.removeAllListeners(IPC_EVENTS.COMPRESS_IMAGE_SUCCESS);
 				ipcRenderer.removeAllListeners(IPC_EVENTS.COMPRESS_ALL_IMAGES_COMPLETE);
+				ipcRenderer.removeAllListeners(IPC_EVENTS.SCAN_IMAGES_COMPLETE);
+				ipcRenderer.removeAllListeners(IPC_EVENTS.SCAN_IMAGES_FAILURE);
 			}
 		},
 		[siteImageData],
