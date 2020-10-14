@@ -85,7 +85,7 @@ export function fileListReducer(state: SiteImageData, action: IAction) {
 		case POPULATE_FILE_LIST.COMPRESS_ALL_IMAGES_COMPLETE:
 			return {
 					...state,
-					optimizationStatus: action.payload.complete,
+					optimizationStatus: OptimizerStatus.COMPLETE,
 			}
 
 		case POPULATE_FILE_LIST.IMAGE_OPTIMIZE_STARTED:

@@ -95,11 +95,7 @@ const ImageOptimizer = (props: IProps) => {
 					IPC_EVENTS.COMPRESS_ALL_IMAGES_COMPLETE,
 					async () => {
 						dispatchSiteImageData({
-							type: POPULATE_FILE_LIST.COMPRESS_ALL_IMAGES_COMPLETE, payload: { complete: OptimizerStatus.COMPLETE }
-						});
-						const updatedScannedImages = await LocalRenderer.ipcAsync(IPC_EVENTS.SCAN_FOR_IMAGES, props.match.params.siteID);
-						dispatchScanImageData({
-							type: SCAN_IMAGES_ACTIONS.SUCCESS, payload: updatedScannedImages
+							type: POPULATE_FILE_LIST.COMPRESS_ALL_IMAGES_COMPLETE
 						});
 					},
 				);
