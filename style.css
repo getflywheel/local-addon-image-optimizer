@@ -73,6 +73,26 @@
 	fill: #ef4e65;
 }
 
+.modal-warning-svg path {
+	fill: #ef4e65;
+}
+
+.modal-warning-svg {
+	height: 58px;
+	padding-bottom: 10px;
+}
+
+.modal-warning-text {
+	padding-bottom: 30px;
+	padding-right: 50px;
+	padding-left: 50px;
+}
+
+.fileList_Modal_Warning_Button {
+	margin-top: 20px !important;
+	padding-top: 0;
+}
+
 .spinner-svg {
 	margin: 0 !important;
 	width: 10px !important;

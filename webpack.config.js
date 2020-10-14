@@ -9,6 +9,7 @@ module.exports = {
 		'react',
 		'@getflywheel/local-components',
 		'react-dom',
+		'react-router-dom',
 	],
 	devtool: 'source-map',
 	target: 'electron-renderer',
