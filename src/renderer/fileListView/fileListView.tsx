@@ -85,12 +85,22 @@ export const FileListView = (props: IFileListViewProps) =>  {
 		ipcRenderer.send(IPC_EVENTS.GO_TO_PREFERENCES);
 	}
 
-	const invokeModal = () =>  {
+	const invokeModal = (displayWarningContent: boolean, onCancel?: Function, onConfirm?: Function) =>  {
 
 		const onSubmit = () => {
 			getCompressionList();
 			FlyModal.onRequestClose();
 		};
+
+		const onCancelSelect = () => {
+			onCancel();
+			FlyModal.onRequestClose();
+		}
+
+		const onConfirmSelect = () => {
+			onConfirm();
+			FlyModal.onRequestClose();
+		}
 
 		ReactDOM.render (
 			(
@@ -100,6 +110,9 @@ export const FileListView = (props: IFileListViewProps) =>  {
 						<FileListModal
 							onSubmit={onSubmit}
 							openPreferences={openPreferencesModal}
+							displayWarningContent={displayWarningContent}
+							onConfirmSelect={onConfirmSelect}
+							onCancelSelect={onCancelSelect}
 						/>
 					</FlyModal>
 			), document.getElementById('popup-container'),

@@ -24,8 +24,8 @@
   },
   "license": "MIT",
   "scripts": {
-	"build": "tsc && yarn webpack --config webpack.config.js",
-	"clean": "rm -rf lib node_modules",
+    "build": "tsc && yarn webpack --config webpack.config.js",
+    "clean": "rm -rf lib node_modules",
     "prepare": "yarn run build",
     "watch-renderer": "yarn run build --watch",
     "test": "yarn jest src/**/*.test.ts",
@@ -70,6 +70,7 @@
     "react-dom": "^16.10.2",
     "react-redux": "^7.2.1",
     "react-router-dom": "^5.1.2",
+    "react-router-navigation-prompt": "^1.8.13",
     "recursive-readdir": "^2.2.2",
     "redux": "^4.0.5"
   },

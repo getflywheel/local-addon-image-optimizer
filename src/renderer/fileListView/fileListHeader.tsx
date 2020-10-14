@@ -7,11 +7,12 @@ import { ImageData } from '../../types';
 import { OptimizerStatus, SiteImageData } from '../../types';
 import { calculateToMb } from '../utils';
 import ChevronArrowSVG from '../_assets/svg/chevron-arrow-right.svg';
+import NavigationPrompt from 'react-router-navigation-prompt';
 
 interface IFileListHeaderProps {
 	siteImageData: SiteImageData,
 	setOverviewSelected: (x: boolean) => void,
-    invokeModal: () => void,
+    invokeModal: (displayWarningContent: boolean, onCancel?: Function, onConfirm?: Function) => void,
 	getAllChecked: () => ImageData[],
 	onCancel: () => void,
 	resetToOverview: () => void,
@@ -42,7 +43,7 @@ export const FileListHeader = (props: IFileListHeaderProps) => {
 
                 <Button
                     className='fileView_Button_Optimization'
-                    onClick={invokeModal}
+                    onClick={() => invokeModal(false)}
                     privateOptions={{
                         color: 'green',
                         form: 'fill'
@@ -56,6 +57,12 @@ export const FileListHeader = (props: IFileListHeaderProps) => {
     } else if (siteImageData.optimizationStatus === OptimizerStatus.RUNNING) {
         return (
             <div className='fileView_Header'>
+				<NavigationPrompt
+					when={true}
+				>
+					{({ onConfirm, onCancel }) => invokeModal(true, onConfirm, onCancel)}
+				</NavigationPrompt>
+
                 <div className='fileView_Header_Text'>
                     Optimizing...
                 </div>
