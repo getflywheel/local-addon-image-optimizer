@@ -21,7 +21,7 @@ export interface SiteImageData {
 	compressedTotalSize?: number;
 	imageCount?: number;
 	totalCompressedCount?: number;
-	scanLoading?: boolean;
+	scanInProgress?: boolean;
 	scanError?: GenericObject;
 	selectAllFilesValue?: boolean;
 	optimizationStatus?: OptimizerStatus;
@@ -44,7 +44,7 @@ export interface Store {
 	getState: () => CachedImageDataBySiteID;
 	getStateBySiteID: (siteID: string) => SiteImageData;
 	setState: (newState: CachedImageDataBySiteID) => void;
-	setStateBySiteID: (siteID: string, newState: SiteImageData) => void;
+	setStateBySiteID: (siteID: string, newState: Partial<SiteImageData>) => void;
 }
 
 export interface RuntimeStore {

@@ -43,7 +43,7 @@ export function createStore(initialState: CachedImageDataBySiteID = {}): Store {
 		 * @param siteID
 		 * @param newState
 		 */
-		setStateBySiteID(siteID: string, newState: SiteImageData): void {
+		setStateBySiteID(siteID: string, newState: Partial<SiteImageData>): void {
 			state = {
 				...state,
 				[siteID]: {

@@ -1,7 +1,7 @@
 import React from 'react';
 import { ColFileStatus } from '../columnRenderers/ColFileStatus';
 import { ColFileName } from '../columnRenderers/ColFileName';
-import { ColFileSize } from '../columnRenderers/ColFileSize'
+import { ColFileSize } from '../columnRenderers/ColFileSize';
 import {
 		VirtualTable,
 		VirtualTableCellRenderer,
@@ -10,11 +10,10 @@ import {
 		FlyModal
 	} from '@getflywheel/local-components';
 import ReactDOM from 'react-dom';
-import { FileListModal } from './fileListModal'
-import { FileListHeader } from './fileListHeader'
+import { FileListHeader } from './fileListHeader';
 import { OptimizerStatus, SiteImageData } from '../../types';
 import { ipcRenderer } from 'electron';
-import { IPC_EVENTS } from '../../constants'
+import { IPC_EVENTS } from '../../constants';
 
 interface IFileListViewProps {
 	siteImageData: SiteImageData,
@@ -24,6 +23,13 @@ interface IFileListViewProps {
 	resetToOverview: () => void,
 	onCancel: () => void,
 	setOverviewSelected: (x: boolean) => void,
+}
+
+interface IModalProps {
+	onSubmit: () => void;
+	openPreferencesModal: () => void;
+	onConfirm: () => void;
+	onCancel: () => void;
 }
 
 export const FileListView = (props: IFileListViewProps) =>  {
@@ -85,7 +91,9 @@ export const FileListView = (props: IFileListViewProps) =>  {
 		ipcRenderer.send(IPC_EVENTS.GO_TO_PREFERENCES);
 	}
 
-	const invokeModal = (displayWarningContent: boolean, onCancel?: Function, onConfirm?: Function) =>  {
+
+
+	const invokeModal = (ModalContents: React.FC<IModalProps>, onCancel?: Function, onConfirm?: Function) =>  {
 
 		const onSubmit = () => {
 			getCompressionList();
@@ -93,12 +101,12 @@ export const FileListView = (props: IFileListViewProps) =>  {
 		};
 
 		const onCancelSelect = () => {
-			onCancel();
+			onCancel?.();
 			FlyModal.onRequestClose();
 		}
 
 		const onConfirmSelect = () => {
-			onConfirm();
+			onConfirm?.();
 			FlyModal.onRequestClose();
 		}
 
@@ -107,12 +115,11 @@ export const FileListView = (props: IFileListViewProps) =>  {
 					<FlyModal
 						contentLabel='Confirm Optimization'
 					>
-						<FileListModal
+						<ModalContents
 							onSubmit={onSubmit}
-							openPreferences={openPreferencesModal}
-							displayWarningContent={displayWarningContent}
-							onConfirmSelect={onConfirmSelect}
-							onCancelSelect={onCancelSelect}
+							openPreferencesModal={openPreferencesModal}
+							onConfirm={onConfirmSelect}
+							onCancel={onCancelSelect}
 						/>
 					</FlyModal>
 			), document.getElementById('popup-container'),

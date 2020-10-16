@@ -55,9 +55,9 @@ const LastOptimizeStatus: React.FC<IProps> = (props: IProps) => {
 							color: 'green',
 							form: 'fill'
 						}}
-						disabled={props.scanImageState.scanLoading}
+						disabled={props.scanImageState.scanInProgress}
 					>
-						{props.scanImageState.scanLoading ? 'Scanning...' : 'Scan'}
+						{props.scanImageState.scanInProgress ? 'Scanning...' : 'Scan'}
 					</Button>
 			</TableListRow>
 			<TableListRow className="lastOptimizeStatus_Row">
