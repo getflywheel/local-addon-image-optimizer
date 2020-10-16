@@ -21,11 +21,11 @@ export function scanImagesFactory(serviceContainer: LocalMain.ServiceContainerSe
 
 		if (!site) {
 			serviceContainer.sendIPCEvent(IPC_EVENTS.SCAN_IMAGES_FAILURE, new Error('Site not found!'));
+			return;
 		}
 
-		const scanningSiteImageData = {
-			...siteData,
-			scanLoading: true,
+		const scanningSiteImageData: Partial<SiteImageData> = {
+			scanInProgress: true,
 		};
 
 		imageDataStore.setStateBySiteID(siteID, scanningSiteImageData);
@@ -113,7 +113,7 @@ export function scanImagesFactory(serviceContainer: LocalMain.ServiceContainerSe
 		const nextSiteImageData = {
 			...siteData,
 			imageData: updatedImageData,
-			scanLoading: false,
+			scanInProgress: false,
 			lastScan: Date.now(),
 			originalTotalSize: totalImagesSize,
 			compressedTotalSize: compressedTotalSize,

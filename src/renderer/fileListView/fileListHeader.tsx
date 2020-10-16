@@ -8,11 +8,13 @@ import { OptimizerStatus, SiteImageData } from '../../types';
 import { calculateToMb } from '../utils';
 import ChevronArrowSVG from '../_assets/svg/chevron-arrow-right.svg';
 import NavigationPrompt from 'react-router-navigation-prompt';
+import { WarningModal } from './WarningModal';
+import { ConfirmOptimizationModal } from './ConfirmOptimizationModal';
 
 interface IFileListHeaderProps {
 	siteImageData: SiteImageData,
 	setOverviewSelected: (x: boolean) => void,
-    invokeModal: (displayWarningContent: boolean, onCancel?: Function, onConfirm?: Function) => void,
+    invokeModal: (ModalContents: React.FC, onCancel?: Function, onConfirm?: Function) => void,
 	getAllChecked: () => ImageData[],
 	onCancel: () => void,
 	resetToOverview: () => void,
@@ -43,7 +45,7 @@ export const FileListHeader = (props: IFileListHeaderProps) => {
 
                 <Button
                     className='fileView_Button_Optimization'
-                    onClick={() => invokeModal(false)}
+                    onClick={() => invokeModal(ConfirmOptimizationModal as React.FC)}
                     privateOptions={{
                         color: 'green',
                         form: 'fill'
@@ -60,7 +62,7 @@ export const FileListHeader = (props: IFileListHeaderProps) => {
 				<NavigationPrompt
 					when={true}
 				>
-					{({ onConfirm, onCancel }) => invokeModal(true, onConfirm, onCancel)}
+					{({ onConfirm, onCancel }) => invokeModal(WarningModal as React.FC, onConfirm, onCancel)}
 				</NavigationPrompt>
 
                 <div className='fileView_Header_Text'>

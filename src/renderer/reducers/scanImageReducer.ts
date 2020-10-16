@@ -13,7 +13,7 @@ export const SCAN_IMAGES_ACTIONS = {
 
 export const initialState: SiteImageData = {
 	imageData: {},
-	scanLoading: false,
+	scanInProgress: false,
 	scanError: undefined,
 	lastScan: 0,
 	originalTotalSize: 0,
@@ -28,7 +28,7 @@ export function scanImageReducer(state: SiteImageData, action: IAction) {
 		case SCAN_IMAGES_ACTIONS.REQUEST:
 			return {
 				...state,
-				scanLoading: true
+				scanInProgress: true
 			};
 
 		case SCAN_IMAGES_ACTIONS.SUCCESS:
@@ -38,7 +38,7 @@ export function scanImageReducer(state: SiteImageData, action: IAction) {
 			};
 
 		case SCAN_IMAGES_ACTIONS.FAILURE:
-			return { ...state, scanLoading: false, scanError: action.payload };
+			return { ...state, scanInProgress: false, scanError: action.payload };
 
 		default:
 			return state;
