@@ -13,9 +13,9 @@ export const WarningModal = ( props: IModalProps ) => (
 	<div className='fileList_Modal'>
 		<ExclamationCircleSVG className='modal-warning-svg' />
 		<br />
-		<Title size="l" container={{ margin: 'm'}}> Heads up! Leaving will stop the optimization process </Title>
+		<Title size="l" container={{ margin: 'm'}}> Heads up! Leaving will disrupt the optimization process </Title>
 			<div className='modal-warning-text'>
-				Leaving this tab will revert your images and stop the optimizing process. Your progress will be lost.
+				Leaving now may cause errors to occur. We recommend waiting until the process finishes.
 			</div>
 		<Divider />
 		<PrimaryButton
