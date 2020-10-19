@@ -91,8 +91,6 @@ export const FileListView = (props: IFileListViewProps) =>  {
 		ipcRenderer.send(IPC_EVENTS.GO_TO_PREFERENCES);
 	}
 
-
-
 	const invokeModal = (ModalContents: React.FC<IModalProps>, onCancel?: Function, onConfirm?: Function) =>  {
 
 		const onSubmit = () => {

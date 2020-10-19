@@ -12,11 +12,6 @@ interface IProps {
 	handleScanForImages: () => void,
 }
 
-// open preferences tab for addon
-const openPreferences = () => {
-	ipcRenderer.send(IPC_EVENTS.GO_TO_PREFERENCES);
-}
-
 const LastOptimizeStatus: React.FC<IProps> = (props: IProps) => {
 	const {
 		lastScan,
@@ -45,9 +40,6 @@ const LastOptimizeStatus: React.FC<IProps> = (props: IProps) => {
 						{'Last updated: '}{getFormattedTimestamp(lastScan)}
 					</Text>
 				: null}
-				<TextButton className="lastOptimizeStatus_Button" onClick={openPreferences}>
-					Settings
-				</TextButton>
 				<Button
 						className="lastOptimizeStatus_Rescan_Button"
 						onClick={() => props.handleScanForImages()}
@@ -57,7 +49,7 @@ const LastOptimizeStatus: React.FC<IProps> = (props: IProps) => {
 						}}
 						disabled={props.scanImageState.scanInProgress}
 					>
-						{props.scanImageState.scanInProgress ? 'Scanning...' : 'Scan'}
+						{props.scanImageState.scanInProgress ? 'Scanning...' : 'Scan for Images'}
 					</Button>
 			</TableListRow>
 			<TableListRow className="lastOptimizeStatus_Row">

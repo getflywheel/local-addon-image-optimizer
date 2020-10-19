@@ -1,5 +1,4 @@
 import 'jest-extended';
-
 import md5 from 'md5';
 import * as LocalMain from '@getflywheel/local/main';
 import { createMockServiceContainer } from '../test/mockCreators';

@@ -3,7 +3,7 @@ import { PrimaryButton, TextButton, Divider, Title } from '@getflywheel/local-co
 
 interface IModalProps {
 	onSubmit: () => void
-	openPreferences: () => void
+	openPreferencesModal: () => void
 	onConfirmSelect?: () => void
 	onCancelSelect?: () => void
 }
@@ -14,9 +14,11 @@ export const ConfirmOptimizationModal = ( props: IModalProps ) =>  (
 		<Divider />
 			<div className='fileList_Modal_Text'>
 				Optimizing images will strip metadata and reduce image sizes to improve your site's performance.
+				<br />
+				<br />
 				<TextButton
 					className="fileList_Modal_Settings_Button"
-					onClick={props.openPreferences}
+					onClick={props.openPreferencesModal}
 				>
 					View Settings
 				</TextButton>
