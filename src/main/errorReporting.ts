@@ -1,0 +1,37 @@
+import * as LocalMain from '@getflywheel/local/main';
+import fs from 'fs-extra';
+import path from 'path';
+const packageJSON = fs.readJsonSync(path.join(__dirname, '../../package.json'));
+
+const { localLogger } = LocalMain.getServiceContainer().cradle;
+
+const logger = localLogger.child({
+    thread: 'main',
+    class: 'AddonImageOptimizer',
+    addonName: packageJSON.name,
+    addonVersion: packageJSON.version,
+});
+
+export const reportScanRequest = (siteID: string) => {
+    logger.info(`Scanning REQUEST for site ${siteID}`);
+}
+
+export const reportScanSuccess = (siteID: string, imageCount: number, totalCompressedCount: number) => {
+    logger.info(`Scanning SUCCESS for site ${siteID}. Found ${imageCount} image(s). ${totalCompressedCount} already compressed.`);
+}
+
+export const reportScanFailure = (siteID: string, error: typeof Error) => {
+    logger.error(`Scanning FAILURE for site ${siteID}. ${error}.`);
+}
+
+export const reportCompressRequest = (siteID: string) => {
+    logger.info(`Compress REQUEST for site ${siteID}`);
+}
+
+export const reportCompressSuccess = (siteID: string, imageCount: number) => {
+    logger.info(`Compress SUCCESS for site ${siteID}. Compressed ${imageCount} image(s).`);
+}
+
+export const reportCompressFailure = (siteID: string, error: typeof Error) => {
+    logger.error(`Compress FAILURE for site ${siteID}. ${error}.`);
+}

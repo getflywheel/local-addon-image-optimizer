@@ -13,6 +13,7 @@ import {
 import { BACKUP_DIR_NAME, IPC_EVENTS } from '../constants';
 import { getFileHash, saveImageDataToDisk } from './utils';
 import { updateCancelCompression } from './index';
+import { reportCompressRequest, reportCompressSuccess, reportCompressFailure } from './errorReporting';
 
 /**
  * Takes a list of md5 hashed ids for images that should be compressed and compress them one at a time
@@ -22,130 +23,137 @@ import { updateCancelCompression } from './index';
  * @param imageIds
  */
 export function compressImagesFactory(serviceContainer: LocalMain.ServiceContainerServices, imageDataStore: Store, createRuntimeStore: RuntimeStore) {
-	return async function(siteID: Local.Site['id'], imageMD5s: string[], stripMetaData?: boolean) {
-		const site = serviceContainer.siteData.getSite(siteID);
+	return async function (siteID: Local.Site['id'], imageMD5s: string[], stripMetaData?: boolean) {
+		try {
+			reportCompressRequest(siteID);
 
-		if (!site) {
-			return;
-		}
+			const site = serviceContainer.siteData.getSite(siteID);
 
-		const backupDirPath = path.join(
-			site.longPath,
-			BACKUP_DIR_NAME,
-		);
-
-		fs.ensureDir(backupDirPath);
-
-		/**
-		 * deep clone this so that the existing store doesn not get corrupted and remains intact until we explicity update it
-		 */
-		const siteImageData: SiteImageData = cloneDeep(imageDataStore.getStateBySiteID(siteID));
-
-		const updatedImageData: SiteImageData['imageData'] = {};
-
-		for (const md5Hash of imageMD5s) {
-			serviceContainer.sendIPCEvent(IPC_EVENTS.COMPRESS_IMAGE_STARTED, md5Hash);
-
-			const currentImageData = siteImageData.imageData[md5Hash];
-			const { filePath } = currentImageData;
-
-			if(!fs.existsSync(filePath)) {
-				serviceContainer.sendIPCEvent(
-					IPC_EVENTS.COMPRESS_IMAGE_FAIL,
-					md5Hash,
-					'File not found!'
-				);
-
-				continue;
+			if (!site) {
+				return;
 			}
 
-			/**
-			 * We do this step to ensure that image backups are nested under the backup directory in
-			 * the same way as they are nested inside wp-conten
-			 *
-			 * We still include "uploads" in this new file path even though that is the "base" from which we scan
-			 * for images so that we can easily expand this to scan other directories within wp-content in the future
-			 */
-			let backupPath = filePath.replace(path.join(site.paths.webRoot, 'wp-content'), backupDirPath);
-			const { dir, name, ext } = path.parse(backupPath);
-
-			let deDupeCounter = 1;
-
-			while (fs.existsSync(backupPath)) {
-				const tempName = `${name} (${deDupeCounter})${ext}`;
-				backupPath = path.join(dir, tempName);
-
-				deDupeCounter++;
-			}
-
-			fs.copySync(filePath, backupPath);
-
-			const args: string[] = [];
-
-			/**
-			 * @todo write some tests to cover this case
-			 */
-			if (stripMetaData) {
-				args.push('--strip');
-			}
-
-			/**
-			 * the src and dest args are expected as the last
-			 * two argv's by jpeg-recompress, so we make sure they are added last
-			 */
-			args.push(
-				backupPath,
-				filePath,
+			const backupDirPath = path.join(
+				site.longPath,
+				BACKUP_DIR_NAME,
 			);
 
-			/**
-			 * Wrap this in a promise to ensure that only one image is compressed at a time
-			 */
-			await new Promise((resolve) => {
-				const cp = childProcess.spawn(
-					jpegRecompress,
-					args,
-				);
+			fs.ensureDir(backupDirPath);
 
-				cp.on('close', async (code) => {
-					if (code !== 0) {
-						serviceContainer.sendIPCEvent(IPC_EVENTS.COMPRESS_IMAGE_FAIL, {
-							originalImageHash: md5Hash,
-							errorMessage: `Failed to process ${filePath}. Exited with code ${code}`,
-						});
+			/**
+			 * deep clone this so that the existing store doesn not get corrupted and remains intact until we explicity update it
+			 */
+			const siteImageData: SiteImageData = cloneDeep(imageDataStore.getStateBySiteID(siteID));
+
+			const updatedImageData: SiteImageData['imageData'] = {};
+
+			for (const md5Hash of imageMD5s) {
+				serviceContainer.sendIPCEvent(IPC_EVENTS.COMPRESS_IMAGE_STARTED, md5Hash);
+
+				const currentImageData = siteImageData.imageData[md5Hash];
+				const { filePath } = currentImageData;
+
+				if (!fs.existsSync(filePath)) {
+					serviceContainer.sendIPCEvent(
+						IPC_EVENTS.COMPRESS_IMAGE_FAIL,
+						md5Hash,
+						'File not found!'
+					);
+
+					continue;
+				}
+
+				/**
+				 * We do this step to ensure that image backups are nested under the backup directory in
+				 * the same way as they are nested inside wp-conten
+				 *
+				 * We still include "uploads" in this new file path even though that is the "base" from which we scan
+				 * for images so that we can easily expand this to scan other directories within wp-content in the future
+				 */
+				let backupPath = filePath.replace(path.join(site.paths.webRoot, 'wp-content'), backupDirPath);
+				const { dir, name, ext } = path.parse(backupPath);
+
+				let deDupeCounter = 1;
+
+				while (fs.existsSync(backupPath)) {
+					const tempName = `${name} (${deDupeCounter})${ext}`;
+					backupPath = path.join(dir, tempName);
+
+					deDupeCounter++;
+				}
+
+				fs.copySync(filePath, backupPath);
+
+				const args: string[] = [];
+
+				/**
+				 * @todo write some tests to cover this case
+				 */
+				if (stripMetaData) {
+					args.push('--strip');
+				}
+
+				/**
+				 * the src and dest args are expected as the last
+				 * two argv's by jpeg-recompress, so we make sure they are added last
+				 */
+				args.push(
+					backupPath,
+					filePath,
+				);
+				/**
+				 * Wrap this in a promise to ensure that only one image is compressed at a time
+				 */
+				await new Promise((resolve) => {
+					const cp = childProcess.spawn(
+						jpegRecompress,
+						args,
+					);
+
+					cp.on('close', async (code) => {
+						if (code !== 0) {
+							serviceContainer.sendIPCEvent(IPC_EVENTS.COMPRESS_IMAGE_FAIL, {
+								originalImageHash: md5Hash,
+								errorMessage: `Failed to process ${filePath}. Exited with code ${code}`,
+							});
+
+							resolve();
+							return;
+						}
+
+						updatedImageData[md5Hash] = {
+							...currentImageData,
+							compressedImageHash: await getFileHash(filePath),
+							compressedSize: fs.statSync(filePath).size,
+						};
+
+						serviceContainer.sendIPCEvent(IPC_EVENTS.COMPRESS_IMAGE_SUCCESS, updatedImageData[md5Hash]);
 
 						resolve();
-						return;
-					}
-
-					updatedImageData[md5Hash] = {
-						...currentImageData,
-						compressedImageHash: await getFileHash(filePath),
-						compressedSize: fs.statSync(filePath).size,
-					};
-
-					serviceContainer.sendIPCEvent(IPC_EVENTS.COMPRESS_IMAGE_SUCCESS, updatedImageData[md5Hash]);
-
-					resolve();
+					});
 				});
-			});
 
-			imageDataStore.setStateBySiteID(siteID, {
-				...siteImageData,
-				imageData: {
-					...siteImageData.imageData,
-					...updatedImageData
-				},
-			});
+				imageDataStore.setStateBySiteID(siteID, {
+					...siteImageData,
+					imageData: {
+						...siteImageData.imageData,
+						...updatedImageData
+					},
+				});
 
-			saveImageDataToDisk(imageDataStore, serviceContainer);
+				saveImageDataToDisk(imageDataStore, serviceContainer);
 
-			if(!createRuntimeStore.getState().cancelCompression) {
-				break;
+				if (!createRuntimeStore.getState().cancelCompression) {
+					break;
+				}
 			}
+			updateCancelCompression(true);
+			serviceContainer.sendIPCEvent(IPC_EVENTS.COMPRESS_ALL_IMAGES_COMPLETE);
+			reportCompressSuccess(siteID, imageMD5s.length);
+		} catch (error) {
+			reportCompressFailure(siteID, error);
+			return error;
 		}
-		updateCancelCompression(true);
-		serviceContainer.sendIPCEvent(IPC_EVENTS.COMPRESS_ALL_IMAGES_COMPLETE);
 	}
 };
 
