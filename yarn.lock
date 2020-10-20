@@ -447,10 +447,10 @@
     untildify "^4.0.0"
     url-parse "^1.4.4"
 
-"@getflywheel/local@^5.0.0":
-  version "5.8.1"
-  resolved "https://registry.yarnpkg.com/@getflywheel/local/-/local-5.8.1.tgz#eb4c556c14492ca67e004b1e5018b7c0f1d4354f"
-  integrity sha512-7QrHvIAWloxtx7MDlUPJhW9Bha//rq0NLtZghvJC8/HqjJbaqQ4zTbuzWxADI8E9hNW7UsKCEGqiB0/TIXhjgg==
+"@getflywheel/local@^5.9.0":
+  version "5.9.0"
+  resolved "https://registry.yarnpkg.com/@getflywheel/local/-/local-5.9.0.tgz#d8b8c418e42fb7c7aa0640dc4b649ca5e8c10682"
+  integrity sha512-PGfdUC++sh4tfkgY56ZAlm0ZMsspC0U4Dwigg+QzYSA6bkAHwXR6XDz/KLx6Q2biTM+awbCnvjp+rXaYHaUJQQ==
   dependencies:
     "@types/node" "^12.7.12"
     "@types/react" "^16.9.5"
