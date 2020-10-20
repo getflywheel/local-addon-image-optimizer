@@ -78,6 +78,6 @@
     "prop-types"
   ],
   "engines": {
-    "local-by-flywheel": "^5.0.0"
+    "local-by-flywheel": "^5.9.1"
   }
 }
