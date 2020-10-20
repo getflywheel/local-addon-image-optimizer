@@ -72,10 +72,18 @@
     "redux": "^4.0.5"
   },
   "bundledDependencies": [
+    "@getflywheel/local-components",
     "classnames",
     "dateformat",
-    "@getflywheel/local-components",
-    "prop-types"
+    "fs-extra",
+    "jpeg-recompress-bin",
+    "lodash",
+    "md5",
+    "prop-types",
+    "react-redux",
+    "react-router-navigation-prompt",
+    "recursive-readdir",
+    "redux"
   ],
   "engines": {
     "local-by-flywheel": "^5.9.1"
