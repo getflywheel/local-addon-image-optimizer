@@ -55,7 +55,7 @@
     "react-router-dom": "^4.3.1"
   },
   "dependencies": {
-    "@getflywheel/local-components": "^14.0.0",
+    "@getflywheel/local-components": "^15.0.0",
     "classnames": "^2.2.6",
     "dateformat": "^3.0.3",
     "fs-extra": "^9.0.1",
