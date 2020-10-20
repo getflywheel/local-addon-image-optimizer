@@ -11,7 +11,6 @@ const packageJSON = fs.readJsonSync(path.join(__dirname, '../package.json'));
 const addonID = packageJSON['slug'];
 const stylesheetPath = path.resolve(__dirname, '../style.css');
 
-
 export default async function (context) {
 	const { React, hooks } = context;
 	const { Route } = context.ReactRouter;
@@ -24,6 +23,8 @@ export default async function (context) {
 		</Provider>
 	);
 
+	const Component = withStoreProvider(ImageOptimizer);
+
 	hooks.addContent('stylesheets', () => (
 		<link
 			rel="stylesheet"
@@ -32,24 +33,10 @@ export default async function (context) {
 		/>
 	));
 
-	hooks.addContent('routesSiteInfo', () => (
-		<Route
-			key={`${addonID}-addon`}
-			path={`/main/site-info/:siteID/${addonID}`}
-			render={withStoreProvider(ImageOptimizer)}
-		/>
-	));
-
-	hooks.addFilter('siteInfoMoreMenu', function (menu, site) {
-		menu.push({
-			label: 'Image Optimizer',
-			enabled: true,
-			click: () => {
-				context.events.send('goToRoute', `/main/site-info/${site.id}/${addonID}`);
-			}
-		});
-
-		return menu;
+	hooks.addContent('siteToolsImageOptimizer', ({ match }) => {
+		return (
+			<Component match={match} />
+		)
 	});
 
 	hooks.addFilter(
