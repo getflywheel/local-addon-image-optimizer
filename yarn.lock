@@ -425,10 +425,10 @@
   resolved "https://registry.yarnpkg.com/@getflywheel/eslint-config-local/-/eslint-config-local-1.0.4.tgz#2fab6bb77b63ec123e831534f50e1d3c7c135571"
   integrity sha512-GvnhhT3XaNipDdVvHifWbKjoFpLAbezkKsYBGfDF4uG/9gWo5UX9YLANPlzSLRyvgBrX0+27S5Cu8YE/yM7kPg==
 
-"@getflywheel/local-components@^14.0.0":
-  version "14.0.1"
-  resolved "https://registry.yarnpkg.com/@getflywheel/local-components/-/local-components-14.0.1.tgz#84ffcca4ec7afac25de2778bb53961b8b632e092"
-  integrity sha512-pi8Xdz1qRcqFe3UVXNld/mfWEa/wIfptBjI0ftqznDYgdNwP7CM5HVlRVBWcYSeuJrGkrVbba5zHhYo0GYrggA==
+"@getflywheel/local-components@^15.0.0":
+  version "15.0.1"
+  resolved "https://registry.yarnpkg.com/@getflywheel/local-components/-/local-components-15.0.1.tgz#4701d306ef0ed537d6dbb827ef18f063bcf1551e"
+  integrity sha512-LQlP4lJf7XUdL9aTtyPZl3ieRINI54NKMzn3FzpXQZxEWZcn6X6r2nzak1HINGFyZX4AELs+BTtsg6C5q8quDw==
   dependencies:
     "@getflywheel/memoize-one-ts" "^0.0.2"
     "@types/untildify" "^3.0.0"
