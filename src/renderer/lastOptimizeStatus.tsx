@@ -47,6 +47,9 @@ const LastOptimizeStatus: React.FC<IProps> = (props: IProps) => {
 							color: 'green',
 							form: 'fill'
 						}}
+						style={{
+							marginLeft: 'auto'
+						}}
 						disabled={props.scanImageState.scanInProgress}
 					>
 						{props.scanImageState.scanInProgress ? 'Scanning...' : 'Scan for Images'}
