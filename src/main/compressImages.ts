@@ -1,6 +1,5 @@
 import childProcess from 'child_process';
 import path from 'path';
-import jpegRecompress from 'jpeg-recompress-bin';
 import fs from 'fs-extra';
 import cloneDeep from 'lodash/cloneDeep';
 import * as Local from '@getflywheel/local';
@@ -13,7 +12,30 @@ import {
 import { BACKUP_DIR_NAME, IPC_EVENTS } from '../constants';
 import { getFileHash, saveImageDataToDisk } from './utils';
 import { updateCancelCompression } from './index';
-import { reportCompressRequest, reportCompressSuccess, reportCompressFailure } from './errorReporting';
+import {
+	reportCompressRequest,
+	reportCompressSuccess,
+	reportCompressFailure,
+	reportNoBinFound,
+	reportBinOutput,
+} from './errorReporting';
+
+let jpegRecompressBinName;
+
+switch(process.platform) {
+	case 'win32':
+		jpegRecompressBinName = 'jpeg-recompress.exe';
+		break;
+	default:
+		jpegRecompressBinName = 'jpeg-recompress';
+		break;
+}
+
+const jpegRecompressBin = path.join(__dirname, '..', '..', 'vendor', process.platform, jpegRecompressBinName);
+
+if (!fs.existsSync(jpegRecompressBin)) {
+	reportNoBinFound(jpegRecompressBin);
+}
 
 /**
  * Takes a list of md5 hashed ids for images that should be compressed and compress them one at a time
@@ -101,18 +123,20 @@ export function compressImagesFactory(serviceContainer: LocalMain.ServiceContain
 					backupPath,
 					filePath,
 				);
+
 				/**
 				 * Wrap this in a promise to ensure that only one image is compressed at a time
 				 */
 				await new Promise((resolve) => {
 					const cp = childProcess.spawn(
-						jpegRecompress,
+						jpegRecompressBin,
 						args,
 					);
 
-					cp.stderr.on('data', (data) => {
-						reportCompressFailure(siteID, data, currentImageData);
-					});
+					const stdioCB = (data) => reportBinOutput(filePath, jpegRecompressBin, data);
+
+					cp.stderr.on('data', stdioCB);
+					cp.stdout.on('data', stdioCB);
 
 					cp.on('close', async (code) => {
 						if (code !== 0) {

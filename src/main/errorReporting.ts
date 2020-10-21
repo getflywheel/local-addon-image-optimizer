@@ -33,11 +33,14 @@ export const reportCompressSuccess = (siteID: string, imageCount: number) => {
     logger.info(`Compress SUCCESS for site ${siteID}. Compressed ${imageCount} image(s).`);
 }
 
-export const reportCompressFailure = (siteID: string, error: typeof Error, imageData?: ImageData) => {
-	if (imageData) {
-		logger.error(`Compress FAILURE for ${imageData.filePath} in site ${siteID}. ${error}.`);
-		return;
-	}
-
+export const reportCompressFailure = (siteID: string, error: typeof Error) => {
     logger.error(`Compress FAILURE for site ${siteID}. ${error}.`);
+}
+
+export const reportNoBinFound = (binaryPath: string) => {
+	logger.error(`No binary found at ${binaryPath}`);
+}
+
+export const reportBinOutput = (imagePath: string, bin: string, output: string) => {
+	logger.info(`[attempting to compress] ${imagePath} [using] ${bin} [ouput] ${output}`);
 }
