@@ -110,6 +110,10 @@ export function compressImagesFactory(serviceContainer: LocalMain.ServiceContain
 						args,
 					);
 
+					cp.stderr.on('data', (data) => {
+						reportCompressFailure(siteID, data, currentImageData);
+					});
+
 					cp.on('close', async (code) => {
 						if (code !== 0) {
 							serviceContainer.sendIPCEvent(IPC_EVENTS.COMPRESS_IMAGE_FAIL, {
