@@ -1,6 +1,7 @@
 import * as LocalMain from '@getflywheel/local/main';
 import fs from 'fs-extra';
 import path from 'path';
+import { ImageData } from '../types';
 const packageJSON = fs.readJsonSync(path.join(__dirname, '../../package.json'));
 
 const { localLogger } = LocalMain.getServiceContainer().cradle;
@@ -32,6 +33,11 @@ export const reportCompressSuccess = (siteID: string, imageCount: number) => {
     logger.info(`Compress SUCCESS for site ${siteID}. Compressed ${imageCount} image(s).`);
 }
 
-export const reportCompressFailure = (siteID: string, error: typeof Error) => {
+export const reportCompressFailure = (siteID: string, error: typeof Error, imageData?: ImageData) => {
+	if (imageData) {
+		logger.error(`Compress FAILURE for ${imageData.filePath} in site ${siteID}. ${error}.`);
+		return;
+	}
+
     logger.error(`Compress FAILURE for site ${siteID}. ${error}.`);
 }
