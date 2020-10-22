@@ -1,4 +1,7 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
+import { connect } from 'react-redux';
+import { ipcRenderer } from 'electron';
 import { ColFileStatus } from '../columnRenderers/ColFileStatus';
 import { ColFileName } from '../columnRenderers/ColFileName';
 import { ColFileSize } from '../columnRenderers/ColFileSize';
@@ -9,10 +12,8 @@ import {
 		ProgressBar,
 		FlyModal
 	} from '@getflywheel/local-components';
-import ReactDOM from 'react-dom';
 import { FileListHeader } from './fileListHeader';
-import { OptimizerStatus, SiteImageData } from '../../types';
-import { ipcRenderer } from 'electron';
+import { OptimizerStatus, SiteImageData, Preferences } from '../../types';
 import { IPC_EVENTS } from '../../constants';
 
 interface IFileListViewProps {
@@ -23,6 +24,7 @@ interface IFileListViewProps {
 	resetToOverview: () => void,
 	onCancel: () => void,
 	setOverviewSelected: (x: boolean) => void,
+	preferences: Preferences,
 }
 
 interface IModalProps {
@@ -30,9 +32,12 @@ interface IModalProps {
 	openPreferencesModal: () => void;
 	onConfirm: () => void;
 	onCancel: () => void;
+	preferences: Preferences;
 }
 
-export const FileListView = (props: IFileListViewProps) =>  {
+export const FileListView = connect(
+	({ preferences }) => ({ preferences }),
+)((props: IFileListViewProps) => {
 	const {
 		siteImageData,
 		handleCheckBoxChange,
@@ -41,6 +46,7 @@ export const FileListView = (props: IFileListViewProps) =>  {
 		resetToOverview,
 		onCancel,
 		setOverviewSelected,
+		preferences,
 	} = props;
 
 	const imageData = Object.values(siteImageData.imageData);
@@ -118,6 +124,7 @@ export const FileListView = (props: IFileListViewProps) =>  {
 							openPreferencesModal={openPreferencesModal}
 							onConfirm={onConfirmSelect}
 							onCancel={onCancelSelect}
+							preferences={preferences}
 						/>
 					</FlyModal>
 			), document.getElementById('popup-container'),
@@ -154,4 +161,4 @@ export const FileListView = (props: IFileListViewProps) =>  {
 			</div>
 		</div>
 	);
-};
+});
