@@ -52,7 +52,7 @@ export const MetaDataRow = connect(
 				</Text>
 			</div>
 			<Text>
-				Photos often store camera settings in the file, i.e. focal length, date, time and location. Removing the EXIF data reduces the file size. We do not strip the SEO data.
+				Photos often store camera settings in the file, i.e. focal length, date, time and location. Removing the EXIF, IPTC and XMP metadata reduces the file size in addition to removing potentially identifying data.
 			</Text>
 		</div>
 	);
