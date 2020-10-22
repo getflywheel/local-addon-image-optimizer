@@ -1,7 +1,7 @@
 {
   "name": "@getflywheel/local-addon-image-optimizer",
   "productName": "Image Optimizer",
-  "version": "1.0.1-beta",
+  "version": "1.0.2-beta",
   "author": "Local Team",
   "keywords": [
     "local-addon"
