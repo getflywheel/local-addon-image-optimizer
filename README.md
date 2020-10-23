@@ -1,14 +1,18 @@
-# Local Boilerplate Add-on
+# Local Image Optimizer Add-on
+
+A [Local](https://localwp.com/) add on for compressing images on your WordPress site. This repository hosts the source code; if you simply want to use the add-on, download the latest version of local from [the release page](https://localwp.com/releases/) and install the add-on within the app.
+
+
+Currently this add-on performs lossy compression with [`jpeg-recompress`](https://github.com/danielgtaylor/jpeg-archive#jpeg-recompress). It is planned to expand this in the future to leverage more tools that do things like lossless compression.
+
+### Get Started with Local Add-on development
 
 https://build.localwp.com/
 
-## Get Started with the Local Add-on Generator
 
-Get up and running with your new add-on quickly and easily with the [Local Add-on Generator](https://github.com/getflywheel/create-local-addon). It is super simple to set up, and can help you start developing your new add-on in no time!
+## Manual Installation & Development setup
 
-The generator uses this boilerplate add-on to get you started, making setup easy and fast. The README for the generator also has more information on how to create an amazing add-on for Local, so be sure to check it out!
-
-## Installation
+*If you aren't already, it is advised that you familiarize yourself with the basics of [electron](https://www.electronjs.org/).*
 
 ### Clone
 
@@ -16,13 +20,42 @@ Clone the repository into the following directory depending on your platform:
 
 -   macOS: `~/Library/Application Support/Local/addons`
 -   Windows: `C:\Users\username\AppData\Roaming\Local\addons`
--   Debian Linux: `~/.config/Local/addons`
+-   Linux: `~/.config/Local/addons`
 
-*You can replace 'Local' with 'Local Beta' if you want to create the add-on for Local Beta.*
+*You nee to replace 'Local' with 'Local Beta' in the above paths if you want to create the add-on for Local Beta.*
+
+If you prefer to clone your source code elsewhere, you can do so and then symlink that directory to one in the above mentioned directories.
+
+On example on MacOS would look like:
+
+```
+git clone git@github.com:getflywheel/local-addon-image-optimizer.git ~/code
+
+ln -s ~/code/local-addon-image-optimizer ~/Library/Application Support/Local/addons
+```
+
 
 ### Install Add-on Dependencies
 
 `yarn install` or `npm install`
+
+
+### Build
+
+This add-on utilizes `tsc` to compile the Main thread code and `webpack` to compile the Renderer thread code.
+
+to compile both at the same time run:
+
+`yarn build`
+
+Otherwise you can compile the main thread code with:
+
+`yarn build-main`
+
+Or the renderer thread code with
+
+`yarn build-renderer` or `yarn watch-renderer`
+
 
 ### Add Add-on to Local
 
@@ -30,6 +63,12 @@ Clone the repository into the following directory depending on your platform:
 2. `yarn install` or `npm install` (install dependencies)
 2. `yarn build` or `npm run build`
 3. Open Local and enable add-on
+
+If the enabling the add-on via the Local UI doesn't work for some reason, you can also enable it by updating the file `enabled-addons.json`. This is located at one of the following application specific paths.
+
+-	macOS: `~/Library/Application Support/Local/enabled-addons.json`
+-   Linux: `~/.config/Local/enabled-addons.json`
+-   Windows: `C:\Users\<username>\AppData\Roaming\Local\addons/enabled-addons.json`
 
 ## Development
 
@@ -39,6 +78,8 @@ Clone the repository into the following directory depending on your platform:
 	- Node Module: https://www.npmjs.com/package/@getflywheel/local-components
 	- GitHub Repo: https://github.com/getflywheel/local-components
 
+It is worth noting the the TS definitions for this module are exposed and publicly availble. The actual code is injected once the add-on is loaded by Local. This can make writing tests a little tricky as the `@getflywheel/local/<main/renderer>` module isn't available outside of Local (ie testing unit testing environments). The best option is to mock out this module while running tests.
+
 - @getflywheel/local-components provides reusable React components to use in your Local add-on.
 	- Node Module: https://www.npmjs.com/package/@getflywheel/local
 	- GitHub Repo: https://github.com/getflywheel/local-addon-api
@@ -46,7 +87,9 @@ Clone the repository into the following directory depending on your platform:
 
 ### Folder Structure
 
-All files in `/src` will be transpiled to `/lib` using [TypeScript](https://www.typescriptlang.org/). Anything in `/lib` will be overwritten.
+All files (other than test files) in `/src` will be transpiled to `/lib` using [TypeScript](https://www.typescriptlang.org/). Anything in `/lib` will be overwritten.
+
+`vendor` contains compiled binaries namespaced under the appropriate operating system name.
 
 ### Development Workflow
 
