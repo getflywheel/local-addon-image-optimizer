@@ -1,40 +1,23 @@
 import 'jest-extended';
-import md5 from 'md5';
 import * as LocalMain from '@getflywheel/local/main';
 import { createMockServiceContainer } from '../test/mockCreators';
 import { scanImagesFactory } from './scanImages';
 import { createStore } from './createStore';
+
 
 const sitePath = '/Users/cool-man-joe/Local Sites/twice-baked-potato';
 const serviceContainer = createMockServiceContainer(sitePath);
 
 const imageDataStore = createStore();
 
-/**
- * @todo Clean up dependencies that are unused and make fs-extra a dev only dependency
- */
-
-jest.mock('fs-extra');
-const fs = require('fs-extra');
-fs.statSync.mockImplementation((filePath: string) => ({
-	size: Math.floor(Math.random() * 99999) + 700
+jest.mock('./errorReporting', () => ({
+	reportScanRequest: jest.fn(),
+	reportScanSuccess: jest.fn(),
+	reportScanFailure: jest.fn()
 }));
 
-const mockFilePaths = [
-	'fake/path/file1.jpeg',
-	'fake/path/file2.jpeg',
-];
-
-// mock out utils so that we don't accidentally make calls to fs, etc.
-// also this makes assertions much easier and utils should be tested independantly anyways
 jest.mock('./utils');
 const utils = require('./utils');
-utils.getImageFilePaths.mockImplementation((site) => {
-	return mockFilePaths;
-});
-utils.getFileHash.mockImplementation((filePath) => {
-	return md5(filePath);
-});
 
 describe('scanImages', () => {
 	const scanImages = scanImagesFactory(
@@ -46,25 +29,14 @@ describe('scanImages', () => {
 
 
 	beforeAll(async () => {
-		siteData = await scanImages(siteID);
+
+		await scanImages(siteID);
+
+		siteImageData = imageDataStore.getStateBySiteID(siteID);
 	});
 
 	it('calls serviceContainer.getSite', () => {
 		expect(serviceContainer.siteData.getSite.mock.calls).toBeArrayOfSize(1);
-	});
-
-	it('calls getImageFilePaths once with the correct args', () => {
-		expect(utils.getImageFilePaths.mock.calls).toBeArrayOfSize(1);
-
-		expect(utils.getImageFilePaths.mock.calls[0][0]).toEqual(
-			serviceContainer.siteData.getSite.mock.results[0].value.paths.webRoot
-		);
-	});
-
-	it('calls getFileHash once for each file ', () => {
-		const { mock } = utils.getFileHash;
-		expect(mock.calls).toBeArrayOfSize(mockFilePaths.length);
-		expect(mock.calls.map(call => call[0])).toIncludeSameMembers(mockFilePaths);
 	});
 
 	it('calls saveImageDataToDisk with the correct args', () => {
@@ -82,14 +54,47 @@ describe('scanImages', () => {
 	it('siteData.imageData contains keys and the appropriate fields for each of the hashed files', () => {
 		const { imageData } = siteData;
 
-		expect(imageData).toContainAllKeys(mockFilePaths.map(md5));
+		expect(imageData).toContainAllKeys(['aoeuaoeuaoeuaou', 'yfyfyfyfyfyfyfyfy']);
 
 		Object.values(imageData).forEach(singleImageDataObject => {
 			expect(singleImageDataObject).toContainAllKeys([
 				'originalImageHash',
+				'compressedImageHash',
 				'filePath',
 				'originalSize',
+				'compressedSize',
+				'fileStatus',
+				'isChecked'
 			]);
 		});
+	});
+
+	it('confirms siteImageData contains appropriate keys', () => {
+		expect(siteImageData).toContainAllKeys([
+			'scanInProgress',
+			'imageData',
+			'lastScan',
+			'originalTotalSize',
+			'compressedTotalSize',
+			'imageCount',
+			'totalCompressedCount',
+			'compressedImagesOriginalSize'
+		]);
+	});
+
+	it('confirms originalTotalSize is calculated correctly', () => {
+		expect(siteImageData.originalTotalSize).toBe(17000000);
+	});
+
+	it('confirms compressedTotalSize is calculated correctly', () => {
+		expect(siteImageData.compressedTotalSize).toBe(8500000);
+	});
+
+	it('confirms totalCompressedCount is calculated correctly', () => {
+		expect(siteImageData.totalCompressedCount).toBe(2);
+	});
+
+	it('confirms compressedImagesOriginalSize is calculated correctly', () => {
+		expect(siteImageData.compressedImagesOriginalSize).toBe(17000000);
 	});
 });
