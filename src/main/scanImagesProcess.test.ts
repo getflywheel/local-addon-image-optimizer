@@ -1,7 +1,5 @@
 import 'jest-extended';
-import child_process from 'child_process';
 import fs from 'fs-extra';
-import path from 'path';
 import { createMockServiceContainer } from '../test/mockCreators';
 import { createStore } from './createStore';
 import md5 from 'md5';
@@ -66,7 +64,6 @@ describe('scanImagesProcess', () => {
 	beforeAll( async () => {
 		const filePaths = await scanImages({webRoot: sitePath});
 		imageStats = await getImageStats({ filePaths: mockFilePaths, imageData: mockImageData });
-		console.log(filePaths, imageStats);
 	});
 
 	it('calls getImageFilePaths once with the correct args', () => {
