@@ -1,15 +1,15 @@
 import fs from 'fs-extra';
 import { getImageFilePaths, getImageIfCompressed, getFileHash } from './utils';
-import { SiteData, Store } from '../types';
+import { SiteImageData } from '../types';
 
-const scanImages = async (payload) => {
+export const scanImages = async (payload) => {
 	const { webRoot } = payload;
 	const filePaths = await getImageFilePaths(webRoot);
 
 	return filePaths;
 };
 
-const getImageStats = async (payload) => {
+export const getImageStats = async (payload) => {
 	const { filePaths, imageData } = payload;
 
 	return await filePaths.reduce(async (
@@ -21,6 +21,7 @@ const getImageStats = async (payload) => {
 		const fileHash = await getFileHash(filePath);
 
 		let compressedImage = getImageIfCompressed(fileHash, imageData)
+
 		if (compressedImage) {
 			return {
 				...(await imageDataAccumulator),
