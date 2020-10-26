@@ -1,6 +1,6 @@
 import 'jest-extended';
-
 import { EventEmitter } from 'events';
+import { Readable } from 'stream';
 import md5 from 'md5';
 import path from 'path';
 import * as LocalMain from '@getflywheel/local/main';
@@ -9,7 +9,6 @@ import { createRuntimeStore, createStore } from './createStore';
 import { IPC_EVENTS, BACKUP_DIR_NAME } from '../constants';
 import { SiteData } from '../types';
 import { createMockServiceContainer } from '../test/mockCreators';
-
 
 const sitePath = '/Users/cool-man-joe/Local Sites/twice-baked-potato';
 
@@ -46,9 +45,11 @@ const initialState = {
 
 jest.mock('./utils');
 const utils = require('./utils');
-
 utils.getFileHash.mockImplementation((filePath: string) => md5(filePath));
 
+jest.mock('./index', () => ({
+	updateCancelCompression: jest.fn(),
+}));
 
 jest.mock('fs-extra');
 const fsExtra = require('fs-extra');
@@ -61,6 +62,9 @@ fsExtra.existsSync.mockImplementation((filePath: string) => {
 	if (filePath.includes(imageThreeName)) {
 		return false;
 	}
+	if (filePath.includes(BACKUP_DIR_NAME)) {
+		return false;
+	}
 
 	return true;
 });
@@ -68,24 +72,42 @@ fsExtra.existsSync.mockImplementation((filePath: string) => {
 jest.mock('child_process');
 const childProcess = require('child_process');
 
+jest.mock('./errorReporting', () => ({
+	reportCompressRequest: jest.fn(),
+	reportCompressSuccess: jest.fn(),
+	reportCompressFailure: jest.fn(),
+	reportNoBinFound: jest.fn(),
+	reportBinOutput: jest.fn()
+}));
+
+class MockChildProc extends EventEmitter {
+	stderr: Readable;
+	stdout: Readable;
+	constructor() {
+		super();
+		this.stderr = new Readable({
+			read(){}
+		});
+		this.stdout = new Readable({
+			read(){}
+		});
+	}
+}
+
 const emitters = [];
 let compressedCount = 0;
 childProcess.spawn.mockImplementation((command: string, args: any[]) => {
-	const emitter = new EventEmitter();
+	const emitter = new MockChildProc();
 	emitter.on = (channel: string, cb) => {
 		if (channel !== 'close') {
 			return emitter;
 		}
-
 		compressedCount++;
-
 		/**
 		 * simulate a fail on only the second image
 		 */
 		const code = compressedCount === 2 ? 1 : 0;
-
 		cb(code);
-
 		return emitter;
 	};
 	emitters.push(emitter);
@@ -128,7 +150,7 @@ describe('compressImages', () => {
 	});
 
 	it('calls fs.copySync once for each image id passed in that exists on disk and copies to the correct path in the backup dir', () => {
-		expect(fsExtra.copySync.mock.calls).toBeArrayOfSize(2);
+		expect(fsExtra.copySync.mock.calls[0]).toBeArrayOfSize(2);
 
 		const args = fsExtra.copySync.mock.calls[0];
 
@@ -138,8 +160,6 @@ describe('compressImages', () => {
 		compressedFileRelativePathPieces.forEach((piece, i) => {
 			expect(backupFileRelativePathPieces[i]).toEqual(piece);
 		});
-
-
 	});
 
 	it('calls child_process.spawn with the correct args', () => {
@@ -148,7 +168,7 @@ describe('compressImages', () => {
 
 		expect(mock.calls.length).toEqual(2);
 
-		expect(mock.calls[0][0]).toEqual('jpeg-recompress');
+		expect(mock.calls[0][0]).toContain('jpeg-recompress');
 		expect(cliArgs).toBeArray();
 
 		expect(cliArgs.pop()).toEqual(path.join(wpContent, 'uploads', '1.jpeg'));
@@ -157,7 +177,6 @@ describe('compressImages', () => {
 
 	it('calls sendIPCEvent with the correct args when successful', () => {
 		const mock = mockServiceContainer.sendIPCEvent.mock;
-
 		let call = mock.calls[0];
 		expect(call[0]).toEqual(IPC_EVENTS.COMPRESS_IMAGE_STARTED);
 		expect(call[1]).toEqual(imageOneID);
