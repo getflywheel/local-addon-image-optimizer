@@ -1,21 +1,22 @@
-import fs from 'fs-extra';
 import path from 'path';
 import { Provider } from 'react-redux';
 import * as LocalRenderer from '@getflywheel/local/renderer';
 import { IPC_EVENTS } from './constants';
-import makeStore from './renderer/store';
+import { Preferences } from './types';
+import { store, actions } from './renderer/store';
 import ImageOptimizer from './renderer/index';
 import { MetaDataRow } from './renderer/preferencesRows';
 
-const packageJSON = fs.readJsonSync(path.join(__dirname, '../package.json'));
-const addonID = packageJSON['slug'];
 const stylesheetPath = path.resolve(__dirname, '../style.css');
 
 export default async function (context) {
 	const { React, hooks } = context;
-	const { Route } = context.ReactRouter;
 
-	const store = await makeStore();
+	const preferences: Preferences = await LocalRenderer.ipcAsync(
+		IPC_EVENTS.READ_PREFERENCES_FROM_DISK
+	);
+
+	store.dispatch(actions.preferences.hydrate(preferences));
 
 	const withStoreProvider = (Component) => (props) => (
 		<Provider store={store}>
@@ -56,6 +57,7 @@ export default async function (context) {
 					},
 				],
 				onApply: () => {
+					console.log('apply', store, store.getState())
 					LocalRenderer.ipcAsync(
 						IPC_EVENTS.SAVE_PREFERENCES_TO_DISK,
 						store.getState().preferences,

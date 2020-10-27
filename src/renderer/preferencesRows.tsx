@@ -1,20 +1,22 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import classNames from 'classnames';
 import {
 	Switch,
 	Text,
 } from '@getflywheel/local-components';
+/**
+ * @todo remove these old action constants
+ */
 import { PREFERENCES_REDUCER_ACTION_TYPES } from '../constants';
 
-export const MetaDataRow = connect(
-	({ preferences }) => ({ preferences }),
-)((props) => {
-	const {
-		setApplyButtonDisabled,
-		preferences,
-		dispatch,
-	} = props;
+import { store, actions, useStoreSelector } from './store';
+
+export const MetaDataRow = (props) => {
+	const { setApplyButtonDisabled } = props;
+
+	const { count } = useStoreSelector((state) => state.example);
+	const preferences = useStoreSelector((state) => state.preferences);
 
 	return (
 		<div
@@ -36,10 +38,7 @@ export const MetaDataRow = connect(
 					flat
 					onChange={(_, checked) => {
 						setApplyButtonDisabled();
-						dispatch({
-							type: PREFERENCES_REDUCER_ACTION_TYPES.META_DATA,
-							payload: checked,
-						});
+						store.dispatch(actions.preferences.stripMetaData(checked));
 					}}
 				/>
 				<Text
@@ -56,4 +55,4 @@ export const MetaDataRow = connect(
 			</Text>
 		</div>
 	);
-});
+};

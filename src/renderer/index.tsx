@@ -17,6 +17,8 @@ interface IProps {
 	match: { params: { siteID: string; } };
 }
 
+import { actions } from './store';
+
 const ImageOptimizer = (props: IProps) => {
 	const [overviewSelected, setOverviewSelected] = useState(true);
 	const initialImageData = {} as SiteImageData;
