@@ -15,6 +15,8 @@ export const Overview = (props: IProps) => {
 	const {
 		imageCount,
 		totalCompressedCount,
+		lastScan,
+		scanInProgress
 	} = scanImageState;
 
 	const onClickViewImages = () => {
@@ -28,6 +30,14 @@ export const Overview = (props: IProps) => {
 		{remainingUncompressedImages > 0 &&
 			<Banner variant="warning" icon="warning" buttonText={'View Images'} buttonOnClick={() => onClickViewImages()}>
 				We've found{' '}<strong>{remainingUncompressedImages}</strong>images slowing down your site.
+			</Banner>
+		}
+		{imageCount === 0
+		&& lastScan > 0
+		&& !scanInProgress
+		&&
+			<Banner variant="warning" icon="warning">
+				No images found on site.
 			</Banner>
 		}
 
