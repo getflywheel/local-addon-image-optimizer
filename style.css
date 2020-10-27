@@ -37,6 +37,10 @@
 	margin-left: auto;
 }
 
+.imageNotificationBanner {
+	padding-left: 20px;
+}
+
 /* File List Viewer Table */
 
 .fileListViewer_Column_Selected {

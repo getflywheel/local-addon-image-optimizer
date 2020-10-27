@@ -28,7 +28,7 @@ export const Overview = (props: IProps) => {
 
 	return <div className="overview_Container">
 		{remainingUncompressedImages > 0 &&
-			<Banner variant="warning" icon="warning" buttonText={'View Images'} buttonOnClick={() => onClickViewImages()}>
+			<Banner className="imageNotificationBanner" variant="success" icon="false" buttonText={'View Images'} buttonOnClick={() => onClickViewImages()}>
 				We've found{' '}<strong>{remainingUncompressedImages}</strong>images slowing down your site.
 			</Banner>
 		}
