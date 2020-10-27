@@ -1,5 +1,5 @@
 import * as LocalMain from '@getflywheel/local/main';
-import { SiteImageData, DatasetType } from '../types';
+import { SiteImageData, DatasetType, CachedImageDataBySiteID } from '../types';
 import { COMPRESSED_IMAGE_DATA_FILE_NAME, PREFERENCES_FILE_NAME } from '../constants';
 import { Preferences } from '../types';
 import { scanImagesFactory } from './scanImages';
@@ -52,6 +52,10 @@ export function getImageData(siteID: string, imageDataset: DatasetType = Dataset
 		imageData: onlyUncompressedImages,
 	}
 
+}
+
+export function getImageDataStore(): CachedImageDataBySiteID {
+	return imageDataStore.getState();
 }
 
 export const scanImages = scanImagesFactory(serviceContainer, imageDataStore);

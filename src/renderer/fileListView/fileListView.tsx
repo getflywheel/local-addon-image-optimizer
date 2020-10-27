@@ -15,6 +15,7 @@ import {
 import { FileListHeader } from './fileListHeader';
 import { OptimizerStatus, SiteImageData, Preferences } from '../../types';
 import { IPC_EVENTS } from '../../constants';
+import { useStoreSelector } from '../store';
 
 interface IFileListViewProps {
 	siteImageData: SiteImageData,
@@ -24,7 +25,6 @@ interface IFileListViewProps {
 	resetToOverview: () => void,
 	onCancel: () => void,
 	setOverviewSelected: (x: boolean) => void,
-	preferences: Preferences,
 }
 
 interface IModalProps {
@@ -35,9 +35,7 @@ interface IModalProps {
 	preferences: Preferences;
 }
 
-export const FileListView = connect(
-	({ preferences }) => ({ preferences }),
-)((props: IFileListViewProps) => {
+export const FileListView = (props: IFileListViewProps) => {
 	const {
 		siteImageData,
 		handleCheckBoxChange,
@@ -46,8 +44,9 @@ export const FileListView = connect(
 		resetToOverview,
 		onCancel,
 		setOverviewSelected,
-		preferences,
 	} = props;
+
+	const preferences = useStoreSelector((state) => state.preferences);
 
 	const imageData = Object.values(siteImageData.imageData);
 
@@ -161,4 +160,4 @@ export const FileListView = connect(
 			</div>
 		</div>
 	);
-});
+};

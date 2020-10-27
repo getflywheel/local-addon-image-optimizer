@@ -15,7 +15,6 @@ import { store, actions, useStoreSelector } from './store';
 export const MetaDataRow = (props) => {
 	const { setApplyButtonDisabled } = props;
 
-	const { count } = useStoreSelector((state) => state.example);
 	const preferences = useStoreSelector((state) => state.preferences);
 
 	return (

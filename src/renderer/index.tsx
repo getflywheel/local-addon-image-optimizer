@@ -6,56 +6,83 @@ import { IPC_EVENTS } from '../constants';
 import { ipcRenderer } from 'electron';
 import { SiteImageData, OptimizerStatus } from '../types';
 import { Preferences } from '../types';
+/**
+ * @todo delete unused reducer files
+ */
 import { scanImageReducer, initialState, SCAN_IMAGES_ACTIONS } from './reducers/scanImageReducer';
 import * as LocalRenderer from '@getflywheel/local/renderer';
 import { fileListReducer } from './reducers/fileListReducer';
 import { POPULATE_FILE_LIST } from './reducers/fileListReducer';
 import { DatasetType } from '../types';
+import { store, actions, useStoreSelector } from './store';
 
 interface IProps {
-	preferences: Preferences;
 	match: { params: { siteID: string; } };
 }
 
-import { actions } from './store';
 
 const ImageOptimizer = (props: IProps) => {
+	const { match } = props;
+	const { siteID } = match.params;
+
+	/**
+	 * @todo rename to siteImageData
+	 */
+	const preferences = useStoreSelector((state) => state.preferences);
+	const siteImageData = useStoreSelector((state) => state.sites[siteID]);
+
 	const [overviewSelected, setOverviewSelected] = useState(true);
+
 	const initialImageData = {} as SiteImageData;
-	const [siteImageData, dispatchSiteImageData] = useReducer(fileListReducer, initialImageData);
-	const [scanImageState, dispatchScanImageData] = useReducer(scanImageReducer, initialState);
+	// const [siteImageData, dispatchSiteImageData] = useReducer(fileListReducer, initialImageData);
+
+	/**
+	 * @todo remove this stubbed function
+	 */
+	const dispatchSiteImageData = (...args) => console.log('Hey, plz upate me', ...args);
+
+	console.log('store', siteID, store.getState());
 
 	const scanForImages = () => {
-		dispatchScanImageData({ type: SCAN_IMAGES_ACTIONS.REQUEST });
+		store.dispatch(actions.scanRequest(siteID));
+
 		ipcRenderer.send(
 			IPC_EVENTS.SCAN_FOR_IMAGES,
-			props.match.params.siteID
+			siteID,
 		);
 	}
 
 	// set up initial state for file list view
-	useEffect(
-		() => {
-			const initialImageScan = async () => {
-				await fetchImageStateData();
-			}
-			initialImageScan();
-		}, []
-	);
+	// useEffect(
+	// 	() => {
+	// 		(async () => {
+	// 			const mainImageData = await LocalRenderer.ipcAsync(
+	// 				IPC_EVENTS.GET_IMAGE_DATA,
+	// 				siteID,
+	// 				DatasetType.ONLY_UNCOMPRESSED
+	// 			);
+
+	// 			await fetchImageStateData();
+	// 		})();
+	// 	}, []
+	// );
 
 	const fetchImageStateData = async () => {
-		const mainImageData = await LocalRenderer.ipcAsync(
-			IPC_EVENTS.GET_IMAGE_DATA,
-			props.match.params.siteID,
-			DatasetType.ONLY_UNCOMPRESSED
+		// const mainImageData = await LocalRenderer.ipcAsync(
+		// 	IPC_EVENTS.GET_IMAGE_DATA,
+		// 	siteID,
+		// 	DatasetType.ONLY_UNCOMPRESSED
+		// );
+
+		store.dispatch(
+			actions.setSiteImageDataBeforeIntialCompression({ siteID, siteImageData })
 		);
 
-		dispatchScanImageData({ type: SCAN_IMAGES_ACTIONS.SUCCESS, payload: mainImageData });
-
-		dispatchSiteImageData({
-			type: POPULATE_FILE_LIST.SET_IMAGE_DATA, payload: mainImageData
-		});
+		// dispatchSiteImageData({
+		// 	type: POPULATE_FILE_LIST.SET_IMAGE_DATA, payload: mainImageData
+		// });
 	}
+
 	// listen for optimization events and update status accordingly
 	useEffect(
 		() => {
@@ -63,6 +90,8 @@ const ImageOptimizer = (props: IProps) => {
 				ipcRenderer.on(
 					IPC_EVENTS.COMPRESS_IMAGE_SUCCESS,
 					(_, newImageData: ImageData) => {
+						// store.dispatch(actions.setSiteImageDataBeforeIntialCompression({ siteID, siteImageData }));
+
 						dispatchSiteImageData({
 							type: POPULATE_FILE_LIST.IMAGE_OPTIMIZE_SUCCESS, payload: newImageData
 						});
@@ -106,10 +135,8 @@ const ImageOptimizer = (props: IProps) => {
 			if (!ipcRenderer.listenerCount(IPC_EVENTS.SCAN_IMAGES_COMPLETE)) {
 				ipcRenderer.on(
 					IPC_EVENTS.SCAN_IMAGES_COMPLETE,
-					(_, scanImageState) => {
-						dispatchScanImageData({
-							type: SCAN_IMAGES_ACTIONS.SUCCESS, payload: scanImageState
-						});
+					(_, siteImageState) => {
+						store.dispatch(actions.scanSuccess({ siteID, siteImageData }));
 					},
 				);
 			}
@@ -118,9 +145,7 @@ const ImageOptimizer = (props: IProps) => {
 				ipcRenderer.on(
 					IPC_EVENTS.SCAN_IMAGES_COMPLETE,
 					(_, error) => {
-						dispatchScanImageData({
-							type: SCAN_IMAGES_ACTIONS.FAILURE, payload: error
-						});
+						store.dispatch(actions.scanFailure({ siteID, error }));
 					},
 				);
 			}
@@ -167,9 +192,9 @@ const ImageOptimizer = (props: IProps) => {
 
 		ipcRenderer.send(
 			IPC_EVENTS.COMPRESS_IMAGES,
-			props.match.params.siteID,
+			siteID,
 			compressionList,
-			props.preferences.stripMetaData,
+			preferences.stripMetaData,
 		);
 	}
 
@@ -203,7 +228,7 @@ const ImageOptimizer = (props: IProps) => {
 		default:
 			return (
 				<Overview
-					scanImageState={scanImageState}
+					siteImageData={siteImageData}
 					setOverviewSelected={setOverviewSelected}
 					handleScanForImages={scanForImages}
 					fetchImageStateData={fetchImageStateData}
@@ -213,8 +238,4 @@ const ImageOptimizer = (props: IProps) => {
 
 };
 
-export default connect(
-	(state) => ({
-		preferences: state.preferences,
-	}),
-)(ImageOptimizer);
+export default ImageOptimizer;

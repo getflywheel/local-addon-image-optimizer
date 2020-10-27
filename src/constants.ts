@@ -6,6 +6,7 @@ export const IPC_EVENTS = {
 	COMPRESS_IMAGE_FAIL: 'imageOptimizer:image-compress-fail',
 	COMPRESS_ALL_IMAGES_COMPLETE: 'imageOptimizer:image-compress-all-complete',
 	GET_IMAGE_DATA: 'imageOptimizer:get-image-data',
+	GET_IMAGE_DATA_STORE: 'imageOptimizer:get-image-data-store',
 	SAVE_PREFERENCES_TO_DISK: 'imageOptimizer:savePreferencesToDisk',
 	READ_PREFERENCES_FROM_DISK: 'imageOptimizer:readPreferencesFromDisk',
 	GO_TO_PREFERENCES: 'imageOptimizer:go-to-preferences',
