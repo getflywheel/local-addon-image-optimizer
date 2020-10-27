@@ -2,6 +2,7 @@ import * as LocalMain from '@getflywheel/local/main';
 import {
 	scanImages,
 	getImageData,
+	getImageDataStore,
 	compressImages,
 	readPreferencesFromDisk,
 	savePreferencesToDisk,
@@ -36,6 +37,11 @@ export default function (context) {
 	LocalMain.addIpcAsyncListener(
 		IPC_EVENTS.GET_IMAGE_DATA,
 		getImageData,
+	);
+
+	LocalMain.addIpcAsyncListener(
+		IPC_EVENTS.GET_IMAGE_DATA_STORE,
+		getImageDataStore,
 	);
 
 	/**

@@ -6,24 +6,26 @@ import { SiteImageData } from '../types';
 interface IProps {
 	setOverviewSelected: (x: boolean) => void,
 	handleScanForImages: () => void,
-	scanImageState: SiteImageData,
+	siteImageData: SiteImageData,
 	fetchImageStateData: () => void,
 }
 
 export const Overview = (props: IProps) => {
-	const { setOverviewSelected, handleScanForImages, scanImageState } = props;
+	const { setOverviewSelected, handleScanForImages, siteImageData } = props;
+
 	const {
 		imageCount,
 		totalCompressedCount,
-		lastScan,
-		scanInProgress
-	} = scanImageState;
+	} = siteImageData;
 
 	const onClickViewImages = () => {
 		setOverviewSelected(false);
 		props.fetchImageStateData();
 	}
 
+	/**
+	 * @todo selector functionify?
+	 */
 	const remainingUncompressedImages = imageCount - totalCompressedCount;
 
 	return <div className="overview_Container">
@@ -42,7 +44,7 @@ export const Overview = (props: IProps) => {
 		}
 
 		<LastOptimizeStatus
-			scanImageState={scanImageState}
+			siteImageData={siteImageData}
 			handleScanForImages={handleScanForImages}
 		/>
 	</div>

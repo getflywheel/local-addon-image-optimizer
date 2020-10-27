@@ -22,6 +22,9 @@ export function scanImagesFactory(serviceContainer: LocalMain.ServiceContainerSe
 			const imageData = siteData.imageData || {};
 
 			if (!site) {
+				/**
+				 * @todo does passing the error object here translate correctly to the UI?
+				 */
 				serviceContainer.sendIPCEvent(IPC_EVENTS.SCAN_IMAGES_FAILURE, new Error('Site not found!'));
 				return;
 			}
@@ -112,10 +115,10 @@ export function scanImagesFactory(serviceContainer: LocalMain.ServiceContainerSe
 				}, 0
 			);
 
-			const nextSiteImageData = {
+			const nextSiteImageData: SiteImageData = {
 				...siteData,
 				imageData: updatedImageData,
-				scanInProgress: false,
+				// scanInProgress: false,
 				lastScan: Date.now(),
 				originalTotalSize: totalImagesSize,
 				compressedTotalSize: compressedTotalSize,

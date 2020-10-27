@@ -19,12 +19,12 @@ export const POPULATE_FILE_LIST = {
 }
 
 export function fileListReducer(state: SiteImageData, action: IAction) {
-
 	const incrementCounter = (state.compressionListCounter + 1);
 
 	const incrementProgress = ( incrementCounter / state.compressionListTotal ) * 100;
 
 	switch (action.type) {
+		// setSiteImageDataBeforeIntialCompression
 		case POPULATE_FILE_LIST.SET_IMAGE_DATA:
 			return {
 				...state,

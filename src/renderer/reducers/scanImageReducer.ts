@@ -2,7 +2,7 @@ import { SiteImageData } from "../../types";
 
 interface IAction {
 	type: string,
-	payload?: GenericObject
+	payload?: GenericObject,
 };
 
 export const SCAN_IMAGES_ACTIONS = {
@@ -34,6 +34,7 @@ export function scanImageReducer(state: SiteImageData, action: IAction) {
 		case SCAN_IMAGES_ACTIONS.SUCCESS:
 			return {
 				...state,
+				// site image data
 				...action.payload,
 			};
 

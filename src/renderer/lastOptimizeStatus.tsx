@@ -1,14 +1,12 @@
 import React from 'react';
 import { getFormattedTimestamp } from './utils';
-import {Button, Text, TableList, TableListRow, TextButton } from '@getflywheel/local-components';
+import { Button, Text, TableList, TableListRow } from '@getflywheel/local-components';
 import classnames from 'classnames';
-import { ipcRenderer } from 'electron';
-import { IPC_EVENTS } from '../constants';
 import { formatCompressedPercentage, calculateToMb } from './utils';
 import { SiteImageData } from '../types';
 
 interface IProps {
-	scanImageState: SiteImageData,
+	siteImageData: SiteImageData,
 	handleScanForImages: () => void,
 }
 
@@ -20,7 +18,8 @@ const LastOptimizeStatus: React.FC<IProps> = (props: IProps) => {
 		compressedTotalSize,
 		totalCompressedCount,
 		imageCount,
-	} = props.scanImageState;
+		scanInProgress,
+	} = props.siteImageData;
 
 	const totalImageOptimized = `${totalCompressedCount}/${imageCount}`;
 
@@ -50,9 +49,9 @@ const LastOptimizeStatus: React.FC<IProps> = (props: IProps) => {
 						style={{
 							marginLeft: 'auto'
 						}}
-						disabled={props.scanImageState.scanInProgress}
+						disabled={scanInProgress}
 					>
-						{props.scanImageState.scanInProgress ? 'Scanning...' : 'Scan for Images'}
+						{scanInProgress ? 'Scanning...' : 'Scan for Images'}
 					</Button>
 			</TableListRow>
 			<TableListRow className="lastOptimizeStatus_Row">
