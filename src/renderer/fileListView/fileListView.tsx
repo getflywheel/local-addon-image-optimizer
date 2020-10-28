@@ -47,9 +47,10 @@ export const FileListView = (props: IFileListViewProps) => {
 		preferences,
 	} = props;
 
-	const uncompressedImageData = selectors.uncompressedSiteImageData(store.getState());
+	const uncompressedImages = selectors.uncompressedSiteImageData(store.getState());
+	const selectedImages = selectors.selectedSiteImageData(store.getState());
 
-	console.log('file list data', props, uncompressedImageData)
+	console.log('file list data', props, uncompressedImages)
 
 	const cellRender: VirtualTableCellRenderer = (dataArgs: IVirtualTableCellRendererDataArgs) => {
 		switch (dataArgs.colKey) {
@@ -86,11 +87,11 @@ export const FileListView = (props: IFileListViewProps) => {
 		}
 	};
 
-	const getAllChecked = () => {
-		return uncompressedImageData.filter(
-			data => data.isChecked
-		);
-	}
+	// const getAllChecked = () => {
+	// 	return Object.values(siteImageData.imageData).filter(
+	// 		data => data.isChecked
+	// 	);
+	// }
 
 	const openPreferencesModal = () => {
 		FlyModal.onRequestClose();
@@ -137,7 +138,7 @@ export const FileListView = (props: IFileListViewProps) => {
 				siteImageData={siteImageData}
 				resetToOverview={resetToOverview}
 				invokeModal={invokeModal}
-				getAllChecked={getAllChecked}
+				selectedImages={selectedImages}
 				onCancel={onCancel}
 				setOverviewSelected={setOverviewSelected}
 			/>
@@ -146,7 +147,7 @@ export const FileListView = (props: IFileListViewProps) => {
 				<VirtualTable
 					rowClassName='fileList_Virtual_Table_Row'
 					cellRenderer={cellRender}
-					data={siteImageData.optimizationStatus === OptimizerStatus.BEFORE ? uncompressedImageData : getAllChecked()}
+					data={siteImageData.optimizationStatus === OptimizerStatus.BEFORE ? uncompressedImages : selectedImages}
 					headers={[
 						{ key: 'fileStatus', value: '', className: 'fileListViewer_Column_Selected'},
 						{ key: 'filePath', value: 'Filename', className: 'fileListViewer_Column_File_Name'},
