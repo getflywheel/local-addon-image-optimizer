@@ -17,7 +17,6 @@
 	display: flex !important;
 	flex: 1;
 	align-items: center;
-	justify-content: space-between;
 }
 
 .lastOptimizeStatus_Header_Row, .lastOptimizeStatus_Header_Row>div {
@@ -25,6 +24,15 @@
 }
 
 .lastOptimizeStatus_Text {
+	padding: 20px;
+}
+
+.lastOptimizeStatus_TextWithIcon {
+	padding: 10px;
+}
+
+.lastOptimizeStatus_TextAlignRight {
+	margin-left: auto;
 	padding: 20px;
 }
 
@@ -41,6 +49,27 @@
 	padding-left: 20px;
 }
 
+.success-count-svg {
+	height: 18px;
+	width: 18px;
+	margin-left: 20px
+}
+
+.success-count-svg svg {
+	height: 18px;
+	width: 18px;
+}
+
+.error-count-svg {
+	height: 18px;
+	width: 18px;
+	margin-left: 20px
+}
+
+.error-count-svg path {
+	fill: #ef4e65;
+}
+
 /* File List Viewer Table */
 
 .fileListViewer_Column_Selected {
@@ -53,18 +82,21 @@
 .fileListViewer_Column_Compressed_Size, .fileListViewer_Column_Original_Size {
 	align-self: center;
 	text-align: right;
-	white-space: nowrap;
 }
 
 .fileListViewer_Column_Original_Size {
 	min-width: 85px;
 	margin-left: 30px;
+	white-space: nowrap;
 }
 
 .fileListViewer_Column_Compressed_Size {
 	min-width: 115px;
 	margin-right: 20px;
-	margin-left: 30px
+	margin-left: 30px;
+	word-break: break-all;
+	padding-top: 6px;
+	padding-bottom: 6px;
 }
 
 .fileListViewer_Column_File_Name {
