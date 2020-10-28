@@ -4,7 +4,7 @@ import { Button, Text, TableList, TableListRow } from '@getflywheel/local-compon
 import classnames from 'classnames';
 import { formatCompressedPercentage, convertBytesToMb } from './utils';
 import { SiteImageData } from '../types';
-import CheckmarkSmallSVG from './_assets/svg/checkmark--sm.svg';
+import CheckmarkMedSVG from './_assets/svg/Checkmark-med.svg';
 import WarningSVG from './_assets/svg/warning.svg';
 
 interface IProps {
@@ -78,7 +78,7 @@ const LastOptimizeStatus: React.FC<IProps> = (props: IProps) => {
 				<Text className="lastOptimizeStatus_Text">{convertBytesToMb(compressedImagesOriginalSize - compressedTotalSize)}{' '}MB</Text>
 			</TableListRow>
 			<TableListRow className="lastOptimizeStatus_Row">
-				<CheckmarkSmallSVG className="success-count-svg"/>
+				<CheckmarkMedSVG className="success-count-svg"/>
 				<Text className="lastOptimizeStatus_TextWithIcon">Total images optimized</Text>
 				<Text className="lastOptimizeStatus_TextAlignRight">{totalImageOptimized}</Text>
 			</TableListRow>

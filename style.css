@@ -50,14 +50,7 @@
 }
 
 .success-count-svg {
-	height: 18px;
-	width: 18px;
 	margin-left: 20px
-}
-
-.success-count-svg svg {
-	height: 18px;
-	width: 18px;
 }
 
 .error-count-svg {
