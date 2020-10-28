@@ -5,6 +5,7 @@ import { IPC_EVENTS } from '../constants';
 import { ipcRenderer } from 'electron';
 import { OptimizerStatus, ImageData } from '../types';
 import { store, actions, selectors, useStoreSelector } from './store/store';
+import { reportAnalytics, ANALYTIC_EVENT_TYPES } from './analytics';
 
 interface IProps {
 	match: { params: { siteID: string; } };
@@ -142,6 +143,7 @@ const ImageOptimizer = (props: IProps) => {
 		ipcRenderer.send(
 			IPC_EVENTS.CANCEL_COMPRESSION,
 		);
+		reportAnalytics(ANALYTIC_EVENT_TYPES.OPTIMIZE_CANCEL);
 	}
 
 	if (!activeSiteID) {
@@ -156,7 +158,7 @@ const ImageOptimizer = (props: IProps) => {
 
 	switch (overviewSelected) {
 		case false:
-			return(
+			return (
 				<FileListView
 					siteImageData={siteImageData}
 					handleCheckBoxChange={handleCheckBoxChange}
