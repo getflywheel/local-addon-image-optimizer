@@ -4,6 +4,8 @@ import { Button, Text, TableList, TableListRow } from '@getflywheel/local-compon
 import classnames from 'classnames';
 import { formatCompressedPercentage, convertBytesToMb } from './utils';
 import { SiteImageData } from '../types';
+import CheckmarkSmallSVG from './_assets/svg/checkmark--sm.svg';
+import WarningSVG from './_assets/svg/warning.svg';
 
 interface IProps {
 	siteImageData: SiteImageData,
@@ -28,6 +30,7 @@ const LastOptimizeStatus: React.FC<IProps> = (props: IProps) => {
 	const { lastScan, scanInProgress } = siteImageData;
 
 	const totalImageOptimized = `${totalCompressedCount}/${imageCount}`;
+	const totalImageErrored = `${erroredTotalCount}/${imageCount}`;
 
 	return (
 		<TableList className="lastOptimizeStatus_Table">
@@ -63,7 +66,7 @@ const LastOptimizeStatus: React.FC<IProps> = (props: IProps) => {
 			</TableListRow>
 			<TableListRow className="lastOptimizeStatus_Row">
 				<Text className="lastOptimizeStatus_Text">Total reductions</Text>
-				<Text className="lastOptimizeStatus_Text">
+				<Text className="lastOptimizeStatus_TextAlignRight">
 					{
 						originalTotalSize === 0
 							? '0'
@@ -75,8 +78,14 @@ const LastOptimizeStatus: React.FC<IProps> = (props: IProps) => {
 				<Text className="lastOptimizeStatus_Text">{convertBytesToMb(compressedImagesOriginalSize - compressedTotalSize)}{' '}MB</Text>
 			</TableListRow>
 			<TableListRow className="lastOptimizeStatus_Row">
-				<Text className="lastOptimizeStatus_Text">Total images optimized</Text>
-				<Text className="lastOptimizeStatus_Text">{totalImageOptimized}</Text>
+				<CheckmarkSmallSVG className="success-count-svg"/>
+				<Text className="lastOptimizeStatus_TextWithIcon">Total images optimized</Text>
+				<Text className="lastOptimizeStatus_TextAlignRight">{totalImageOptimized}</Text>
+			</TableListRow>
+			<TableListRow className="lastOptimizeStatus_Row">
+				<WarningSVG className="error-count-svg"/>
+				<Text className="lastOptimizeStatus_TextWithIcon">Total errors</Text>
+				<Text className="lastOptimizeStatus_TextAlignRight">{totalImageErrored}</Text>
 			</TableListRow>
 		</TableList>
 	);
