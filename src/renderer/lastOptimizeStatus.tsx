@@ -8,18 +8,19 @@ import { SiteImageData } from '../types';
 interface IProps {
 	siteImageData: SiteImageData,
 	handleScanForImages: () => void,
+	imageCount: number;
 }
 
 const LastOptimizeStatus: React.FC<IProps> = (props: IProps) => {
+	const { imageCount, siteImageData } = props;
 	const {
 		lastScan,
 		originalTotalSize,
 		compressedImagesOriginalSize,
 		compressedTotalSize,
 		totalCompressedCount,
-		imageCount,
 		scanInProgress,
-	} = props.siteImageData;
+	} = siteImageData;
 
 	const totalImageOptimized = `${totalCompressedCount}/${imageCount}`;
 

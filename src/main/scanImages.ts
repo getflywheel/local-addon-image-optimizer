@@ -79,6 +79,9 @@ export function scanImagesFactory(serviceContainer: LocalMain.ServiceContainerSe
 				 */
 			) as SiteImageData['imageData'];
 
+			/**
+			 * @todo these reducer funcs don't need awaits before
+			 */
 			const totalImagesSize = await Object.values(updatedImageData).reduce(
 				(acc, data) => {
 					return acc + data.originalSize;
@@ -87,11 +90,16 @@ export function scanImagesFactory(serviceContainer: LocalMain.ServiceContainerSe
 
 			const compressedTotalSize = await Object.values(updatedImageData).reduce(
 				(acc, data) => {
-					if (typeof data.compressedSize === 'number') {
-						return acc + data.compressedSize;
-					} else {
-						return acc;
-					}
+					return acc + data.compressedSize;
+
+					/**
+					 * @todo ensure this won't break anything if it is removed
+					 */
+					// if (typeof data.compressedSize === 'number') {
+					// 	return acc + data.compressedSize;
+					// } else {
+					// 	return acc;
+					// }
 				}, 0
 			);
 
@@ -115,6 +123,9 @@ export function scanImagesFactory(serviceContainer: LocalMain.ServiceContainerSe
 				}, 0
 			);
 
+			/**
+			 * @todo do we want to drop previously scanned data here so that stale/non-existent images do not get included?
+			 */
 			const nextSiteImageData: SiteImageData = {
 				...siteData,
 				imageData: updatedImageData,
@@ -122,7 +133,7 @@ export function scanImagesFactory(serviceContainer: LocalMain.ServiceContainerSe
 				lastScan: Date.now(),
 				originalTotalSize: totalImagesSize,
 				compressedTotalSize: compressedTotalSize,
-				imageCount: filePaths.length,
+				// imageCount: filePaths.length,
 				totalCompressedCount: totalCompressedCount,
 				compressedImagesOriginalSize: compressedImagesOriginalSize,
 			};

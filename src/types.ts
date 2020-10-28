@@ -3,7 +3,7 @@ export interface ImageData {
 	compressedImageHash?: string;
 	filePath: string;
 	originalSize: number;
-	compressedSize?: number | string;
+	compressedSize?: number;
 	fileStatus?: string;
 	isChecked?: boolean;
 }
@@ -19,12 +19,18 @@ export interface SiteImageData {
 	lastScan?: number;
 	originalTotalSize?: number;
 	compressedTotalSize?: number;
-	imageCount?: number;
+	// imageCount?: number;
+	/**
+	 * @todo make this state derived with selector
+	 */
 	totalCompressedCount?: number;
 	scanInProgress?: boolean;
 	scanError?: GenericObject;
 	selectAllFilesValue?: boolean;
 	optimizationStatus?: OptimizerStatus;
+	/**
+	 * @todo see which of the following can become derived state
+	 */
 	compressionListTotal?: number;
 	compressionListCounter?: number;
 	compressionListCompletionPercentage?: number;
@@ -58,10 +64,13 @@ export enum FileStatus {
 	FAILED = 'failed',
 }
 
-export enum DatasetType {
-	ONLY_UNCOMPRESSED = 'only_uncompressed_images',
-	ALL_FOUND = 'all_found_images'
-}
+/**
+ * @todo remove this type & all references if possible since this type of thing should be handled by selectors now
+ */
+// export enum DatasetType {
+// 	ONLY_UNCOMPRESSED = 'only_uncompressed_images',
+// 	ALL_FOUND = 'all_found_images'
+// }
 
 export interface Preferences {
 	stripMetaData?: boolean;

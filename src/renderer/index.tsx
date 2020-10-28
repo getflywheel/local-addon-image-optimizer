@@ -4,7 +4,7 @@ import { Overview } from './overview';
 import { FileListView } from './fileListView/fileListView';
 import { IPC_EVENTS } from '../constants';
 import { ipcRenderer } from 'electron';
-import { SiteImageData, OptimizerStatus } from '../types';
+import { SiteImageData, OptimizerStatus, ImageData } from '../types';
 import { Preferences } from '../types';
 /**
  * @todo delete unused reducer files
@@ -13,7 +13,6 @@ import { scanImageReducer, initialState, SCAN_IMAGES_ACTIONS } from './reducers/
 import * as LocalRenderer from '@getflywheel/local/renderer';
 import { fileListReducer } from './reducers/fileListReducer';
 import { POPULATE_FILE_LIST } from './reducers/fileListReducer';
-import { DatasetType } from '../types';
 import { store, actions, useStoreSelector } from './store';
 
 interface IProps {
@@ -25,16 +24,17 @@ const ImageOptimizer = (props: IProps) => {
 	const { match } = props;
 	const { siteID } = match.params;
 
-	/**
-	 * @todo rename to siteImageData
-	 */
 	const preferences = useStoreSelector((state) => state.preferences);
 	const siteImageData = useStoreSelector((state) => state.sites[siteID]);
 
 	const [overviewSelected, setOverviewSelected] = useState(true);
 
-	const initialImageData = {} as SiteImageData;
+	// const initialImageData = {} as SiteImageData;
 	// const [siteImageData, dispatchSiteImageData] = useReducer(fileListReducer, initialImageData);
+
+	useEffect(() => {
+		store.dispatch(actions.setActiveSiteID(siteID));
+	}, [siteID]);
 
 	/**
 	 * @todo remove this stubbed function
@@ -42,6 +42,7 @@ const ImageOptimizer = (props: IProps) => {
 	const dispatchSiteImageData = (...args) => console.log('Hey, plz upate me', ...args);
 
 	console.log('store', siteID, store.getState());
+	console.log('main component state', siteImageData);
 
 	const scanForImages = () => {
 		store.dispatch(actions.scanRequest(siteID));
@@ -67,6 +68,9 @@ const ImageOptimizer = (props: IProps) => {
 	// 	}, []
 	// );
 
+	/**
+	 * @todo rethink the usage of this function now that it has been pared down
+	 */
 	const fetchImageStateData = async () => {
 		// const mainImageData = await LocalRenderer.ipcAsync(
 		// 	IPC_EVENTS.GET_IMAGE_DATA,
@@ -89,12 +93,12 @@ const ImageOptimizer = (props: IProps) => {
 			if (!ipcRenderer.listenerCount(IPC_EVENTS.COMPRESS_IMAGE_SUCCESS)) {
 				ipcRenderer.on(
 					IPC_EVENTS.COMPRESS_IMAGE_SUCCESS,
-					(_, newImageData: ImageData) => {
-						// store.dispatch(actions.setSiteImageDataBeforeIntialCompression({ siteID, siteImageData }));
+					(_, imageData: ImageData) => {
+						store.dispatch(actions.optimizeSuccess({ siteID, imageData }));
 
-						dispatchSiteImageData({
-							type: POPULATE_FILE_LIST.IMAGE_OPTIMIZE_SUCCESS, payload: newImageData
-						});
+						// dispatchSiteImageData({
+						// 	type: POPULATE_FILE_LIST.IMAGE_OPTIMIZE_SUCCESS, payload: newImageData
+						// });
 					},
 				);
 			}
@@ -102,10 +106,12 @@ const ImageOptimizer = (props: IProps) => {
 			if (!ipcRenderer.listenerCount(IPC_EVENTS.COMPRESS_IMAGE_FAIL)) {
 				ipcRenderer.on(
 					IPC_EVENTS.COMPRESS_IMAGE_FAIL,
-					(_, originalImageHash, errorMessage) => {
-						dispatchSiteImageData({
-							type: POPULATE_FILE_LIST.IMAGE_OPTIMIZE_FAIL, payload: { originalImageHash, errorMessage }
-						});
+					(_, imageID, errorMessage) => {
+						store.dispatch(actions.optimizeFailure({ siteID, imageID, errorMessage }));
+
+						// dispatchSiteImageData({
+						// 	type: POPULATE_FILE_LIST.IMAGE_OPTIMIZE_FAIL, payload: { originalImageHash, errorMessage }
+						// });
 					},
 				);
 			}
@@ -113,10 +119,12 @@ const ImageOptimizer = (props: IProps) => {
 			if (!ipcRenderer.listenerCount(IPC_EVENTS.COMPRESS_IMAGE_STARTED)) {
 				ipcRenderer.on(
 					IPC_EVENTS.COMPRESS_IMAGE_STARTED,
-					(_, md5hash) => {
-						dispatchSiteImageData({
-							type: POPULATE_FILE_LIST.IMAGE_OPTIMIZE_STARTED, payload: { md5hash }
-						});
+					(_, imageID) => {
+						store.dispatch(actions.optimizationStarted({ siteID, imageID }));
+
+						// dispatchSiteImageData({
+						// 	type: POPULATE_FILE_LIST.IMAGE_OPTIMIZE_STARTED, payload: { md5hash }
+						// });
 					},
 				);
 			}
@@ -125,9 +133,11 @@ const ImageOptimizer = (props: IProps) => {
 				ipcRenderer.on(
 					IPC_EVENTS.COMPRESS_ALL_IMAGES_COMPLETE,
 					async () => {
-						dispatchSiteImageData({
-							type: POPULATE_FILE_LIST.COMPRESS_ALL_IMAGES_COMPLETE
-						});
+						store.dispatch(actions.optimizationComplete({ siteID }));
+
+						// dispatchSiteImageData({
+						// 	type: POPULATE_FILE_LIST.COMPRESS_ALL_IMAGES_COMPLETE
+						// });
 					},
 				);
 			}
@@ -163,21 +173,31 @@ const ImageOptimizer = (props: IProps) => {
 	);
 
 	// handles file selection for final optimization list
-	const handleCheckBoxChange: (imageID: string) => (isChecked: boolean) => void = (imageID) => (isChecked) => {
-		dispatchSiteImageData({
-			type: POPULATE_FILE_LIST.TOGGLE_CHECKED_ONE, payload: { imageID, isChecked }
-		});
+	const handleCheckBoxChange = (imageID: string) => (isChecked: boolean) => {
+		store.dispatch(actions.setImageSelected({ siteID, imageID, isChecked }));
+
+		// dispatchSiteImageData({
+		// 	type: POPULATE_FILE_LIST.TOGGLE_CHECKED_ONE, payload: { imageID, isChecked }
+		// });
 	};
 
 	// select or deselect all files
 	const toggleSelectAll = (isChecked) => {
-		dispatchSiteImageData({
-			type: POPULATE_FILE_LIST.TOGGLE_CHECKED_ALL, payload: { isChecked }
-		})
+		store.dispatch(actions.setAllImagesSelected({ siteID, isChecked }));
+
+		// dispatchSiteImageData({
+		// 	type: POPULATE_FILE_LIST.TOGGLE_CHECKED_ALL, payload: { isChecked }
+		// })
 	};
 
+	/**
+	 * @todo rename this function since it is technically not a getter
+	 */
 	// compiles the list of images to be sent to the main thread for compression
 	const getCompressionList = () => {
+		/**
+		 * @todo consider making this a selector
+		 */
 		const compressionList = Object.entries(siteImageData.imageData).reduce((acc, [id, data]) => {
 			if (data.isChecked) {
 				acc.push(id);
@@ -185,10 +205,12 @@ const ImageOptimizer = (props: IProps) => {
 			return acc
 		}, [])
 
-		dispatchSiteImageData({ type: POPULATE_FILE_LIST.IS_OPTIMIZING, payload: {
-			compressionListTotal: compressionList.length,
-			running: OptimizerStatus.RUNNING
-		} });
+		store.dispatch(actions.optimizationRequested({ siteID, compressionListTotal: compressionList.length }));
+
+		// dispatchSiteImageData({ type: POPULATE_FILE_LIST.IS_OPTIMIZING, payload: {
+		// 	compressionListTotal: compressionList.length,
+		// 	running: OptimizerStatus.RUNNING
+		// } });
 
 		ipcRenderer.send(
 			IPC_EVENTS.COMPRESS_IMAGES,
@@ -198,7 +220,6 @@ const ImageOptimizer = (props: IProps) => {
 		);
 	}
 
-	// compiles the list of images to be sent to the main thread for compression
 	const resetToOverview = () => {
 		setOverviewSelected(true);
 		scanForImages();
@@ -222,6 +243,7 @@ const ImageOptimizer = (props: IProps) => {
 					resetToOverview={resetToOverview}
 					onCancel={onCancel}
 					setOverviewSelected={setOverviewSelected}
+					preferences={preferences}
 				/>
 			);
 

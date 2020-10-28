@@ -26,32 +26,31 @@ const runtimeStore = createRuntimeStore();
  *
  * @returns SiteImageData
  */
-export function getImageData(siteID: string, imageDataset: DatasetType = DatasetType.ALL_FOUND): SiteImageData {
-	const allImages = imageDataStore.getStateBySiteID(siteID);
+export function getImageData(siteID: string): SiteImageData {
+	return imageDataStore.getStateBySiteID(siteID);
 
-	if (imageDataset === DatasetType.ALL_FOUND) {
-		return allImages;
-	}
+	// if (imageDataset === DatasetType.ALL_FOUND) {
+	// 	return allImages;
+	// }
 
-	const onlyUncompressedImages = Object.entries(allImages.imageData).reduce(
-		(acc,[id, data]) => {
-			if (data.compressedImageHash) {
-				return acc;
-			}
-			return {
-				...acc,
-				[id]: {
-					...data
-				}
-			}
-		}, {}
-	);
+	// const onlyUncompressedImages = Object.entries(allImages.imageData).reduce(
+	// 	(acc,[id, data]) => {
+	// 		if (data.compressedImageHash) {
+	// 			return acc;
+	// 		}
+	// 		return {
+	// 			...acc,
+	// 			[id]: {
+	// 				...data
+	// 			}
+	// 		}
+	// 	}, {}
+	// );
 
-	return {
-		...allImages,
-		imageData: onlyUncompressedImages,
-	}
-
+	// return {
+	// 	...allImages,
+	// 	imageData: onlyUncompressedImages,
+	// }
 }
 
 export function getImageDataStore(): CachedImageDataBySiteID {
