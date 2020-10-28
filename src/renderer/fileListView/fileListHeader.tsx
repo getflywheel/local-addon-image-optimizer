@@ -15,7 +15,7 @@ interface IFileListHeaderProps {
 	siteImageData: SiteImageData,
 	setOverviewSelected: (x: boolean) => void,
     invokeModal: (ModalContents: React.FC, onCancel?: Function, onConfirm?: Function) => void,
-	getAllChecked: () => ImageData[],
+	selectedImages: ImageData[],
 	onCancel: () => void,
 	resetToOverview: () => void,
 }
@@ -25,12 +25,12 @@ export const FileListHeader = (props: IFileListHeaderProps) => {
 		siteImageData,
 		setOverviewSelected,
 		invokeModal,
-		getAllChecked,
+		selectedImages,
 		onCancel,
 		resetToOverview,
 	} = props;
 
-    const disableButton = getAllChecked().length > 0 ? false : true;
+    const disableOptimizeButton = selectedImages.length > 0 ? false : true;
 
     if (siteImageData.optimizationStatus === OptimizerStatus.BEFORE) {
         return (
@@ -50,7 +50,7 @@ export const FileListHeader = (props: IFileListHeaderProps) => {
                         color: 'green',
                         form: 'fill'
                     }}
-                    disabled={disableButton}
+                    disabled={disableOptimizeButton}
                 >
                     Optimize Images
                 </Button>

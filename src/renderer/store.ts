@@ -206,16 +206,24 @@ export const actions = {
 // 	return boundActions;
 // }, {});
 
-const getUncompressedImagesList = (imageData: SiteImageData['imageData']) => {
+const getUncompressedImages = (imageData: SiteImageData['imageData']) => {
 	return Object.values(imageData).filter((d) => !d.compressedImageHash);
 };
+
+const getSelectedImages = (imageData: SiteImageData['imageData']) => {
+	return Object.values(imageData).filter((d) => d.isChecked);
+}
 
 const getSiteState = (state) => state.sites[state.activeSiteID];
 
 export const selectors = {
 	uncompressedSiteImageData: createSelector(
 		getSiteState,
-		(siteState) => getUncompressedImagesList(siteState.imageData),
+		(siteState) => getUncompressedImages(siteState.imageData),
+	),
+	selectedSiteImageData: createSelector(
+		getSiteState,
+		(siteState) => getSelectedImages(siteState.imageData),
 	),
 	siteImageCount: createSelector(
 		getSiteState,
@@ -225,7 +233,7 @@ export const selectors = {
 			}
 
 			return Object.values(siteState.imageData).length;
-		}
+		},
 	),
 }
 
