@@ -47,6 +47,7 @@ export function fileListReducer(state: SiteImageData, action: IAction) {
 				compressedTotalSize: 0,
 			};
 
+		// setImageSelected
 		case POPULATE_FILE_LIST.TOGGLE_CHECKED_ONE:
 			return {
 				...state,
@@ -59,6 +60,7 @@ export function fileListReducer(state: SiteImageData, action: IAction) {
 				},
 			}
 
+		// setAllImagesSelected
 		case POPULATE_FILE_LIST.TOGGLE_CHECKED_ALL:
 			return {
 					...state,
@@ -72,6 +74,7 @@ export function fileListReducer(state: SiteImageData, action: IAction) {
 					selectAllFilesValue: action.payload.isChecked,
 			}
 
+		// setOptimizationStarted
 		case POPULATE_FILE_LIST.IS_OPTIMIZING:
 			return {
 					...state,
@@ -82,12 +85,14 @@ export function fileListReducer(state: SiteImageData, action: IAction) {
 					compressedTotalSize: 0,
 			}
 
+		// optimizationComplete
 		case POPULATE_FILE_LIST.COMPRESS_ALL_IMAGES_COMPLETE:
 			return {
 					...state,
 					optimizationStatus: OptimizerStatus.COMPLETE,
 			}
 
+		// optimizationStarted (for one image)
 		case POPULATE_FILE_LIST.IMAGE_OPTIMIZE_STARTED:
 			return {
 					...state,
@@ -100,6 +105,7 @@ export function fileListReducer(state: SiteImageData, action: IAction) {
 					},
 			}
 
+		// optimizeSuccess
 		case POPULATE_FILE_LIST.IMAGE_OPTIMIZE_SUCCESS:
 			return {
 					...state,
@@ -117,6 +123,7 @@ export function fileListReducer(state: SiteImageData, action: IAction) {
 					compressedTotalSize: state.compressedTotalSize += action.payload.compressedSize,
 			}
 
+		// optimizeFailure
 		case POPULATE_FILE_LIST.IMAGE_OPTIMIZE_FAIL:
 			return {
 					...state,

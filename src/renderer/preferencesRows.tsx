@@ -37,7 +37,7 @@ export const MetaDataRow = (props) => {
 					flat
 					onChange={(_, checked) => {
 						setApplyButtonDisabled();
-						store.dispatch(actions.preferences.stripMetaData(checked));
+						store.dispatch(actions.stripMetaData(checked));
 					}}
 				/>
 				<Text

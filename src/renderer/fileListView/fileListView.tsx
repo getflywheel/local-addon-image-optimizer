@@ -1,30 +1,30 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { connect } from 'react-redux';
 import { ipcRenderer } from 'electron';
 import { ColFileStatus } from '../columnRenderers/ColFileStatus';
 import { ColFileName } from '../columnRenderers/ColFileName';
 import { ColFileSize } from '../columnRenderers/ColFileSize';
 import {
-		VirtualTable,
-		VirtualTableCellRenderer,
-		IVirtualTableCellRendererDataArgs,
-		ProgressBar,
-		FlyModal
-	} from '@getflywheel/local-components';
+	VirtualTable,
+	VirtualTableCellRenderer,
+	IVirtualTableCellRendererDataArgs,
+	ProgressBar,
+	FlyModal
+} from '@getflywheel/local-components';
 import { FileListHeader } from './fileListHeader';
 import { OptimizerStatus, SiteImageData, Preferences } from '../../types';
 import { IPC_EVENTS } from '../../constants';
-import { useStoreSelector } from '../store';
+import { store, useStoreSelector, selectors } from '../store';
 
 interface IFileListViewProps {
-	siteImageData: SiteImageData,
-	handleCheckBoxChange: (imageID: string) => (isChecked: boolean) => void,
-	toggleSelectAll: (isChecked: boolean) => void,
-	getCompressionList: () => void,
-	resetToOverview: () => void,
-	onCancel: () => void,
-	setOverviewSelected: (x: boolean) => void,
+	siteImageData: SiteImageData;
+	handleCheckBoxChange: (imageID: string) => (isChecked: boolean) => void;
+	toggleSelectAll: (isChecked: boolean) => void;
+	getCompressionList: () => void;
+	resetToOverview: () => void;
+	onCancel: () => void;
+	setOverviewSelected: (x: boolean) => void;
+	preferences: Preferences;
 }
 
 interface IModalProps {
@@ -44,11 +44,12 @@ export const FileListView = (props: IFileListViewProps) => {
 		resetToOverview,
 		onCancel,
 		setOverviewSelected,
+		preferences,
 	} = props;
 
-	const preferences = useStoreSelector((state) => state.preferences);
+	const uncompressedImageData = selectors.uncompressedSiteImageData(store.getState());
 
-	const imageData = Object.values(siteImageData.imageData);
+	console.log('file list data', props, uncompressedImageData)
 
 	const cellRender: VirtualTableCellRenderer = (dataArgs: IVirtualTableCellRendererDataArgs) => {
 		switch (dataArgs.colKey) {
@@ -86,7 +87,7 @@ export const FileListView = (props: IFileListViewProps) => {
 	};
 
 	const getAllChecked = () => {
-		return imageData.filter(
+		return uncompressedImageData.filter(
 			data => data.isChecked
 		);
 	}
@@ -113,24 +114,24 @@ export const FileListView = (props: IFileListViewProps) => {
 			FlyModal.onRequestClose();
 		}
 
-		ReactDOM.render (
+		ReactDOM.render(
 			(
-					<FlyModal
-						contentLabel='Confirm Optimization'
-					>
-						<ModalContents
-							onSubmit={onSubmit}
-							openPreferencesModal={openPreferencesModal}
-							onConfirm={onConfirmSelect}
-							onCancel={onCancelSelect}
-							preferences={preferences}
-						/>
-					</FlyModal>
+				<FlyModal
+					contentLabel='Confirm Optimization'
+				>
+					<ModalContents
+						onSubmit={onSubmit}
+						openPreferencesModal={openPreferencesModal}
+						onConfirm={onConfirmSelect}
+						onCancel={onCancelSelect}
+						preferences={preferences}
+					/>
+				</FlyModal>
 			), document.getElementById('popup-container'),
 		);
 	};
 
-	return(
+	return (
 		<div className='fileView_Container'>
 			<FileListHeader
 				siteImageData={siteImageData}
@@ -145,7 +146,7 @@ export const FileListView = (props: IFileListViewProps) => {
 				<VirtualTable
 					rowClassName='fileList_Virtual_Table_Row'
 					cellRenderer={cellRender}
-					data={siteImageData.optimizationStatus === OptimizerStatus.BEFORE ? imageData : getAllChecked()}
+					data={siteImageData.optimizationStatus === OptimizerStatus.BEFORE ? uncompressedImageData : getAllChecked()}
 					headers={[
 						{ key: 'fileStatus', value: '', className: 'fileListViewer_Column_Selected'},
 						{ key: 'filePath', value: 'Filename', className: 'fileListViewer_Column_File_Name'},

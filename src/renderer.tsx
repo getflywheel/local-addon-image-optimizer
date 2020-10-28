@@ -20,6 +20,10 @@ export default async function (context) {
 		IPC_EVENTS.GET_IMAGE_DATA_STORE,
 	);
 
+	/**
+	 * It is important that the store get hydrated before any React components are mounted so that the data is ready
+	 * once the components are mounted
+	 */
 	store.dispatch(actions.hydratePreferences(preferences));
 	store.dispatch(actions.hydrateSites(allImageData));
 

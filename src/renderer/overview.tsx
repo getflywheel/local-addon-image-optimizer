@@ -1,6 +1,7 @@
 import React from 'react';
 import { Banner } from '@getflywheel/local-components';
 import LastOptimizeStatus from './lastOptimizeStatus';
+import { store, selectors } from './store';
 import { SiteImageData } from '../types';
 
 interface IProps {
@@ -13,15 +14,14 @@ interface IProps {
 export const Overview = (props: IProps) => {
 	const { setOverviewSelected, handleScanForImages, siteImageData } = props;
 
-	const {
-		imageCount,
-		totalCompressedCount,
-	} = siteImageData;
+	const { totalCompressedCount } = siteImageData;
 
 	const onClickViewImages = () => {
 		setOverviewSelected(false);
 		props.fetchImageStateData();
 	}
+
+	const imageCount = selectors.siteImageCount(store.getState());
 
 	/**
 	 * @todo selector functionify?
@@ -46,6 +46,7 @@ export const Overview = (props: IProps) => {
 		<LastOptimizeStatus
 			siteImageData={siteImageData}
 			handleScanForImages={handleScanForImages}
+			imageCount={imageCount}
 		/>
 	</div>
 }
