@@ -1,5 +1,5 @@
 import React from 'react';
-import { IVirtualTableCellRendererDataArgs } from '@getflywheel/local-components';
+import { IVirtualTableCellRendererDataArgs, Text } from '@getflywheel/local-components';
 interface IFileSizeProps {
 	dataArgs: IVirtualTableCellRendererDataArgs
 }
