@@ -17,7 +17,6 @@ const ImageOptimizer = (props: IProps) => {
 
 	const preferences = useStoreSelector((state) => state.preferences);
 	const siteImageData = useStoreSelector((state) => state.sites[siteID]);
-
 	const [overviewSelected, setOverviewSelected] = useState(true);
 
 	const scanForImages = () => {
@@ -131,6 +130,12 @@ const ImageOptimizer = (props: IProps) => {
 		ipcRenderer.send(
 			IPC_EVENTS.CANCEL_COMPRESSION,
 		);
+	}
+
+	if (!siteImageData) {
+		store.dispatch(actions.addSite({ siteID }));
+
+		return null;
 	}
 
 	switch (overviewSelected) {
