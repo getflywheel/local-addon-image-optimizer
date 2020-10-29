@@ -19,7 +19,6 @@ interface IFileStatusProps {
 }
 
 export const ColFileStatus = (props: IFileStatusProps) =>  {
-
 	const {
 		dataArgs,
 		handleCheckBoxChange,
@@ -35,8 +34,8 @@ export const ColFileStatus = (props: IFileStatusProps) =>  {
 			<div>
 				{/* TODO: Set the header checkbox to 'unchecked' if not all files are selected */}
 				<Checkbox
-					checked={ dataArgs.isHeader ? toggleSelectAllValue : dataArgs.rowData.isChecked }
-					onChange={ onChange }
+					checked={dataArgs.isHeader ? toggleSelectAllValue : dataArgs.rowData.isChecked}
+					onChange={onChange}
 				/>
 			</div>
 		);

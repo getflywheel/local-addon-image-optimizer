@@ -16,16 +16,32 @@ export default async function (context) {
 		IPC_EVENTS.READ_PREFERENCES_FROM_DISK
 	);
 
-	const allImageData: CachedImageDataBySiteID = await LocalRenderer.ipcAsync(
+	const cachedImageDataBySiteID: CachedImageDataBySiteID = await LocalRenderer.ipcAsync(
 		IPC_EVENTS.GET_IMAGE_DATA_STORE,
 	);
+
+	const sites = await LocalRenderer.ipcAsync(
+		IPC_EVENTS.READ_SITES_FROM_DISK,
+	);
+
+	/**
+	 * We must add empty records for any sites that we do not yet have image optimizer data for so that we can
+	 * properly hydrate state
+	 */
+	Object.keys(sites).forEach((key) => {
+		if (!cachedImageDataBySiteID[key]) {
+			cachedImageDataBySiteID[key] = {
+				imageData: {},
+			};
+		}
+	})
 
 	/**
 	 * It is important that the store get hydrated before any React components are mounted so that the data is ready
 	 * once the components are mounted
 	 */
 	store.dispatch(actions.hydratePreferences(preferences));
-	store.dispatch(actions.hydrateSites(allImageData));
+	store.dispatch(actions.hydrateSites(cachedImageDataBySiteID));
 
 	const withStoreProvider = (Component) => (props) => (
 		<Provider store={store}>
@@ -66,7 +82,6 @@ export default async function (context) {
 					},
 				],
 				onApply: () => {
-					console.log('apply', store, store.getState())
 					LocalRenderer.ipcAsync(
 						IPC_EVENTS.SAVE_PREFERENCES_TO_DISK,
 						store.getState().preferences,

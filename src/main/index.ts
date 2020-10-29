@@ -1,5 +1,5 @@
 import * as LocalMain from '@getflywheel/local/main';
-import { SiteImageData, DatasetType, CachedImageDataBySiteID } from '../types';
+import { SiteImageData, CachedImageDataBySiteID } from '../types';
 import { COMPRESSED_IMAGE_DATA_FILE_NAME, PREFERENCES_FILE_NAME } from '../constants';
 import { Preferences } from '../types';
 import { scanImagesFactory } from './scanImages';
@@ -28,29 +28,6 @@ const runtimeStore = createRuntimeStore();
  */
 export function getImageData(siteID: string): SiteImageData {
 	return imageDataStore.getStateBySiteID(siteID);
-
-	// if (imageDataset === DatasetType.ALL_FOUND) {
-	// 	return allImages;
-	// }
-
-	// const onlyUncompressedImages = Object.entries(allImages.imageData).reduce(
-	// 	(acc,[id, data]) => {
-	// 		if (data.compressedImageHash) {
-	// 			return acc;
-	// 		}
-	// 		return {
-	// 			...acc,
-	// 			[id]: {
-	// 				...data
-	// 			}
-	// 		}
-	// 	}, {}
-	// );
-
-	// return {
-	// 	...allImages,
-	// 	imageData: onlyUncompressedImages,
-	// }
 }
 
 export function getImageDataStore(): CachedImageDataBySiteID {
@@ -74,3 +51,7 @@ export function savePreferencesToDisk(preferences: Preferences): void {
 		preferences,
 	);
 };
+
+export function readSitesFromDisk() {
+	return serviceContainer.userData.get('sites', {});
+}

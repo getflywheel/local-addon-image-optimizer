@@ -8,20 +8,22 @@ interface IProps {
 	setOverviewSelected: (x: boolean) => void,
 	handleScanForImages: () => void,
 	siteImageData: SiteImageData,
-	fetchImageStateData: () => void,
+	siteID: string,
 }
 
 export const Overview = (props: IProps) => {
-	const { setOverviewSelected, handleScanForImages, siteImageData } = props;
+	const { setOverviewSelected, handleScanForImages, siteImageData, siteID } = props;
 
-	const { totalCompressedCount } = siteImageData;
+	const totalCompressedCount = selectors.compressedSiteImages(store.getState(), props).length;
 
 	const onClickViewImages = () => {
 		setOverviewSelected(false);
-		props.fetchImageStateData();
 	}
 
-	const imageCount = selectors.siteImageCount(store.getState());
+	const imageCount = selectors.siteImageCount(store.getState(), props);
+	const originalTotalSize = selectors.totalImagesSizeBeforeCompression(store.getState(), props);
+	const compressedImagesOriginalSize = selectors.originalSizeOfCompressedImages(store.getState(), props);
+	const compressedTotalSize = selectors.sizeOfCompressedImages(store.getState(), props);
 
 	/**
 	 * @todo selector functionify?
@@ -47,6 +49,10 @@ export const Overview = (props: IProps) => {
 			siteImageData={siteImageData}
 			handleScanForImages={handleScanForImages}
 			imageCount={imageCount}
+			totalCompressedCount={totalCompressedCount}
+			originalTotalSize={originalTotalSize}
+			compressedImagesOriginalSize={compressedImagesOriginalSize}
+			compressedTotalSize={compressedTotalSize}
 		/>
 	</div>
 }

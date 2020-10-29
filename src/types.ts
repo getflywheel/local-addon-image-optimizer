@@ -17,13 +17,16 @@ export enum OptimizerStatus {
 export interface SiteImageData {
 	imageData: { [imageID: string]: ImageData };
 	lastScan?: number;
-	originalTotalSize?: number;
-	compressedTotalSize?: number;
+	/**
+	 * @todo try and derive this state
+	 */
+	// originalTotalSize?: number;
+	// compressedTotalSize?: number;
 	// imageCount?: number;
 	/**
 	 * @todo make this state derived with selector
 	 */
-	totalCompressedCount?: number;
+	// totalCompressedCount?: number;
 	scanInProgress?: boolean;
 	scanError?: GenericObject;
 	selectAllFilesValue?: boolean;
@@ -34,7 +37,7 @@ export interface SiteImageData {
 	compressionListTotal?: number;
 	compressionListCounter?: number;
 	compressionListCompletionPercentage?: number;
-	compressedImagesOriginalSize?: number;
+	// compressedImagesOriginalSize?: number;
 }
 
 

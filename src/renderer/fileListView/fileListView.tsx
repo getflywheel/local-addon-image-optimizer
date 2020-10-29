@@ -25,6 +25,7 @@ interface IFileListViewProps {
 	onCancel: () => void;
 	setOverviewSelected: (x: boolean) => void;
 	preferences: Preferences;
+	siteID: string;
 }
 
 interface IModalProps {
@@ -45,12 +46,11 @@ export const FileListView = (props: IFileListViewProps) => {
 		onCancel,
 		setOverviewSelected,
 		preferences,
+		siteID,
 	} = props;
 
-	const uncompressedImages = selectors.uncompressedSiteImageData(store.getState());
-	const selectedImages = selectors.selectedSiteImageData(store.getState());
-
-	console.log('file list data', props, uncompressedImages)
+	const uncompressedImages = selectors.uncompressedSiteImages(store.getState(), props);
+	const selectedImages = selectors.selectedSiteImages(store.getState(), props);
 
 	const cellRender: VirtualTableCellRenderer = (dataArgs: IVirtualTableCellRendererDataArgs) => {
 		switch (dataArgs.colKey) {
@@ -86,12 +86,6 @@ export const FileListView = (props: IFileListViewProps) => {
 			default: return null;
 		}
 	};
-
-	// const getAllChecked = () => {
-	// 	return Object.values(siteImageData.imageData).filter(
-	// 		data => data.isChecked
-	// 	);
-	// }
 
 	const openPreferencesModal = () => {
 		FlyModal.onRequestClose();
@@ -141,6 +135,7 @@ export const FileListView = (props: IFileListViewProps) => {
 				selectedImages={selectedImages}
 				onCancel={onCancel}
 				setOverviewSelected={setOverviewSelected}
+				siteID={siteID}
 			/>
 				<ProgressBar progress={siteImageData.compressionListCompletionPercentage} />
 			<div className='fileListViewer_File_List'>

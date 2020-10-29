@@ -9,6 +9,7 @@ export const IPC_EVENTS = {
 	GET_IMAGE_DATA_STORE: 'imageOptimizer:get-image-data-store',
 	SAVE_PREFERENCES_TO_DISK: 'imageOptimizer:savePreferencesToDisk',
 	READ_PREFERENCES_FROM_DISK: 'imageOptimizer:readPreferencesFromDisk',
+	READ_SITES_FROM_DISK: 'imageOptimizer:readSitesFromDisk',
 	GO_TO_PREFERENCES: 'imageOptimizer:go-to-preferences',
 	CANCEL_COMPRESSION: 'imageOptimizer:cancel-compression',
 	SCAN_IMAGES_COMPLETE: 'imageOptimizer:scan-images-complete',

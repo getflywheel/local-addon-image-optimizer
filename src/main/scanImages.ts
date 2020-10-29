@@ -129,13 +129,14 @@ export function scanImagesFactory(serviceContainer: LocalMain.ServiceContainerSe
 			const nextSiteImageData: SiteImageData = {
 				...siteData,
 				imageData: updatedImageData,
-				// scanInProgress: false,
 				lastScan: Date.now(),
-				originalTotalSize: totalImagesSize,
-				compressedTotalSize: compressedTotalSize,
+
+				// scanInProgress: false,
+				// originalTotalSize: totalImagesSize,
+				// compressedTotalSize: compressedTotalSize,
 				// imageCount: filePaths.length,
-				totalCompressedCount: totalCompressedCount,
-				compressedImagesOriginalSize: compressedImagesOriginalSize,
+				// totalCompressedCount: totalCompressedCount,
+				// compressedImagesOriginalSize: compressedImagesOriginalSize,
 			};
 
 			imageDataStore.setStateBySiteID(siteID, nextSiteImageData);
@@ -143,6 +144,7 @@ export function scanImagesFactory(serviceContainer: LocalMain.ServiceContainerSe
 			saveImageDataToDisk(imageDataStore, serviceContainer);
 
 			serviceContainer.sendIPCEvent(IPC_EVENTS.SCAN_IMAGES_COMPLETE, nextSiteImageData);
+
 			reportScanSuccess(siteID, filePaths.length, totalCompressedCount);
 		} catch (error) {
 			reportScanFailure(siteID, error);
