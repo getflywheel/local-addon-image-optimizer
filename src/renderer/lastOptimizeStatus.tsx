@@ -4,7 +4,6 @@ import { Button, Text, TableList, TableListRow } from '@getflywheel/local-compon
 import classnames from 'classnames';
 import { formatCompressedPercentage, calculateToMb } from './utils';
 import { SiteImageData } from '../types';
-import { store, selectors } from './store';
 
 interface IProps {
 	siteImageData: SiteImageData,
@@ -27,7 +26,6 @@ const LastOptimizeStatus: React.FC<IProps> = (props: IProps) => {
 	} = props;
 
 	const { lastScan, scanInProgress } = siteImageData;
-
 
 	const totalImageOptimized = `${totalCompressedCount}/${imageCount}`;
 

@@ -4,7 +4,6 @@ import {
 	createSlice,
 	createSelector,
 	PayloadAction,
-	current,
 } from '@reduxjs/toolkit';
 
 import {
@@ -130,27 +129,6 @@ const sitesSlice = createSlice({
 		setSiteImageData: (state, action: PayloadAction<Omit<SiteActionPayload, 'error'>>) => {
 			return mergeSiteState(state, action.payload);
 		},
-		/**
-		 * @todo rename this poor guy
-		 *
-		 * @todo this might be unecessary because of the hydrate reducer func
-		 */
-		setSiteImageDataBeforeIntialCompression: (state, action: PayloadAction<Omit<SiteActionPayload, 'error'>>) => {
-			return mergeSiteState(
-				state,
-				action.payload,
-				/**
-				 * @todo set these values dynamically based on any current compression process happening in the background
-				 *
-				 * Also, these can probably just be setup in the hydrate function instead
-				 */
-				{
-					selectAllFilesValue: false,
-					optimizationStatus: OptimizerStatus.BEFORE,
-					compressionListCompletionPercentage: 0,
-				},
-			);
-		},
 		setImageSelected: (state, action: PayloadAction<{ siteID: string, imageID: string, isChecked: boolean }>) => {
 			const { siteID, imageID, isChecked } = action.payload;
 			const siteState = state[siteID];
@@ -216,9 +194,6 @@ const sitesSlice = createSlice({
 
 			siteState.compressionListCounter = siteState.compressionListCounter + 1;
 			siteState.compressionListCompletionPercentage = (siteState.compressionListCounter / siteState.compressionListTotal) * 100;
-
-			// siteState.compressedImagesOriginalSize = siteState.compressedImagesOriginalSize += imageData.originalSize;
-			// siteState.compressedTotalSize = siteState.compressedTotalSize += imageData.compressedSize;
 
 			return state;
 		},

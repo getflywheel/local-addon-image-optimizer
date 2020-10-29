@@ -14,8 +14,6 @@ interface IProps {
 export const Overview = (props: IProps) => {
 	const { setOverviewSelected, handleScanForImages, siteImageData, siteID } = props;
 
-	const totalCompressedCount = selectors.compressedSiteImages(store.getState(), props).length;
-
 	const onClickViewImages = () => {
 		setOverviewSelected(false);
 	}
@@ -24,10 +22,8 @@ export const Overview = (props: IProps) => {
 	const originalTotalSize = selectors.totalImagesSizeBeforeCompression(store.getState(), props);
 	const compressedImagesOriginalSize = selectors.originalSizeOfCompressedImages(store.getState(), props);
 	const compressedTotalSize = selectors.sizeOfCompressedImages(store.getState(), props);
+	const totalCompressedCount = selectors.compressedSiteImages(store.getState(), props).length;
 
-	/**
-	 * @todo selector functionify?
-	 */
 	const remainingUncompressedImages = imageCount - totalCompressedCount;
 
 	return <div className="overview_Container">

@@ -1,5 +1,3 @@
-import { ImageData, SiteImageData } from '../types';
-
 export function formatCompressedPercentage (num: number) {
 	return Math.round(num * 100)
 }

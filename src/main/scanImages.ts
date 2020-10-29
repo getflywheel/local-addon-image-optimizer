@@ -130,13 +130,6 @@ export function scanImagesFactory(serviceContainer: LocalMain.ServiceContainerSe
 				...siteData,
 				imageData: updatedImageData,
 				lastScan: Date.now(),
-
-				// scanInProgress: false,
-				// originalTotalSize: totalImagesSize,
-				// compressedTotalSize: compressedTotalSize,
-				// imageCount: filePaths.length,
-				// totalCompressedCount: totalCompressedCount,
-				// compressedImagesOriginalSize: compressedImagesOriginalSize,
 			};
 
 			imageDataStore.setStateBySiteID(siteID, nextSiteImageData);

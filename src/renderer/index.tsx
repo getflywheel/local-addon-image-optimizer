@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useReducer } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Overview } from './overview';
 import { FileListView } from './fileListView/fileListView';
 import { IPC_EVENTS } from '../constants';
