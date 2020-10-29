@@ -10,6 +10,7 @@ import ChevronArrowSVG from '../_assets/svg/chevron-arrow-right.svg';
 import NavigationPrompt from 'react-router-navigation-prompt';
 import { WarningModal } from './WarningModal';
 import { ConfirmOptimizationModal } from './ConfirmOptimizationModal';
+import { store, selectors } from '../store';
 
 interface IFileListHeaderProps {
 	siteImageData: SiteImageData,
@@ -18,6 +19,7 @@ interface IFileListHeaderProps {
 	selectedImages: ImageData[],
 	onCancel: () => void,
 	resetToOverview: () => void,
+	siteID: string,
 }
 
 export const FileListHeader = (props: IFileListHeaderProps) => {
@@ -29,6 +31,9 @@ export const FileListHeader = (props: IFileListHeaderProps) => {
 		onCancel,
 		resetToOverview,
 	} = props;
+
+	const compressedImagesOriginalSize = selectors.originalSizeOfCompressedImages(store.getState(), props);
+	const compressedTotalSize = selectors.sizeOfCompressedImages(store.getState(), props);
 
     const disableOptimizeButton = selectedImages.length > 0 ? false : true;
 
@@ -86,13 +91,13 @@ export const FileListHeader = (props: IFileListHeaderProps) => {
             <div className='fileView_Header'>
                 <div className='fileView_Header_Text'>
 					Optimization complete! You've saved{' '}{calculateToMb(
-						siteImageData.compressedImagesOriginalSize - siteImageData.compressedTotalSize
+						compressedImagesOriginalSize - compressedTotalSize
 					)}{' '}MB of space.
                 </div>
 
                 <Button
                     className='fileView_Button_Optimization'
-                    onClick={() => resetToOverview()}
+                    onClick={resetToOverview}
                     privateOptions={{
                         color: 'green',
                         form: 'fill'

@@ -4,23 +4,30 @@ import { Button, Text, TableList, TableListRow } from '@getflywheel/local-compon
 import classnames from 'classnames';
 import { formatCompressedPercentage, calculateToMb } from './utils';
 import { SiteImageData } from '../types';
+import { store, selectors } from './store';
 
 interface IProps {
 	siteImageData: SiteImageData,
 	handleScanForImages: () => void,
 	imageCount: number;
+	totalCompressedCount: number;
+	originalTotalSize: number;
+	compressedImagesOriginalSize: number;
+	compressedTotalSize: number;
 }
 
 const LastOptimizeStatus: React.FC<IProps> = (props: IProps) => {
-	const { imageCount, siteImageData } = props;
 	const {
-		lastScan,
+		imageCount,
+		siteImageData,
+		totalCompressedCount,
 		originalTotalSize,
 		compressedImagesOriginalSize,
 		compressedTotalSize,
-		totalCompressedCount,
-		scanInProgress,
-	} = siteImageData;
+	} = props;
+
+	const { lastScan, scanInProgress } = siteImageData;
+
 
 	const totalImageOptimized = `${totalCompressedCount}/${imageCount}`;
 
@@ -30,16 +37,17 @@ const LastOptimizeStatus: React.FC<IProps> = (props: IProps) => {
 						"lastOptimizeStatus_Row",
 						"lastOptimizeStatus_Header_Row",
 					)}>
-				{lastScan !== 0
-				? <Text
-						className="lastOptimizeStatus_Text"
-						privateOptions={{
-							fontWeight: "bold"
-						}}
-					>
-						{'Last updated: '}{getFormattedTimestamp(lastScan)}
-					</Text>
-				: null}
+				{lastScan
+					? <Text
+							className="lastOptimizeStatus_Text"
+							privateOptions={{
+								fontWeight: "bold"
+							}}
+						>
+							Last updated:{' '}{getFormattedTimestamp(lastScan)}
+						</Text>
+					: null
+				}
 				<Button
 						className="lastOptimizeStatus_Rescan_Button"
 						onClick={() => props.handleScanForImages()}
@@ -60,8 +68,8 @@ const LastOptimizeStatus: React.FC<IProps> = (props: IProps) => {
 				<Text className="lastOptimizeStatus_Text">
 					{
 						originalTotalSize === 0
-						? '0'
-						: formatCompressedPercentage((compressedImagesOriginalSize - compressedTotalSize)/originalTotalSize)
+							? '0'
+							: formatCompressedPercentage((compressedImagesOriginalSize - compressedTotalSize) / originalTotalSize)
 					}%</Text>
 			</TableListRow>
 			<TableListRow className="lastOptimizeStatus_Row">

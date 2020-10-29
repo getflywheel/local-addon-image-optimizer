@@ -7,6 +7,7 @@ import {
 	readPreferencesFromDisk,
 	savePreferencesToDisk,
 	updateCancelCompression,
+	readSitesFromDisk,
 } from './main/index';
 import { IPC_EVENTS } from './constants';
 import { Preferences } from './types';
@@ -42,6 +43,11 @@ export default function (context) {
 	LocalMain.addIpcAsyncListener(
 		IPC_EVENTS.GET_IMAGE_DATA_STORE,
 		getImageDataStore,
+	);
+
+	LocalMain.addIpcAsyncListener(
+		IPC_EVENTS.READ_SITES_FROM_DISK,
+		async () => readSitesFromDisk(),
 	);
 
 	/**

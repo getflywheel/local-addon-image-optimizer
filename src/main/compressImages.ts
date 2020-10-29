@@ -180,6 +180,9 @@ export function compressImagesFactory(serviceContainer: LocalMain.ServiceContain
 			reportCompressSuccess(siteID, imageMD5s.length);
 		} catch (error) {
 			reportCompressFailure(siteID, error);
+			/**
+			 * @todo add ipc event emitter error here to report errors to the UI
+			 */
 			return error;
 		}
 	}

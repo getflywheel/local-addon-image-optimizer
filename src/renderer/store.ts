@@ -1,17 +1,12 @@
-/**
- * @todo prune out the unused redux deps once this is done
- */
-import { createStore, combineReducers } from 'redux';
 import { useSelector, TypedUseSelectorHook } from 'react-redux';
 import {
 	configureStore,
 	createSlice,
 	createSelector,
 	PayloadAction,
+	current,
 } from '@reduxjs/toolkit';
 
-import * as LocalRenderer from '@getflywheel/local/renderer';
-import { IPC_EVENTS } from '../constants';
 import {
 	Preferences,
 	CachedImageDataBySiteID,
@@ -20,8 +15,6 @@ import {
 	ImageData,
 	FileStatus,
 } from '../types';
-import { preferencesReducer } from './reducers';
-import { filterImageData } from './utils';
 
 interface SiteActionPayload {
 	siteID: string;
@@ -31,6 +24,7 @@ interface SiteActionPayload {
 
 function mergeSiteState(state, payload: Partial<SiteActionPayload>, newState?: Partial<SiteImageData>) {
 	const { siteID, siteImageData } = payload;
+
 	state[siteID] = {
 		...state[siteID],
 		...siteImageData,
@@ -40,16 +34,14 @@ function mergeSiteState(state, payload: Partial<SiteActionPayload>, newState?: P
 	return state;
 }
 
-const activeSiteIDSlice = createSlice({
-	name: 'activeSiteID',
-	initialState: null,
-	reducers: {
-		setActiveSiteID: (state, action: PayloadAction<string>) => {
-			state = action.payload;
-			return state;
-		},
-	}
-})
+function generateInitialState(): Partial<SiteImageData> {
+	return {
+		scanInProgress: false,
+		selectAllFilesValue: true,
+		optimizationStatus: OptimizerStatus.BEFORE,
+		compressionListCompletionPercentage: 0,
+	};
+}
 
 const preferencesSlice = createSlice({
 	name: 'preferences',
@@ -70,7 +62,28 @@ const sitesSlice = createSlice({
 	initialState: {} as CachedImageDataBySiteID,
 	reducers: {
 		hydrateSites: (_, action: PayloadAction<CachedImageDataBySiteID>) => {
-			return action.payload;
+			const initialState = Object.entries(action.payload).reduce((acc, [id, siteImageData]) => {
+				acc[id] = {
+					...siteImageData,
+					...generateInitialState(),
+				};
+
+				Object.values(acc[id].imageData).forEach((d) => d.isChecked = true);
+
+				return acc;
+			}, {} as CachedImageDataBySiteID);
+
+			return initialState;
+		},
+		addSite: (state, action: PayloadAction<{ siteID: string }>) => {
+			const { siteID } = action.payload;
+
+			state[siteID] = {
+				...generateInitialState(),
+				imageData: {},
+			}
+
+			return state;
 		},
 		scanRequest: (state, action: PayloadAction<string>) => {
 			state[action.payload].scanInProgress = true;
@@ -78,16 +91,49 @@ const sitesSlice = createSlice({
 			return state;
 		},
 		scanSuccess: (state, action: PayloadAction<Omit<SiteActionPayload, 'error'>>) => {
-			return mergeSiteState(state, action.payload, { scanInProgress: false });
+			const { siteID, siteImageData } = action.payload;
+
+			const { selectAllFilesValue } = state[siteID];
+
+			/**
+			 * merge in UI specific things (like whether or not an image is selected)
+			 */
+			const imageData = Object.entries(siteImageData.imageData).reduce((acc, [key, data]) => {
+				acc[key] = {
+					...state[siteID].imageData[key],
+					...data,
+					isChecked: selectAllFilesValue ? true : acc[key].isChecked,
+				};
+
+				return acc;
+			}, siteImageData.imageData);
+
+			state[siteID] = {
+				...state[siteID],
+				...siteImageData,
+				imageData,
+			};
+
+			return state;
 		},
 		scanFailure: (state, action: PayloadAction<Omit<SiteActionPayload, 'siteImageData'>>) => {
-			return mergeSiteState(state, action.payload);
+			const { siteID, error } = action.payload;
+
+			state[siteID] = {
+				...state[siteID],
+				scanInProgress: false,
+				scanError: error,
+			};
+
+			return state;
 		},
 		setSiteImageData: (state, action: PayloadAction<Omit<SiteActionPayload, 'error'>>) => {
 			return mergeSiteState(state, action.payload);
 		},
 		/**
 		 * @todo rename this poor guy
+		 *
+		 * @todo this might be unecessary because of the hydrate reducer func
 		 */
 		setSiteImageDataBeforeIntialCompression: (state, action: PayloadAction<Omit<SiteActionPayload, 'error'>>) => {
 			return mergeSiteState(
@@ -95,26 +141,34 @@ const sitesSlice = createSlice({
 				action.payload,
 				/**
 				 * @todo set these values dynamically based on any current compression process happening in the background
+				 *
+				 * Also, these can probably just be setup in the hydrate function instead
 				 */
 				{
 					selectAllFilesValue: false,
 					optimizationStatus: OptimizerStatus.BEFORE,
 					compressionListCompletionPercentage: 0,
-					originalTotalSize: 0,
-					compressedImagesOriginalSize: 0,
-					compressedTotalSize: 0,
 				},
 			);
 		},
 		setImageSelected: (state, action: PayloadAction<{ siteID: string, imageID: string, isChecked: boolean }>) => {
 			const { siteID, imageID, isChecked } = action.payload;
-			state[siteID].imageData[imageID].isChecked = isChecked;
+			const siteState = state[siteID];
+
+			siteState.imageData[imageID].isChecked = isChecked;
+
+			if (!isChecked) {
+				siteState.selectAllFilesValue = false;
+			}
 
 			return state;
 		},
 		setAllImagesSelected: (state, action: PayloadAction<{ siteID: string, isChecked: boolean }>) => {
 			const { siteID, isChecked } = action.payload;
-			Object.values(state[siteID].imageData).forEach((d) => d.isChecked = isChecked);
+			const siteState = state[siteID];
+
+			Object.values(siteState.imageData).forEach((d) => d.isChecked = isChecked);
+			siteState.selectAllFilesValue = isChecked;
 
 			return state;
 		},
@@ -126,10 +180,15 @@ const sitesSlice = createSlice({
 					optimizationStatus: OptimizerStatus.RUNNING,
 					compressionListTotal: action.payload.compressionListTotal,
 					compressionListCounter: 0,
-					compressedImagesOriginalSize: 0,
-					compressedTotalSize: 0,
 				},
 			);
+		},
+		optimizationStatus: (state, action: PayloadAction<{ siteID: string, optimizationStatus: OptimizerStatus }>) => {
+			const { siteID, optimizationStatus } = action.payload;
+
+			state[siteID].optimizationStatus = optimizationStatus;
+
+			return state;
 		},
 		optimizationComplete: (state, action: PayloadAction<{ siteID: string }>) => {
 			const { siteID } = action.payload;
@@ -157,8 +216,9 @@ const sitesSlice = createSlice({
 
 			siteState.compressionListCounter = siteState.compressionListCounter + 1;
 			siteState.compressionListCompletionPercentage = (siteState.compressionListCounter / siteState.compressionListTotal) * 100;
-			siteState.compressedImagesOriginalSize = siteState.compressedImagesOriginalSize += imageData.originalSize;
-			siteState.compressedTotalSize = siteState.compressedTotalSize += imageData.compressedSize;
+
+			// siteState.compressedImagesOriginalSize = siteState.compressedImagesOriginalSize += imageData.originalSize;
+			// siteState.compressedTotalSize = siteState.compressedTotalSize += imageData.compressedSize;
 
 			return state;
 		},
@@ -187,53 +247,64 @@ const sitesSlice = createSlice({
 
 export const store = configureStore({
 	reducer: {
-		activeSiteID: activeSiteIDSlice.reducer,
 		preferences: preferencesSlice.reducer,
 		sites: sitesSlice.reducer,
 	},
 });
 
-
 export const actions = {
-	...activeSiteIDSlice.actions,
 	...preferencesSlice.actions,
 	...sitesSlice.actions,
 };
 
-// export const boundActions = Object.entries(actions).reduce((boundActions, [name, action]) => {
-// 	boundActions[name] = (payload: Parameters<typeof action>) => store.dispatch(action(payload));
-//
-// 	return boundActions;
-// }, {});
+const getSiteState = (state, props) => state.sites[props.siteID || props.match.params.siteID];
 
-const getUncompressedImages = (imageData: SiteImageData['imageData']) => {
-	return Object.values(imageData).filter((d) => !d.compressedImageHash);
-};
-
-const getSelectedImages = (imageData: SiteImageData['imageData']) => {
-	return Object.values(imageData).filter((d) => d.isChecked);
-}
-
-const getSiteState = (state) => state.sites[state.activeSiteID];
+const getSiteImageData = (state, props) => state.sites[props.siteID || props.match.params.siteID].imageData;
 
 export const selectors = {
-	uncompressedSiteImageData: createSelector(
+	uncompressedSiteImages: createSelector(
 		getSiteState,
-		(siteState) => getUncompressedImages(siteState.imageData),
+		(siteState: SiteImageData) => Object.values(siteState.imageData).filter((d) => !d.compressedImageHash),
 	),
-	selectedSiteImageData: createSelector(
+	compressedSiteImages: createSelector(
 		getSiteState,
-		(siteState) => getSelectedImages(siteState.imageData),
+		(siteState: SiteImageData) => Object.values(siteState.imageData).filter(((d) => d.compressedImageHash)),
+	),
+	totalImagesSizeBeforeCompression: createSelector(
+		getSiteImageData,
+		(imageData: ImageData) => Object.values(imageData).reduce((totalSize, d) => {
+			totalSize += d.originalSize;
+
+			return totalSize;
+		}, 0),
+	),
+	originalSizeOfCompressedImages: createSelector(
+		getSiteImageData,
+		(imageData: ImageData) => Object.values(imageData).reduce((size, d) => {
+			if (d.compressedImageHash) {
+				size += d.originalSize;
+			}
+
+			return size;
+		}, 0),
+	),
+	sizeOfCompressedImages: createSelector(
+		getSiteImageData,
+		(imageData: ImageData) => Object.values(imageData).reduce((size, d) => {
+			if (d.compressedImageHash) {
+				size += d.compressedSize;
+			}
+
+			return size;
+		}, 0),
+	),
+	selectedSiteImages: createSelector(
+		getSiteState,
+		(siteState: SiteImageData) => Object.values(siteState.imageData).filter((d) => d.isChecked),
 	),
 	siteImageCount: createSelector(
 		getSiteState,
-		(siteState) => {
-			if (!siteState) {
-				return 0;
-			}
-
-			return Object.values(siteState.imageData).length;
-		},
+		(siteState) => Object.values(siteState?.imageData || []).length,
 	),
 }
 

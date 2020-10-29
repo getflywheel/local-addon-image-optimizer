@@ -36,21 +36,3 @@ export function getFormattedTimestamp(date: number) {
 
 	return `${monthName} ${day}, ${year} ${timestamp}`;
 }
-
-/**
- * Util function to help filter image data. This is useful for deriving state for UI views.
- *
- * @param imageData
- * @param filterFn
- *
- * @todo write some tests for this
- */
-export const filterImageData = (imageData: SiteImageData['imageData'], filterFn: (d: ImageData) => boolean): SiteImageData['imageData'] => {
-	return Object.entries(imageData).reduce((acc, [key, val]) => {
-		if (filterFn(val)) {
-			acc[key] = val;
-		}
-
-		return acc;
-	}, {});
-};
