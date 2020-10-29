@@ -20,22 +20,6 @@ export default async function (context) {
 		IPC_EVENTS.GET_IMAGE_DATA_STORE,
 	);
 
-	const sites = await LocalRenderer.ipcAsync(
-		IPC_EVENTS.READ_SITES_FROM_DISK,
-	);
-
-	/**
-	 * We must add empty records for any sites that we do not yet have image optimizer data for so that we can
-	 * properly hydrate state
-	 */
-	Object.keys(sites).forEach((key) => {
-		if (!cachedImageDataBySiteID[key]) {
-			cachedImageDataBySiteID[key] = {
-				imageData: {},
-			};
-		}
-	})
-
 	/**
 	 * It is important that the store get hydrated before any React components are mounted so that the data is ready
 	 * once the components are mounted

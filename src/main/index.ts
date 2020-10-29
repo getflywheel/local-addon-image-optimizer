@@ -6,7 +6,6 @@ import { scanImagesFactory } from './scanImages';
 import { compressImagesFactory } from './compressImages';
 import { createStore, createRuntimeStore}  from './createStore';
 
-
 const serviceContainer = LocalMain.getServiceContainer().cradle;
 
 const existingImageData = serviceContainer.userData.get(COMPRESSED_IMAGE_DATA_FILE_NAME, {});
@@ -51,7 +50,3 @@ export function savePreferencesToDisk(preferences: Preferences): void {
 		preferences,
 	);
 };
-
-export function readSitesFromDisk() {
-	return serviceContainer.userData.get('sites', {});
-}
