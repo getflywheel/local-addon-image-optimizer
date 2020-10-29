@@ -4,6 +4,7 @@ export interface ImageData {
 	filePath: string;
 	originalSize: number;
 	compressedSize?: number;
+	errorMessage?: string;
 	fileStatus?: string;
 	isChecked?: boolean;
 }

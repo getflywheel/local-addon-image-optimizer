@@ -1,15 +1,9 @@
 import React from 'react';
-import { connect, useSelector } from 'react-redux';
 import classNames from 'classnames';
 import {
 	Switch,
 	Text,
 } from '@getflywheel/local-components';
-/**
- * @todo remove these old action constants
- */
-import { PREFERENCES_REDUCER_ACTION_TYPES } from '../constants';
-
 import { store, actions, useStoreSelector } from './store';
 
 export const MetaDataRow = (props) => {

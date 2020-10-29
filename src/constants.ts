@@ -21,7 +21,3 @@ export const BACKUP_DIR_NAME = 'backups/addon-image-optimizer';
 export const COMPRESSED_IMAGE_DATA_FILE_NAME = 'image-optimizer-plugin-image-data';
 
 export const PREFERENCES_FILE_NAME = 'image-optimizer-plugin-preferences';
-
-export const PREFERENCES_REDUCER_ACTION_TYPES = {
-	META_DATA: 'reducerAction:stripMetaData',
-};

@@ -204,11 +204,7 @@ const sitesSlice = createSlice({
 
 			siteState.imageData[imageID] = {
 				...siteState.imageData[imageID],
-				/**
-				 * @todo consider storing this on its own field and fix up this stuff
-				 */
-				/* @ts-ignore */
-				compressedSize: errorMessage,
+				errorMessage,
 				fileStatus: FileStatus.FAILED,
 			};
 
