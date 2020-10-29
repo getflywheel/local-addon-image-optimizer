@@ -33,7 +33,7 @@ function mergeSiteState(state, payload: Partial<SiteActionPayload>, newState?: P
 	return state;
 }
 
-function generateInitialState(): Partial<SiteImageData> {
+function generateInitialSiteState(): Partial<SiteImageData> {
 	return {
 		scanInProgress: false,
 		selectAllFilesValue: true,
@@ -64,7 +64,7 @@ const sitesSlice = createSlice({
 			const initialState = Object.entries(action.payload).reduce((acc, [id, siteImageData]) => {
 				acc[id] = {
 					...siteImageData,
-					...generateInitialState(),
+					...generateInitialSiteState(),
 				};
 
 				Object.values(acc[id].imageData).forEach((d) => d.isChecked = true);
@@ -78,7 +78,7 @@ const sitesSlice = createSlice({
 			const { siteID } = action.payload;
 
 			state[siteID] = {
-				...generateInitialState(),
+				...generateInitialSiteState(),
 				imageData: {},
 			}
 

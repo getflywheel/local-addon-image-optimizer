@@ -108,11 +108,7 @@ const ImageOptimizer = (props: IProps) => {
 		store.dispatch(actions.setAllImagesSelected({ siteID, isChecked }));
 	};
 
-	/**
-	 * @todo rename this function since it is technically not a getter
-	 */
-	// compiles the list of images to be sent to the main thread for compression
-	const getCompressionList = () => {
+	const compressSelectedImages = () => {
 		const compressionList = selectors.selectedSiteImages(store.getState(), props).map((d) => d.originalImageHash);
 
 		store.dispatch(actions.optimizationRequested({ siteID, compressionListTotal: compressionList.length }));
@@ -131,8 +127,7 @@ const ImageOptimizer = (props: IProps) => {
 		store.dispatch(actions.optimizationStatus({ siteID, optimizationStatus: OptimizerStatus.BEFORE }));
 	}
 
-	// cancel image optimization session
-	const onCancel = () => {
+	const cancelImageCompression = () => {
 		ipcRenderer.send(
 			IPC_EVENTS.CANCEL_COMPRESSION,
 		);
@@ -145,9 +140,9 @@ const ImageOptimizer = (props: IProps) => {
 					siteImageData={siteImageData}
 					handleCheckBoxChange={handleCheckBoxChange}
 					toggleSelectAll={toggleSelectAll}
-					getCompressionList={getCompressionList}
+					compressSelectedImages={compressSelectedImages}
 					resetToOverview={resetToOverview}
-					onCancel={onCancel}
+					cancelImageCompression={cancelImageCompression}
 					setOverviewSelected={setOverviewSelected}
 					preferences={preferences}
 					siteID={siteID}
