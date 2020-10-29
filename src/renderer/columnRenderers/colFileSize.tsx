@@ -6,25 +6,27 @@ interface IFileSizeProps {
 
 export const ColFileSize = (props: IFileSizeProps) =>  {
 	const { dataArgs } = props;
-	if (!dataArgs.cellData || typeof dataArgs.cellData === 'string') {
-		return (
-			<div>
-				{dataArgs.cellData}
-			</div>
-		);
+	const { colKey, rowData } = dataArgs;
+
+	let content = null;
+
+	if (typeof dataArgs.cellData === 'string') {
+		content = dataArgs.cellData;
 	} else if (dataArgs.colKey === 'originalSize') {
-		return (
-			<div>
-				{dataArgs.isHeader ? dataArgs.cellData : (dataArgs.rowData.originalSize / (1024*1024)).toFixed(2) + ' MB'}
-			</div>
-		);
-	} else if (dataArgs.colKey === 'compressedSize') {
-		return (
-			<div>
-				{dataArgs.isHeader ? dataArgs.cellData : (dataArgs.rowData.compressedSize / (1024*1024)).toFixed(2) + ' MB'}
-			</div>
-		);
-	} else {
-		return null;
+		content = dataArgs.isHeader
+			? dataArgs.cellData
+			: (dataArgs.rowData.originalSize / (1024*1024)).toFixed(2) + ' MB';
+	} else if (colKey === 'compressedSize') {
+		content = dataArgs.isHeader
+			? dataArgs.cellData
+			: (dataArgs.rowData.compressedSize / (1024*1024)).toFixed(2) + ' MB';
+
+		if (rowData.errorMessage && !rowData.compressedSize) {
+			content = rowData.errorMessage;
+		}
 	}
+
+	return (
+		<div>{content}</div>
+	);
 };

@@ -18,13 +18,6 @@ export default function (context) {
 	const { ipcMain } = electron;
 
 	/**
-	 * @todo read from disk any previous image data and store in a runtime cache
-	 * this is important because it will help us determine which images have
-	 * been compressed thus far
-	 */
-
-
-	/**
 	 * Scan a site for images and return the list of all images found
 	 */
 	ipcMain.on(
