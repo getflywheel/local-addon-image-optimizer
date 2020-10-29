@@ -20,9 +20,9 @@ interface IFileListViewProps {
 	siteImageData: SiteImageData;
 	handleCheckBoxChange: (imageID: string) => (isChecked: boolean) => void;
 	toggleSelectAll: (isChecked: boolean) => void;
-	getCompressionList: () => void;
+	compressSelectedImages: () => void;
 	resetToOverview: () => void;
-	onCancel: () => void;
+	cancelImageCompression: () => void;
 	setOverviewSelected: (x: boolean) => void;
 	preferences: Preferences;
 	siteID: string;
@@ -41,9 +41,9 @@ export const FileListView = (props: IFileListViewProps) => {
 		siteImageData,
 		handleCheckBoxChange,
 		toggleSelectAll,
-		getCompressionList,
+		compressSelectedImages,
 		resetToOverview,
-		onCancel,
+		cancelImageCompression,
 		setOverviewSelected,
 		preferences,
 		siteID,
@@ -95,7 +95,7 @@ export const FileListView = (props: IFileListViewProps) => {
 	const invokeModal = (ModalContents: React.FC<IModalProps>, onCancel?: Function, onConfirm?: Function) =>  {
 
 		const onSubmit = () => {
-			getCompressionList();
+			compressSelectedImages();
 			FlyModal.onRequestClose();
 		};
 
@@ -133,7 +133,7 @@ export const FileListView = (props: IFileListViewProps) => {
 				resetToOverview={resetToOverview}
 				invokeModal={invokeModal}
 				selectedImages={selectedImages}
-				onCancel={onCancel}
+				cancelImageCompression={cancelImageCompression}
 				setOverviewSelected={setOverviewSelected}
 				siteID={siteID}
 			/>

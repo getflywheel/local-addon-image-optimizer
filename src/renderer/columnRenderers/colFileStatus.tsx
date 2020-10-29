@@ -32,7 +32,6 @@ export const ColFileStatus = (props: IFileStatusProps) =>  {
 	if (optimizationStatus === OptimizerStatus.BEFORE) {
 		return (
 			<div>
-				{/* TODO: Set the header checkbox to 'unchecked' if not all files are selected */}
 				<Checkbox
 					checked={dataArgs.isHeader ? toggleSelectAllValue : dataArgs.rowData.isChecked}
 					onChange={onChange}

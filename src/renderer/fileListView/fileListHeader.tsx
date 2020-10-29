@@ -17,7 +17,7 @@ interface IFileListHeaderProps {
 	setOverviewSelected: (x: boolean) => void,
     invokeModal: (ModalContents: React.FC, onCancel?: Function, onConfirm?: Function) => void,
 	selectedImages: ImageData[],
-	onCancel: () => void,
+	cancelImageCompression: () => void,
 	resetToOverview: () => void,
 	siteID: string,
 }
@@ -28,7 +28,7 @@ export const FileListHeader = (props: IFileListHeaderProps) => {
 		setOverviewSelected,
 		invokeModal,
 		selectedImages,
-		onCancel,
+		cancelImageCompression,
 		resetToOverview,
 	} = props;
 
@@ -76,7 +76,7 @@ export const FileListHeader = (props: IFileListHeaderProps) => {
 
                 <Button
                     className='fileView_Button_Optimization'
-					onClick={onCancel}
+					onClick={cancelImageCompression}
                     privateOptions={{
                         color: 'green',
                         form: 'fill'
