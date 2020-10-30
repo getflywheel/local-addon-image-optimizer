@@ -10,7 +10,7 @@ import ChevronArrowSVG from '../_assets/svg/chevron-arrow-right.svg';
 import NavigationPrompt from 'react-router-navigation-prompt';
 import { WarningModal } from './WarningModal';
 import { ConfirmOptimizationModal } from './ConfirmOptimizationModal';
-import { store, selectors } from '../store';
+import { selectors } from '../store';
 
 interface IFileListHeaderProps {
 	siteImageData: SiteImageData,
@@ -32,8 +32,8 @@ export const FileListHeader = (props: IFileListHeaderProps) => {
 		resetToOverview,
 	} = props;
 
-	const compressedImagesOriginalSize = selectors.originalSizeOfCompressedImages(store.getState());
-	const compressedTotalSize = selectors.sizeOfCompressedImages(store.getState());
+	const compressedImagesOriginalSize = selectors.originalSizeOfCompressedImages();
+	const compressedTotalSize = selectors.sizeOfCompressedImages();
 
     const disableOptimizeButton = selectedImages.length > 0 ? false : true;
 

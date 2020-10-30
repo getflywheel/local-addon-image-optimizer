@@ -15,8 +15,13 @@ const ImageOptimizer = (props: IProps) => {
 	const { match } = props;
 	const { siteID } = match.params;
 
-	const preferences = useStoreSelector((state) => state.preferences);
-	const siteImageData = useStoreSelector((state) => state.sites[siteID]);
+	const [activeSiteID, preferences, siteImageData] = useStoreSelector((state) => ([
+		state.activeSiteID,
+		state.preferences,
+		state.sites[siteID],
+	]));
+
+	// const activeSiteID = useStoreSelector((state) => state.activeSiteID);
 	const [overviewSelected, setOverviewSelected] = useState(true);
 
 	const scanForImages = () => {
@@ -115,7 +120,7 @@ const ImageOptimizer = (props: IProps) => {
 	};
 
 	const compressSelectedImages = () => {
-		const compressionList = selectors.selectedSiteImages(store.getState()).map((d) => d.originalImageHash);
+		const compressionList = selectors.selectedSiteImages().map((d) => d.originalImageHash);
 
 		store.dispatch(actions.optimizationRequested({ siteID, compressionListTotal: compressionList.length }));
 
@@ -137,6 +142,10 @@ const ImageOptimizer = (props: IProps) => {
 		ipcRenderer.send(
 			IPC_EVENTS.CANCEL_COMPRESSION,
 		);
+	}
+
+	if (!activeSiteID) {
+		return null;
 	}
 
 	if (!siteImageData) {
