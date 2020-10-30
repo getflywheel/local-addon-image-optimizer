@@ -5,7 +5,7 @@ export function formatCompressedPercentage (num: number) {
 /**
  * @todo rename: bytesToMb
  */
-export function calculateToMb (num: number) {
+export function convertBytesToMb (num: number) {
 	return (num / (1024*1024)).toFixed(2)
 }
 
