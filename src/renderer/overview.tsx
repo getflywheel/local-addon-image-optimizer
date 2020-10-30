@@ -1,7 +1,7 @@
 import React from 'react';
 import { Banner } from '@getflywheel/local-components';
 import LastOptimizeStatus from './lastOptimizeStatus';
-import { selectors } from './store/store';
+import { selectors, useStoreSelector } from './store/store';
 import { SiteImageData } from '../types';
 
 interface IProps {
@@ -27,11 +27,13 @@ export const Overview = (props: IProps) => {
 		setOverviewSelected(false);
 	}
 
-	const imageCount = selectors.siteImageCount();
-	const originalTotalSize = selectors.totalImagesSizeBeforeCompression();
-	const compressedImagesOriginalSize = selectors.originalSizeOfCompressedImages();
-	const compressedTotalSize = selectors.sizeOfCompressedImages();
-	const totalCompressedCount = selectors.compressedSiteImages().length;
+	const {
+		imageCount,
+		originalTotalSize,
+		compressedImagesOriginalSize,
+		compressedTotalSize,
+		totalCompressedCount,
+	} = useStoreSelector(selectors.imageStats);
 
 	const remainingUncompressedImages = imageCount - totalCompressedCount;
 

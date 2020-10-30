@@ -22,4 +22,3 @@ export const actions = {
 
 type State = ReturnType<typeof store.getState>;
 export const useStoreSelector = useSelector as TypedUseSelectorHook<State>;
-export const useFancyAssSelector = useStoreSelector;
