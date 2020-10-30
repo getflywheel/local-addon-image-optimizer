@@ -49,8 +49,8 @@ export const FileListView = (props: IFileListViewProps) => {
 		siteID,
 	} = props;
 
-	const uncompressedImages = selectors.uncompressedSiteImages(store.getState(), props);
-	const selectedImages = selectors.selectedSiteImages(store.getState(), props);
+	const uncompressedImages = selectors.uncompressedSiteImages(store.getState());
+	const selectedImages = selectors.selectedSiteImages(store.getState());
 
 	const cellRender: VirtualTableCellRenderer = (dataArgs: IVirtualTableCellRendererDataArgs) => {
 		switch (dataArgs.colKey) {

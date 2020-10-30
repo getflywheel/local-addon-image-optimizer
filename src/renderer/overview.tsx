@@ -27,11 +27,11 @@ export const Overview = (props: IProps) => {
 		setOverviewSelected(false);
 	}
 
-	const imageCount = selectors.siteImageCount(store.getState(), props);
-	const originalTotalSize = selectors.totalImagesSizeBeforeCompression(store.getState(), props);
-	const compressedImagesOriginalSize = selectors.originalSizeOfCompressedImages(store.getState(), props);
-	const compressedTotalSize = selectors.sizeOfCompressedImages(store.getState(), props);
-	const totalCompressedCount = selectors.compressedSiteImages(store.getState(), props).length;
+	const imageCount = selectors.siteImageCount(store.getState());
+	const originalTotalSize = selectors.totalImagesSizeBeforeCompression(store.getState());
+	const compressedImagesOriginalSize = selectors.originalSizeOfCompressedImages(store.getState());
+	const compressedTotalSize = selectors.sizeOfCompressedImages(store.getState());
+	const totalCompressedCount = selectors.compressedSiteImages(store.getState()).length;
 
 	const remainingUncompressedImages = imageCount - totalCompressedCount;
 
