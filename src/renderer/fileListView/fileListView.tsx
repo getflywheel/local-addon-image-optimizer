@@ -14,7 +14,7 @@ import {
 import { FileListHeader } from './fileListHeader';
 import { OptimizerStatus, SiteImageData, Preferences } from '../../types';
 import { IPC_EVENTS } from '../../constants';
-import { store, selectors } from '../store';
+import { selectors } from '../store';
 
 interface IFileListViewProps {
 	siteImageData: SiteImageData;
@@ -49,8 +49,8 @@ export const FileListView = (props: IFileListViewProps) => {
 		siteID,
 	} = props;
 
-	const uncompressedImages = selectors.uncompressedSiteImages(store.getState());
-	const selectedImages = selectors.selectedSiteImages(store.getState());
+	const uncompressedImages = selectors.uncompressedSiteImages();
+	const selectedImages = selectors.selectedSiteImages();
 
 	const cellRender: VirtualTableCellRenderer = (dataArgs: IVirtualTableCellRendererDataArgs) => {
 		switch (dataArgs.colKey) {
