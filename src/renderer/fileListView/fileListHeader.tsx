@@ -10,7 +10,7 @@ import ChevronArrowSVG from '../_assets/svg/chevron-arrow-right.svg';
 import NavigationPrompt from 'react-router-navigation-prompt';
 import { WarningModal } from './WarningModal';
 import { ConfirmOptimizationModal } from './ConfirmOptimizationModal';
-import { selectors } from '../store';
+import { selectors } from '../store/store';
 
 interface IFileListHeaderProps {
 	siteImageData: SiteImageData,

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Banner } from '@getflywheel/local-components';
 import LastOptimizeStatus from './lastOptimizeStatus';
-import { selectors } from './store';
+import { selectors } from './store/store';
 import { SiteImageData } from '../types';
 
 interface IProps {
