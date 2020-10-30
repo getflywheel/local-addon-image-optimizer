@@ -1,19 +1,19 @@
 export const IPC_EVENTS = {
-	SCAN_FOR_IMAGES: 'imageOptimizer:scan-for-images',
-	COMPRESS_IMAGES: 'imageOptimizer:compress-images',
-	COMPRESS_IMAGE_STARTED: 'imageOptimizer:image-compress-start',
-	COMPRESS_IMAGE_SUCCESS: 'imageOptimizer:image-compress-success',
-	COMPRESS_IMAGE_FAIL: 'imageOptimizer:image-compress-fail',
-	COMPRESS_ALL_IMAGES_COMPLETE: 'imageOptimizer:image-compress-all-complete',
-	GET_IMAGE_DATA: 'imageOptimizer:get-image-data',
-	GET_IMAGE_DATA_STORE: 'imageOptimizer:get-image-data-store',
-	SAVE_PREFERENCES_TO_DISK: 'imageOptimizer:savePreferencesToDisk',
-	READ_PREFERENCES_FROM_DISK: 'imageOptimizer:readPreferencesFromDisk',
-	READ_SITES_FROM_DISK: 'imageOptimizer:readSitesFromDisk',
-	GO_TO_PREFERENCES: 'imageOptimizer:go-to-preferences',
-	CANCEL_COMPRESSION: 'imageOptimizer:cancel-compression',
-	SCAN_IMAGES_COMPLETE: 'imageOptimizer:scan-images-complete',
-	SCAN_IMAGES_FAILURE: 'imageOptimizer:scan-images-failure'
+	SCAN_FOR_IMAGES: 'image-optimizer:scan-for-images',
+	COMPRESS_IMAGES: 'image-optimizer:compress-images',
+	COMPRESS_IMAGE_STARTED: 'image-optimizer:image-compress-start',
+	COMPRESS_IMAGE_SUCCESS: 'image-optimizer:image-compress-success',
+	COMPRESS_IMAGE_FAIL: 'image-optimizer:image-compress-fail',
+	COMPRESS_ALL_IMAGES_COMPLETE: 'image-optimizer:image-compress-all-complete',
+	GET_IMAGE_DATA: 'image-optimizer:get-image-data',
+	GET_IMAGE_DATA_STORE: 'image-optimizer:get-image-data-store',
+	SAVE_PREFERENCES_TO_DISK: 'image-optimizer:save-preferences-to-disk',
+	READ_PREFERENCES_FROM_DISK: 'image-optimizer:read-preferences-from-disk',
+	READ_SITES_FROM_DISK: 'image-optimizer:read-sites-from-disk',
+	GO_TO_PREFERENCES: 'image-optimizer:go-to-preferences',
+	CANCEL_COMPRESSION: 'image-optimizer:cancel-compression',
+	SCAN_IMAGES_COMPLETE: 'image-optimizer:scan-images-complete',
+	SCAN_IMAGES_FAILURE: 'image-optimizer:scan-images-failure'
 };
 
 export const BACKUP_DIR_NAME = 'backups/addon-image-optimizer';
