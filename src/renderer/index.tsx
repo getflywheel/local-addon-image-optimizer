@@ -28,6 +28,13 @@ const ImageOptimizer = (props: IProps) => {
 		);
 	}
 
+	useEffect(
+		() => {
+			store.dispatch(actions.setActiveSiteID(siteID));
+		},
+		[siteID],
+	);
+
 	// listen for optimization events and update status accordingly
 	useEffect(
 		() => {
@@ -108,7 +115,7 @@ const ImageOptimizer = (props: IProps) => {
 	};
 
 	const compressSelectedImages = () => {
-		const compressionList = selectors.selectedSiteImages(store.getState(), props).map((d) => d.originalImageHash);
+		const compressionList = selectors.selectedSiteImages(store.getState()).map((d) => d.originalImageHash);
 
 		store.dispatch(actions.optimizationRequested({ siteID, compressionListTotal: compressionList.length }));
 

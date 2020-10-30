@@ -32,8 +32,8 @@ export const FileListHeader = (props: IFileListHeaderProps) => {
 		resetToOverview,
 	} = props;
 
-	const compressedImagesOriginalSize = selectors.originalSizeOfCompressedImages(store.getState(), props);
-	const compressedTotalSize = selectors.sizeOfCompressedImages(store.getState(), props);
+	const compressedImagesOriginalSize = selectors.originalSizeOfCompressedImages(store.getState());
+	const compressedTotalSize = selectors.sizeOfCompressedImages(store.getState());
 
     const disableOptimizeButton = selectedImages.length > 0 ? false : true;
 

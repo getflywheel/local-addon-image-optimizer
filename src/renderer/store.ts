@@ -56,6 +56,18 @@ const preferencesSlice = createSlice({
 	},
 });
 
+const activeSiteIDSlice = createSlice({
+	name: 'activeSiteID',
+	initialState: null,
+	reducers: {
+		setActiveSiteID: (state, action: PayloadAction<string>) => {
+			state = action.payload;
+
+			return state;
+		},
+	},
+});
+
 const sitesSlice = createSlice({
 	name: 'sites',
 	initialState: {} as CachedImageDataBySiteID,
@@ -218,40 +230,48 @@ const sitesSlice = createSlice({
 
 export const store = configureStore({
 	reducer: {
+		activeSiteID: activeSiteIDSlice.reducer,
 		preferences: preferencesSlice.reducer,
 		sites: sitesSlice.reducer,
 	},
 });
 
+type State = ReturnType<typeof store.getState>;
+
 export const actions = {
+	...activeSiteIDSlice.actions,
 	...preferencesSlice.actions,
 	...sitesSlice.actions,
 };
 
-const getSiteState = (state, props) => state.sites[props.siteID || props.match.params.siteID];
 
-const getSiteImageData = (state, props) => state.sites[props.siteID || props.match.params.siteID].imageData;
+const siteStateSelector = (state: State) => state.sites[state.activeSiteID];
+
+const siteImageDataSelector = createSelector(
+	siteStateSelector,
+	(siteState) => siteState.imageData,
+);
 
 export const selectors = {
 	uncompressedSiteImages: createSelector(
-		getSiteState,
+		siteStateSelector,
 		(siteState: SiteImageData) => Object.values(siteState.imageData).filter((d) => !d.compressedImageHash),
 	),
 	compressedSiteImages: createSelector(
-		getSiteState,
+		siteStateSelector,
 		(siteState: SiteImageData) => Object.values(siteState.imageData).filter(((d) => d.compressedImageHash)),
 	),
 	totalImagesSizeBeforeCompression: createSelector(
-		getSiteImageData,
-		(imageData: ImageData) => Object.values(imageData).reduce((totalSize, d) => {
+		siteImageDataSelector,
+		(imageData) => Object.values(imageData).reduce((totalSize, d) => {
 			totalSize += d.originalSize;
 
 			return totalSize;
 		}, 0),
 	),
 	originalSizeOfCompressedImages: createSelector(
-		getSiteImageData,
-		(imageData: ImageData) => Object.values(imageData).reduce((size, d) => {
+		siteImageDataSelector,
+		(imageData) => Object.values(imageData).reduce((size, d) => {
 			if (d.compressedImageHash) {
 				size += d.originalSize;
 			}
@@ -260,8 +280,8 @@ export const selectors = {
 		}, 0),
 	),
 	sizeOfCompressedImages: createSelector(
-		getSiteImageData,
-		(imageData: ImageData) => Object.values(imageData).reduce((size, d) => {
+		siteImageDataSelector,
+		(imageData) => Object.values(imageData).reduce((size, d) => {
 			if (d.compressedImageHash) {
 				size += d.compressedSize;
 			}
@@ -270,15 +290,14 @@ export const selectors = {
 		}, 0),
 	),
 	selectedSiteImages: createSelector(
-		getSiteState,
+		siteStateSelector,
 		(siteState: SiteImageData) => Object.values(siteState.imageData).filter((d) => d.isChecked),
 	),
 	siteImageCount: createSelector(
-		getSiteState,
+		siteStateSelector,
 		(siteState) => Object.values(siteState?.imageData || []).length,
 	),
-}
+};
 
-type State = ReturnType<typeof store.getState>;
 export const useStoreSelector = useSelector as TypedUseSelectorHook<State>;
 export const useFancyAssSelector = useStoreSelector;
