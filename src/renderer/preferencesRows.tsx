@@ -4,7 +4,7 @@ import {
 	Switch,
 	Text,
 } from '@getflywheel/local-components';
-import { store, actions, useStoreSelector } from './store';
+import { store, actions, useStoreSelector } from './store/store';
 
 export const MetaDataRow = (props) => {
 	const { setApplyButtonDisabled } = props;

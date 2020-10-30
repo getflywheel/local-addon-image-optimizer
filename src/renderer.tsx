@@ -3,7 +3,7 @@ import { Provider } from 'react-redux';
 import * as LocalRenderer from '@getflywheel/local/renderer';
 import { IPC_EVENTS } from './constants';
 import { Preferences, CachedImageDataBySiteID } from './types';
-import { store, actions } from './renderer/store';
+import { store, actions } from './renderer/store/store';
 import ImageOptimizer from './renderer/index';
 import { MetaDataRow } from './renderer/preferencesRows';
 

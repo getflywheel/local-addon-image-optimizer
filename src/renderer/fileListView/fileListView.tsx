@@ -14,7 +14,7 @@ import {
 import { FileListHeader } from './fileListHeader';
 import { OptimizerStatus, SiteImageData, Preferences } from '../../types';
 import { IPC_EVENTS } from '../../constants';
-import { selectors } from '../store';
+import { selectors } from '../store/store';
 
 interface IFileListViewProps {
 	siteImageData: SiteImageData;

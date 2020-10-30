@@ -4,7 +4,7 @@ import { FileListView } from './fileListView/fileListView';
 import { IPC_EVENTS } from '../constants';
 import { ipcRenderer } from 'electron';
 import { OptimizerStatus, ImageData } from '../types';
-import { store, actions, selectors, useStoreSelector } from './store';
+import { store, actions, selectors, useStoreSelector } from './store/store';
 
 interface IProps {
 	match: { params: { siteID: string; } };
