@@ -2,7 +2,7 @@ import React from 'react';
 import { getFormattedTimestamp } from './utils';
 import { Button, Text, TableList, TableListRow } from '@getflywheel/local-components';
 import classnames from 'classnames';
-import { formatCompressedPercentage, calculateToMb } from './utils';
+import { formatCompressedPercentage, convertBytesToMb } from './utils';
 import { SiteImageData } from '../types';
 
 interface IProps {
@@ -72,7 +72,7 @@ const LastOptimizeStatus: React.FC<IProps> = (props: IProps) => {
 			</TableListRow>
 			<TableListRow className="lastOptimizeStatus_Row">
 				<Text className="lastOptimizeStatus_Text">Total file size reductions</Text>
-				<Text className="lastOptimizeStatus_Text">{calculateToMb(compressedImagesOriginalSize - compressedTotalSize)}{' '}MB</Text>
+				<Text className="lastOptimizeStatus_Text">{convertBytesToMb(compressedImagesOriginalSize - compressedTotalSize)}{' '}MB</Text>
 			</TableListRow>
 			<TableListRow className="lastOptimizeStatus_Row">
 				<Text className="lastOptimizeStatus_Text">Total images optimized</Text>

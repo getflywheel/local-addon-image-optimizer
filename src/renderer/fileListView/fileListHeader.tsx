@@ -5,7 +5,7 @@ import {
 } from '@getflywheel/local-components';
 import { ImageData } from '../../types';
 import { OptimizerStatus, SiteImageData } from '../../types';
-import { calculateToMb } from '../utils';
+import { convertBytesToMb } from '../utils';
 import ChevronArrowSVG from '../_assets/svg/chevron-arrow-right.svg';
 import NavigationPrompt from 'react-router-navigation-prompt';
 import { WarningModal } from './WarningModal';
@@ -90,7 +90,7 @@ export const FileListHeader = (props: IFileListHeaderProps) => {
         return (
             <div className='fileView_Header'>
                 <div className='fileView_Header_Text'>
-					Optimization complete! You've saved{' '}{calculateToMb(
+					Optimization complete! You've saved{' '}{convertBytesToMb(
 						compressedImagesOriginalSize - compressedTotalSize
 					)}{' '}MB of space.
                 </div>
