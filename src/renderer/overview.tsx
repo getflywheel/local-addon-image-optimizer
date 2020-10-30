@@ -12,7 +12,16 @@ interface IProps {
 }
 
 export const Overview = (props: IProps) => {
-	const { setOverviewSelected, handleScanForImages, siteImageData, siteID } = props;
+	const {
+		setOverviewSelected,
+		handleScanForImages,
+		siteImageData,
+	} = props;
+
+	const {
+		lastScan,
+		scanInProgress,
+	} = siteImageData;
 
 	const onClickViewImages = () => {
 		setOverviewSelected(false);
@@ -33,12 +42,12 @@ export const Overview = (props: IProps) => {
 			</Banner>
 		}
 		{imageCount === 0
-		&& lastScan > 0
-		&& !scanInProgress
-		&&
-			<Banner variant="warning" icon="warning">
-				No images found on site.
-			</Banner>
+			&& lastScan > 0
+			&& !scanInProgress
+			&&
+				<Banner variant="warning" icon="warning">
+					No images found on site.
+				</Banner>
 		}
 
 		<LastOptimizeStatus
