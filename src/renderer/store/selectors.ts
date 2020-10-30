@@ -19,7 +19,7 @@ const uncompressedSiteImages = createSelector(
 );
 
 
-const compresedSiteImages = createSelector(
+const compressedSiteImages = createSelector(
 	siteStateSelector,
 	(siteState: SiteImageData) => Object.values(siteState.imageData).filter(((d) => d.compressedImageHash)),
 );
@@ -65,12 +65,28 @@ const siteImageCount = createSelector(
 	(siteState) => Object.values(siteState?.imageData || []).length,
 );
 
+const imageStats = createSelector(
+	siteImageCount,
+	totalImagesSizeBeforeCompression,
+	originalSizeOfCompressedImages,
+	sizeOfCompressedImages,
+	compressedSiteImages,
+	(imageCount, originalTotalSize, compressedImagesOriginalSize, compressedTotalSize, compressedSiteImages) => ({
+		imageCount,
+		originalTotalSize,
+		compressedImagesOriginalSize,
+		compressedTotalSize,
+		totalCompressedCount: compressedSiteImages.length,
+	}),
+);
+
 export const selectors = {
 	uncompressedSiteImages: () => uncompressedSiteImages(store.getState()),
-	compressedSiteImages: () => compresedSiteImages(store.getState()),
+	compressedSiteImages: () => compressedSiteImages(store.getState()),
 	totalImagesSizeBeforeCompression: () => totalImagesSizeBeforeCompression(store.getState()),
 	originalSizeOfCompressedImages: () => originalSizeOfCompressedImages(store.getState()),
 	sizeOfCompressedImages: () => sizeOfCompressedImages(store.getState()),
 	selectedSiteImages: () => selectedSiteImages(store.getState()),
 	siteImageCount: () => siteImageCount(store.getState()),
+	imageStats: () => imageStats(store.getState()),
 };
