@@ -15,6 +15,7 @@ interface IProps {
 	originalTotalSize: number;
 	compressedImagesOriginalSize: number;
 	compressedTotalSize: number;
+	erroredTotalCount: number;
 }
 
 const LastOptimizeStatus: React.FC<IProps> = (props: IProps) => {
@@ -25,6 +26,7 @@ const LastOptimizeStatus: React.FC<IProps> = (props: IProps) => {
 		originalTotalSize,
 		compressedImagesOriginalSize,
 		compressedTotalSize,
+		erroredTotalCount,
 	} = props;
 
 	const { lastScan, scanInProgress } = siteImageData;
@@ -75,7 +77,7 @@ const LastOptimizeStatus: React.FC<IProps> = (props: IProps) => {
 			</TableListRow>
 			<TableListRow className="lastOptimizeStatus_Row">
 				<Text className="lastOptimizeStatus_Text">Total file size reductions</Text>
-				<Text className="lastOptimizeStatus_Text">{convertBytesToMb(compressedImagesOriginalSize - compressedTotalSize)}{' '}MB</Text>
+				<Text className="lastOptimizeStatus_TextAlignRight">{convertBytesToMb(compressedImagesOriginalSize - compressedTotalSize)}{' '}MB</Text>
 			</TableListRow>
 			<TableListRow className="lastOptimizeStatus_Row">
 				<CheckmarkMedSVG className="success-count-svg"/>

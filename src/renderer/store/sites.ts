@@ -136,6 +136,7 @@ export const sitesSlice = createSlice({
 					optimizationStatus: OptimizerStatus.RUNNING,
 					selectedImageIDs: action.payload.selectedImageIDs,
 					compressionListCounter: 0,
+					erroredTotalCount: 0,
 				},
 			);
 		},
@@ -188,6 +189,7 @@ export const sitesSlice = createSlice({
 
 			siteState.compressionListCounter = siteState.compressionListCounter + 1;
 			siteState.compressionListCompletionPercentage = (siteState.compressionListCounter / siteState.selectedImageIDs.length) * 100;
+			siteState.erroredTotalCount = siteState.erroredTotalCount + 1;
 
 			return state;
 		},

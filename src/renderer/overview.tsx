@@ -33,6 +33,7 @@ export const Overview = (props: IProps) => {
 		compressedImagesOriginalSize,
 		compressedTotalSize,
 		totalCompressedCount,
+		erroredTotalCount,
 	} = useStoreSelector(selectors.imageStats);
 
 	const remainingUncompressedImages = imageCount - totalCompressedCount;
@@ -60,6 +61,7 @@ export const Overview = (props: IProps) => {
 			originalTotalSize={originalTotalSize}
 			compressedImagesOriginalSize={compressedImagesOriginalSize}
 			compressedTotalSize={compressedTotalSize}
+			erroredTotalCount={erroredTotalCount}
 		/>
 	</div>
 }
