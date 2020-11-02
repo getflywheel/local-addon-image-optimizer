@@ -22,9 +22,9 @@ export interface SiteImageData {
 	scanError?: GenericObject;
 	selectAllFilesValue?: boolean;
 	optimizationStatus?: OptimizerStatus;
-	compressionListTotal?: number;
 	compressionListCounter?: number;
 	compressionListCompletionPercentage?: number;
+	selectedImageIDs?: string[];
 }
 
 
