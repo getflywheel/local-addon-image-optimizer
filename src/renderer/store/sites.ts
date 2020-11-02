@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction, current } from '@reduxjs/toolkit';
 import {
 	CachedImageDataBySiteID,
 	SiteImageData,
@@ -71,7 +71,6 @@ export const sitesSlice = createSlice({
 		},
 		scanSuccess: (state, action: PayloadAction<Omit<SiteActionPayload, 'error'>>) => {
 			const { siteID, siteImageData } = action.payload;
-
 			const { selectAllFilesValue } = state[siteID];
 
 			/**

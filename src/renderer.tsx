@@ -6,11 +6,14 @@ import { Preferences, CachedImageDataBySiteID } from './types';
 import { store, actions } from './renderer/store/store';
 import ImageOptimizer from './renderer/index';
 import { MetaDataRow } from './renderer/preferencesRows';
+import { setupListeners } from './renderer/setupListeners';
 
 const stylesheetPath = path.resolve(__dirname, '../style.css');
 
 export default async function (context) {
 	const { React, hooks } = context;
+
+	setupListeners();
 
 	const preferences: Preferences = await LocalRenderer.ipcAsync(
 		IPC_EVENTS.READ_PREFERENCES_FROM_DISK
@@ -46,7 +49,7 @@ export default async function (context) {
 	hooks.addContent('siteToolsImageOptimizer', ({ match }) => {
 		return (
 			<Component match={match} />
-		)
+		);
 	});
 
 	hooks.addFilter(
