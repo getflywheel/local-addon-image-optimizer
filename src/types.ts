@@ -26,6 +26,7 @@ export interface SiteImageData {
 	compressionListCompletionPercentage?: number;
 	selectedImageIDs?: string[];
 	erroredTotalCount?: number;
+	overviewSelected?: boolean;
 }
 
 

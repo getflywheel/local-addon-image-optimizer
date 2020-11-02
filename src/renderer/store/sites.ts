@@ -35,6 +35,14 @@ function generateInitialSiteState(): Partial<SiteImageData> {
 	};
 }
 
+function forEachImageDataObject(state: SiteImageData, cb: (d: ImageData) => void) {
+	Object.values(state.imageData).forEach((d) => {
+		cb(d);
+	});
+
+	return state;
+}
+
 export const sitesSlice = createSlice({
 	name: 'sites',
 	initialState: {} as CachedImageDataBySiteID,
@@ -158,6 +166,16 @@ export const sitesSlice = createSlice({
 			state[siteID].compressionListCompletionPercentage = 0;
 			state[siteID].compressionListCounter = 0;
 
+			/**
+			 * These images should be unselected so that they don't accidentally get shown in lists that are filtered on the image's
+			 * isChecked field
+			 */
+			forEachImageDataObject(state[siteID], (d) => {
+				if (d.compressedImageHash) {
+					d.isChecked = false
+				}
+			});
+
 			return state;
 		},
 		optimizationComplete: (state, action: PayloadAction<{ siteID: string }>) => {
@@ -211,6 +229,12 @@ export const sitesSlice = createSlice({
 			siteState.erroredTotalCount = siteState.erroredTotalCount + 1;
 
 			reportAnalytics(ANALYTIC_EVENT_TYPES.OPTIMIZE_FAILURE, { errorCount: siteState.erroredTotalCount });
+			return state;
+		},
+		overviewSelected: (state, action: PayloadAction<{ siteID: string, overviewSelected: boolean }>) => {
+			const { siteID, overviewSelected } = action.payload;
+			state[siteID].overviewSelected = overviewSelected;
+
 			return state;
 		},
 	},
