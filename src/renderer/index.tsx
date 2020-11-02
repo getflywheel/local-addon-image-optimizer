@@ -120,14 +120,14 @@ const ImageOptimizer = (props: IProps) => {
 	};
 
 	const compressSelectedImages = () => {
-		const compressionList = selectors.selectedSiteImages().map((d) => d.originalImageHash);
+		const selectedImageIDs = selectors.selectedSiteImages().map((d) => d.originalImageHash);
 
-		store.dispatch(actions.optimizationRequested({ siteID, compressionListTotal: compressionList.length }));
+		store.dispatch(actions.optimizationRequested({ siteID, selectedImageIDs }));
 
 		ipcRenderer.send(
 			IPC_EVENTS.COMPRESS_IMAGES,
 			siteID,
-			compressionList,
+			selectedImageIDs,
 			preferences.stripMetaData,
 		);
 	}

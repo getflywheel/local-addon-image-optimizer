@@ -128,13 +128,13 @@ export const sitesSlice = createSlice({
 
 			return state;
 		},
-		optimizationRequested: (state, action: PayloadAction<{ siteID: string, compressionListTotal: number }>) => {
+		optimizationRequested: (state, action: PayloadAction<{ siteID: string, selectedImageIDs: string[] }>) => {
 			return mergeSiteState(
 				state,
 				action.payload,
 				{
 					optimizationStatus: OptimizerStatus.RUNNING,
-					compressionListTotal: action.payload.compressionListTotal,
+					selectedImageIDs: action.payload.selectedImageIDs,
 					compressionListCounter: 0,
 				},
 			);
@@ -171,7 +171,7 @@ export const sitesSlice = createSlice({
 			};
 
 			siteState.compressionListCounter = siteState.compressionListCounter + 1;
-			siteState.compressionListCompletionPercentage = (siteState.compressionListCounter / siteState.compressionListTotal) * 100;
+			siteState.compressionListCompletionPercentage = (siteState.compressionListCounter / siteState.selectedImageIDs.length) * 100;
 
 			return state;
 		},
@@ -187,7 +187,7 @@ export const sitesSlice = createSlice({
 			};
 
 			siteState.compressionListCounter = siteState.compressionListCounter + 1;
-			siteState.compressionListCompletionPercentage = (siteState.compressionListCounter / siteState.compressionListTotal) * 100;
+			siteState.compressionListCompletionPercentage = (siteState.compressionListCounter / siteState.selectedImageIDs.length) * 100;
 
 			return state;
 		},
