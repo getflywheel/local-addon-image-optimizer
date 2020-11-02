@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Overview } from './overview';
 import { FileListView } from './fileListView/fileListView';
 import { IPC_EVENTS } from '../constants';
 import { ipcRenderer } from 'electron';
-import { OptimizerStatus, ImageData } from '../types';
 import { store, actions, selectors, useStoreSelector } from './store/store';
 import { reportAnalytics, ANALYTIC_EVENT_TYPES } from './analytics';
 
@@ -22,10 +21,6 @@ const ImageOptimizer = (props: IProps) => {
 		state.sites[siteID],
 	]));
 
-	console.log(siteImageData);
-
-	const [overviewSelected, setOverviewSelected] = useState(true);
-
 	const scanForImages = () => {
 		store.dispatch(actions.scanRequest(siteID));
 
@@ -41,6 +36,10 @@ const ImageOptimizer = (props: IProps) => {
 		},
 		[siteID],
 	);
+
+	const setOverviewSelected = (overviewSelected: boolean) => {
+		store.dispatch(actions.overviewSelected({ siteID, overviewSelected }));
+	}
 
 	// handles file selection for final optimization list
 	const handleCheckBoxChange = (imageID: string) => (isChecked: boolean) => {
@@ -87,6 +86,8 @@ const ImageOptimizer = (props: IProps) => {
 
 		return null;
 	}
+
+	const { overviewSelected } = siteImageData;
 
 	switch (overviewSelected) {
 		case false:
