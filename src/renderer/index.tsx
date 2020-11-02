@@ -91,7 +91,7 @@ const ImageOptimizer = (props: IProps) => {
 
 			if (!ipcRenderer.listenerCount(IPC_EVENTS.SCAN_IMAGES_FAILURE)) {
 				ipcRenderer.on(
-					IPC_EVENTS.SCAN_IMAGES_COMPLETE,
+					IPC_EVENTS.SCAN_IMAGES_FAILURE,
 					(_, error) => {
 						store.dispatch(actions.scanFailure({ siteID, error }));
 					},

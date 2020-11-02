@@ -162,14 +162,19 @@ export const sitesSlice = createSlice({
 			const { siteID } = action.payload;
 			state[siteID].optimizationStatus = OptimizerStatus.COMPLETE;
 
-			// reportAnalytics(ANALYTIC_EVENT_TYPES.OPTIMIZE_SUCCESS);
+			const siteState = state[siteID];
+			reportAnalytics(ANALYTIC_EVENT_TYPES.OPTIMIZE_SUCCESS,
+				{
+					scannedCount: Object.values(siteState?.imageData || []).length,
+					optimizeCount: Object.values(siteState?.imageData).filter(((d) => d.compressedImageHash)).length
+				});
 			return state;
 		},
 		optimizationStarted: (state, action: PayloadAction<{ siteID: string, imageID: string }>) => {
 			const { siteID, imageID } = action.payload;
 			state[siteID].imageData[imageID].fileStatus = FileStatus.STARTED;
 
-			// reportAnalytics(ANALYTIC_EVENT_TYPES.OPTIMIZE_START);
+			reportAnalytics(ANALYTIC_EVENT_TYPES.OPTIMIZE_START);
 			return state;
 		},
 		optimizeSuccess: (state, action: PayloadAction<{ siteID: string, imageData: ImageData }>) => {
@@ -186,8 +191,6 @@ export const sitesSlice = createSlice({
 
 			siteState.compressionListCounter = siteState.compressionListCounter + 1;
 			siteState.compressionListCompletionPercentage = (siteState.compressionListCounter / siteState.selectedImageIDs.length) * 100;
-
-			// reportAnalytics(ANALYTIC_EVENT_TYPES.OPTIMIZE_SUCCESS);
 			return state;
 		},
 		optimizeFailure: (state, action: PayloadAction<{ siteID: string, imageID: string, errorMessage: string }>) => {
@@ -205,7 +208,7 @@ export const sitesSlice = createSlice({
 			siteState.compressionListCompletionPercentage = (siteState.compressionListCounter / siteState.selectedImageIDs.length) * 100;
 			siteState.erroredTotalCount = siteState.erroredTotalCount + 1;
 
-			// reportAnalytics(ANALYTIC_EVENT_TYPES.OPTIMIZE_FAILURE);
+			reportAnalytics(ANALYTIC_EVENT_TYPES.OPTIMIZE_FAILURE, { errorCount: siteState.erroredTotalCount });
 			return state;
 		},
 	},
