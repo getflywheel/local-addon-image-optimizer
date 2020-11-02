@@ -70,7 +70,7 @@ export function compressImagesFactory(serviceContainer: LocalMain.ServiceContain
 			const updatedImageData: SiteImageData['imageData'] = {};
 
 			for (const md5Hash of imageMD5s) {
-				serviceContainer.sendIPCEvent(IPC_EVENTS.COMPRESS_IMAGE_STARTED, md5Hash);
+				serviceContainer.sendIPCEvent(IPC_EVENTS.COMPRESS_IMAGE_STARTED, siteID, md5Hash);
 
 				const currentImageData = siteImageData.imageData[md5Hash];
 				const { filePath } = currentImageData;
@@ -78,8 +78,9 @@ export function compressImagesFactory(serviceContainer: LocalMain.ServiceContain
 				if (!fs.existsSync(filePath)) {
 					serviceContainer.sendIPCEvent(
 						IPC_EVENTS.COMPRESS_IMAGE_FAIL,
+						siteID,
 						md5Hash,
-						'File not found!'
+						'File not found!',
 					);
 
 					continue;
@@ -140,7 +141,9 @@ export function compressImagesFactory(serviceContainer: LocalMain.ServiceContain
 
 					cp.on('close', async (code) => {
 						if (code !== 0) {
-							serviceContainer.sendIPCEvent(IPC_EVENTS.COMPRESS_IMAGE_FAIL,
+							serviceContainer.sendIPCEvent(
+								IPC_EVENTS.COMPRESS_IMAGE_FAIL,
+								siteID,
 								md5Hash,
 								`Failed to process ${filePath}. Exited with code ${code}`,
 							);
@@ -154,7 +157,7 @@ export function compressImagesFactory(serviceContainer: LocalMain.ServiceContain
 							compressedSize: fs.statSync(filePath).size,
 						};
 
-						serviceContainer.sendIPCEvent(IPC_EVENTS.COMPRESS_IMAGE_SUCCESS, updatedImageData[md5Hash]);
+						serviceContainer.sendIPCEvent(IPC_EVENTS.COMPRESS_IMAGE_SUCCESS, siteID, updatedImageData[md5Hash]);
 
 						resolve();
 					});
@@ -173,7 +176,7 @@ export function compressImagesFactory(serviceContainer: LocalMain.ServiceContain
 			}
 
 			updateCancelCompression(true);
-			serviceContainer.sendIPCEvent(IPC_EVENTS.COMPRESS_ALL_IMAGES_COMPLETE);
+			serviceContainer.sendIPCEvent(IPC_EVENTS.COMPRESS_ALL_IMAGES_COMPLETE, siteID);
 			reportCompressSuccess(siteID, imageMD5s.length);
 		} catch (error) {
 			reportCompressFailure(siteID, error);
@@ -184,4 +187,3 @@ export function compressImagesFactory(serviceContainer: LocalMain.ServiceContain
 		}
 	}
 };
-

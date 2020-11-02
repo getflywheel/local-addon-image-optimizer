@@ -7,8 +7,6 @@ import { ImageData } from '../../types';
 import { OptimizerStatus, SiteImageData } from '../../types';
 import { convertBytesToMb } from '../utils';
 import ChevronArrowSVG from '../_assets/svg/chevron-arrow-right.svg';
-import NavigationPrompt from 'react-router-navigation-prompt';
-import { WarningModal } from './WarningModal';
 import { ConfirmOptimizationModal } from './ConfirmOptimizationModal';
 import { selectors, useStoreSelector } from '../store/store';
 
@@ -66,12 +64,6 @@ export const FileListHeader = (props: IFileListHeaderProps) => {
     } else if (siteImageData.optimizationStatus === OptimizerStatus.RUNNING) {
         return (
             <div className='fileView_Header'>
-				<NavigationPrompt
-					when={true}
-				>
-					{({ onConfirm, onCancel }) => invokeModal(WarningModal as React.FC, onConfirm, onCancel)}
-				</NavigationPrompt>
-
                 <div className='fileView_Header_Text'>
                     Optimizing...
                 </div>

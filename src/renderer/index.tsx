@@ -22,7 +22,8 @@ const ImageOptimizer = (props: IProps) => {
 		state.sites[siteID],
 	]));
 
-	// const activeSiteID = useStoreSelector((state) => state.activeSiteID);
+	console.log(siteImageData);
+
 	const [overviewSelected, setOverviewSelected] = useState(true);
 
 	const scanForImages = () => {
@@ -39,75 +40,6 @@ const ImageOptimizer = (props: IProps) => {
 			store.dispatch(actions.setActiveSiteID(siteID));
 		},
 		[siteID],
-	);
-
-	// listen for optimization events and update status accordingly
-	useEffect(
-		() => {
-			if (!ipcRenderer.listenerCount(IPC_EVENTS.COMPRESS_IMAGE_SUCCESS)) {
-				ipcRenderer.on(
-					IPC_EVENTS.COMPRESS_IMAGE_SUCCESS,
-					(_, imageData: ImageData) => {
-						store.dispatch(actions.optimizeSuccess({ siteID, imageData }));
-					},
-				);
-			}
-
-			if (!ipcRenderer.listenerCount(IPC_EVENTS.COMPRESS_IMAGE_FAIL)) {
-				ipcRenderer.on(
-					IPC_EVENTS.COMPRESS_IMAGE_FAIL,
-					(_, imageID, errorMessage) => {
-						store.dispatch(actions.optimizeFailure({ siteID, imageID, errorMessage }));
-					},
-				);
-			}
-
-			if (!ipcRenderer.listenerCount(IPC_EVENTS.COMPRESS_IMAGE_STARTED)) {
-				ipcRenderer.on(
-					IPC_EVENTS.COMPRESS_IMAGE_STARTED,
-					(_, imageID) => {
-						store.dispatch(actions.optimizationStarted({ siteID, imageID }));
-					},
-				);
-			}
-
-			if (!ipcRenderer.listenerCount(IPC_EVENTS.COMPRESS_ALL_IMAGES_COMPLETE)) {
-				ipcRenderer.on(
-					IPC_EVENTS.COMPRESS_ALL_IMAGES_COMPLETE,
-					async () => {
-						store.dispatch(actions.optimizationComplete({ siteID }));
-					},
-				);
-			}
-
-			if (!ipcRenderer.listenerCount(IPC_EVENTS.SCAN_IMAGES_COMPLETE)) {
-				ipcRenderer.on(
-					IPC_EVENTS.SCAN_IMAGES_COMPLETE,
-					(_, siteImageData) => {
-						store.dispatch(actions.scanSuccess({ siteID, siteImageData }));
-					},
-				);
-			}
-
-			if (!ipcRenderer.listenerCount(IPC_EVENTS.SCAN_IMAGES_FAILURE)) {
-				ipcRenderer.on(
-					IPC_EVENTS.SCAN_IMAGES_FAILURE,
-					(_, error) => {
-						store.dispatch(actions.scanFailure({ siteID, error }));
-					},
-				);
-			}
-
-			return () => {
-				ipcRenderer.removeAllListeners(IPC_EVENTS.COMPRESS_IMAGE_STARTED);
-				ipcRenderer.removeAllListeners(IPC_EVENTS.COMPRESS_IMAGE_FAIL);
-				ipcRenderer.removeAllListeners(IPC_EVENTS.COMPRESS_IMAGE_SUCCESS);
-				ipcRenderer.removeAllListeners(IPC_EVENTS.COMPRESS_ALL_IMAGES_COMPLETE);
-				ipcRenderer.removeAllListeners(IPC_EVENTS.SCAN_IMAGES_COMPLETE);
-				ipcRenderer.removeAllListeners(IPC_EVENTS.SCAN_IMAGES_FAILURE);
-			}
-		},
-		[siteImageData],
 	);
 
 	// handles file selection for final optimization list

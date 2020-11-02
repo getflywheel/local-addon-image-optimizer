@@ -25,15 +25,9 @@ export function scanImagesFactory(serviceContainer: LocalMain.ServiceContainerSe
 				/**
 				 * @todo does passing the error object here translate correctly to the UI?
 				 */
-				serviceContainer.sendIPCEvent(IPC_EVENTS.SCAN_IMAGES_FAILURE, new Error('Site not found!'));
+				serviceContainer.sendIPCEvent(IPC_EVENTS.SCAN_IMAGES_FAILURE, siteID, new Error('Site not found!'));
 				return;
 			}
-
-			const scanningSiteImageData: Partial<SiteImageData> = {
-				scanInProgress: true,
-			};
-
-			imageDataStore.setStateBySiteID(siteID, scanningSiteImageData);
 
 			saveImageDataToDisk(imageDataStore, serviceContainer);
 
@@ -99,7 +93,7 @@ export function scanImagesFactory(serviceContainer: LocalMain.ServiceContainerSe
 
 			saveImageDataToDisk(imageDataStore, serviceContainer);
 
-			serviceContainer.sendIPCEvent(IPC_EVENTS.SCAN_IMAGES_COMPLETE, nextSiteImageData);
+			serviceContainer.sendIPCEvent(IPC_EVENTS.SCAN_IMAGES_COMPLETE, siteID, nextSiteImageData);
 
 			reportScanSuccess(siteID, filePaths.length, totalCompressedCount);
 		} catch (error) {
