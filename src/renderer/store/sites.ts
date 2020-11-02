@@ -6,6 +6,7 @@ import {
 	ImageData,
 	FileStatus,
 } from '../../types';
+import { reportAnalytics, ANALYTIC_EVENT_TYPES } from '../analytics';
 
 interface SiteActionPayload {
 	siteID: string;
@@ -63,6 +64,7 @@ export const sitesSlice = createSlice({
 			return state;
 		},
 		scanRequest: (state, action: PayloadAction<string>) => {
+			reportAnalytics(ANALYTIC_EVENT_TYPES.SCAN_START);
 			state[action.payload].scanInProgress = true;
 
 			return state;
@@ -91,6 +93,7 @@ export const sitesSlice = createSlice({
 				imageData,
 			};
 
+			reportAnalytics(ANALYTIC_EVENT_TYPES.SCAN_SUCCESS);
 			return state;
 		},
 		scanFailure: (state, action: PayloadAction<Omit<SiteActionPayload, 'siteImageData'>>) => {
@@ -102,6 +105,7 @@ export const sitesSlice = createSlice({
 				scanError: error,
 			};
 
+			reportAnalytics(ANALYTIC_EVENT_TYPES.SCAN_FAILURE);
 			return state;
 		},
 		setSiteImageData: (state, action: PayloadAction<Omit<SiteActionPayload, 'error'>>) => {
@@ -110,6 +114,9 @@ export const sitesSlice = createSlice({
 		setImageSelected: (state, action: PayloadAction<{ siteID: string, imageID: string, isChecked: boolean }>) => {
 			const { siteID, imageID, isChecked } = action.payload;
 			const siteState = state[siteID];
+
+			isChecked ? reportAnalytics(ANALYTIC_EVENT_TYPES.OPTIMIZE_INCLUDE_ALL_FILES) :
+				reportAnalytics(ANALYTIC_EVENT_TYPES.OPTIMIZE_EXCLUDE_ALL_FILES);
 
 			siteState.imageData[imageID].isChecked = isChecked;
 
@@ -123,12 +130,16 @@ export const sitesSlice = createSlice({
 			const { siteID, isChecked } = action.payload;
 			const siteState = state[siteID];
 
+			isChecked ? reportAnalytics(ANALYTIC_EVENT_TYPES.OPTIMIZE_INCLUDE_SINGLE_FILE) :
+				reportAnalytics(ANALYTIC_EVENT_TYPES.OPTIMIZE_EXLUDE_SINGLE_FILE);
+
 			Object.values(siteState.imageData).forEach((d) => d.isChecked = isChecked);
 			siteState.selectAllFilesValue = isChecked;
 
 			return state;
 		},
 		optimizationRequested: (state, action: PayloadAction<{ siteID: string, selectedImageIDs: string[] }>) => {
+			reportAnalytics(ANALYTIC_EVENT_TYPES.OPTIMIZE_START);
 			return mergeSiteState(
 				state,
 				action.payload,
@@ -151,12 +162,14 @@ export const sitesSlice = createSlice({
 			const { siteID } = action.payload;
 			state[siteID].optimizationStatus = OptimizerStatus.COMPLETE;
 
+			// reportAnalytics(ANALYTIC_EVENT_TYPES.OPTIMIZE_SUCCESS);
 			return state;
 		},
 		optimizationStarted: (state, action: PayloadAction<{ siteID: string, imageID: string }>) => {
 			const { siteID, imageID } = action.payload;
 			state[siteID].imageData[imageID].fileStatus = FileStatus.STARTED;
 
+			// reportAnalytics(ANALYTIC_EVENT_TYPES.OPTIMIZE_START);
 			return state;
 		},
 		optimizeSuccess: (state, action: PayloadAction<{ siteID: string, imageData: ImageData }>) => {
@@ -174,6 +187,7 @@ export const sitesSlice = createSlice({
 			siteState.compressionListCounter = siteState.compressionListCounter + 1;
 			siteState.compressionListCompletionPercentage = (siteState.compressionListCounter / siteState.selectedImageIDs.length) * 100;
 
+			// reportAnalytics(ANALYTIC_EVENT_TYPES.OPTIMIZE_SUCCESS);
 			return state;
 		},
 		optimizeFailure: (state, action: PayloadAction<{ siteID: string, imageID: string, errorMessage: string }>) => {
@@ -191,6 +205,7 @@ export const sitesSlice = createSlice({
 			siteState.compressionListCompletionPercentage = (siteState.compressionListCounter / siteState.selectedImageIDs.length) * 100;
 			siteState.erroredTotalCount = siteState.erroredTotalCount + 1;
 
+			// reportAnalytics(ANALYTIC_EVENT_TYPES.OPTIMIZE_FAILURE);
 			return state;
 		},
 	},
