@@ -69,8 +69,6 @@ export function compressImagesFactory(serviceContainer: LocalMain.ServiceContain
 
 			const updatedImageData: SiteImageData['imageData'] = {};
 
-			let erroredTotalCount = 0;
-
 			for (const md5Hash of imageMD5s) {
 				serviceContainer.sendIPCEvent(IPC_EVENTS.COMPRESS_IMAGE_STARTED, md5Hash);
 
@@ -78,7 +76,6 @@ export function compressImagesFactory(serviceContainer: LocalMain.ServiceContain
 				const { filePath } = currentImageData;
 
 				if (!fs.existsSync(filePath)) {
-					erroredTotalCount++;
 					serviceContainer.sendIPCEvent(
 						IPC_EVENTS.COMPRESS_IMAGE_FAIL,
 						md5Hash,
@@ -147,7 +144,6 @@ export function compressImagesFactory(serviceContainer: LocalMain.ServiceContain
 								md5Hash,
 								`Failed to process ${filePath}. Exited with code ${code}`,
 							);
-							erroredTotalCount++;
 							resolve();
 							return;
 						}
@@ -169,7 +165,6 @@ export function compressImagesFactory(serviceContainer: LocalMain.ServiceContain
 						...siteImageData.imageData,
 						...updatedImageData
 					},
-					erroredTotalCount: erroredTotalCount,
 				});
 				saveImageDataToDisk(imageDataStore, serviceContainer);
 				if (!createRuntimeStore.getState().cancelCompression) {

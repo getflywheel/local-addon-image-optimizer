@@ -81,18 +81,30 @@ const siteImageCount = createSelector(
 	(siteState) => Object.values(siteState?.imageData || []).length,
 );
 
+const erroredTotalCount = createSelector(
+	siteStateSelector,
+	(siteState) => {
+		if (!siteState.erroredTotalCount) {
+			return 0;
+		}
+		return siteState.erroredTotalCount
+	},
+);
+
 const imageStats = createSelector(
 	siteImageCount,
 	totalImagesSizeBeforeCompression,
 	originalSizeOfCompressedImages,
 	sizeOfCompressedImages,
 	compressedSiteImages,
-	(imageCount, originalTotalSize, compressedImagesOriginalSize, compressedTotalSize, compressedSiteImages) => ({
+	erroredTotalCount,
+	(imageCount, originalTotalSize, compressedImagesOriginalSize, compressedTotalSize, compressedSiteImages, erroredTotalCount) => ({
 		imageCount,
 		originalTotalSize,
 		compressedImagesOriginalSize,
 		compressedTotalSize,
 		totalCompressedCount: compressedSiteImages.length,
+		erroredTotalCount,
 	}),
 );
 
