@@ -151,10 +151,12 @@ export const sitesSlice = createSlice({
 				},
 			);
 		},
-		optimizationStatus: (state, action: PayloadAction<{ siteID: string, optimizationStatus: OptimizerStatus }>) => {
-			const { siteID, optimizationStatus } = action.payload;
+		optimizationStatusBefore: (state, action: PayloadAction<{ siteID: string }>) => {
+			const { siteID } = action.payload;
 
-			state[siteID].optimizationStatus = optimizationStatus;
+			state[siteID].optimizationStatus = OptimizerStatus.BEFORE;
+			state[siteID].compressionListCompletionPercentage = 0;
+			state[siteID].compressionListCounter = 0;
 
 			return state;
 		},

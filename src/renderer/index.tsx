@@ -68,7 +68,7 @@ const ImageOptimizer = (props: IProps) => {
 	const resetToOverview = () => {
 		setOverviewSelected(true);
 
-		store.dispatch(actions.optimizationStatus({ siteID, optimizationStatus: OptimizerStatus.BEFORE }));
+		store.dispatch(actions.optimizationStatusBefore({ siteID }));
 	}
 
 	const cancelImageCompression = () => {
