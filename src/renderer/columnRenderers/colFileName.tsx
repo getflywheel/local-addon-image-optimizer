@@ -10,9 +10,7 @@ interface IFileNameProps {
 export const ColFileName = ( props: IFileNameProps ) =>  {
 	const { dataArgs } = props;
 
-	const formatFileName = () => {
-		return dataArgs.cellData.replace(/^.*\/app\/public\/wp-content/g, 'wp-content');
-	}
+	const formattedFilePath = dataArgs.cellData.replace(/^.*\/app\/public\/wp-content/g, 'wp-content');
 
 	const getSelectedCount = () => {
 		return dataArgs.data.filter(
@@ -30,9 +28,9 @@ export const ColFileName = ( props: IFileNameProps ) =>  {
 		return (
 			<div
 				className='fileList_File_Name_Row'
-				title={formatFileName()}
+				title={formattedFilePath}
 			>
-				{formatFileName()}
+				{formattedFilePath}
 			</div>
 		)
 	}
