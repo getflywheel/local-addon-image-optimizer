@@ -3,15 +3,18 @@ import { SiteImageData } from '../../types';
 import { store } from './store';
 
 
-export const getSelectedIDCountByKey = (key: 'compressedSize' | 'originalSize') => (siteState: SiteImageData) => {
-	if (!siteState.selectedImageIDs) {
+const getSelectedIDCountByKey = (key: 'compressedSize' | 'originalSize') => (siteState: SiteImageData) => {
+	const { selectedImageIDs, imageData } = siteState;
+
+	if (!selectedImageIDs) {
 		return 0;
 	}
 
-	return siteState.selectedImageIDs.reduce((size, id) => {
-		const bytes = siteState.imageData[id][key];
+	return selectedImageIDs.reduce((size, id) => {
+		const { compressedImageHash } = imageData[id];
+		const bytes = imageData[id][key];
 
-		if (bytes) {
+		if (compressedImageHash && bytes) {
 			size += bytes;
 		}
 
