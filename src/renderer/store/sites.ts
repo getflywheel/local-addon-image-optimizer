@@ -90,6 +90,7 @@ export const sitesSlice = createSlice({
 			state[siteID] = {
 				...state[siteID],
 				...siteImageData,
+				scanInProgress: false,
 				imageData,
 			};
 
