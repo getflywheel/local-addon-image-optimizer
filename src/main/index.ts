@@ -36,8 +36,8 @@ export function getImageDataStore(): CachedImageDataBySiteID {
 export const scanImages = scanImagesFactory(serviceContainer, imageDataStore);
 export const compressImages = compressImagesFactory(serviceContainer, imageDataStore, runtimeStore);
 
-export const updateCancelCompression = (setCancelCompression: boolean) => {
-	runtimeStore.setState({cancelCompression: setCancelCompression});
+export const updateCancelCompression = (siteID: string, cancelCompression: boolean) => {
+	runtimeStore.setCancelCompressionBySiteID(siteID, cancelCompression);
 }
 
 export function readPreferencesFromDisk(): Preferences {

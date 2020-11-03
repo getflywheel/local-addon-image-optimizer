@@ -69,8 +69,8 @@ export default function (context) {
 	 */
 	ipcMain.on(
 		IPC_EVENTS.CANCEL_COMPRESSION,
-		() => {
-			updateCancelCompression(false);
+		(_, siteID: string) => {
+			updateCancelCompression(siteID, true);
 		},
 	);
 

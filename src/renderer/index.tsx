@@ -73,6 +73,7 @@ const ImageOptimizer = (props: IProps) => {
 	const cancelImageCompression = () => {
 		ipcRenderer.send(
 			IPC_EVENTS.CANCEL_COMPRESSION,
+			siteID,
 		);
 		reportAnalytics(ANALYTIC_EVENT_TYPES.OPTIMIZE_CANCEL);
 	}

@@ -1,7 +1,9 @@
 import {
 	SiteImageData,
 	CachedImageDataBySiteID,
-	Store, CancelCompression, RuntimeStore
+	Store,
+	RuntimeData,
+	RuntimeStore,
 } from '../types';
 
 export function createStore(initialState: CachedImageDataBySiteID = {}): Store {
@@ -55,26 +57,37 @@ export function createStore(initialState: CachedImageDataBySiteID = {}): Store {
 	};
 }
 
-export function createRuntimeStore(initialState: CancelCompression = {cancelCompression: true}): RuntimeStore {
+export function createRuntimeStore(initialState: RuntimeData = {}): RuntimeStore {
 	let state = initialState;
 	return {
 		/**
 		 * returns the current state
 		 */
-		getState(): CancelCompression {
+		getState() {
 			return state;
 		},
 
 		/**
-		 * Merges in new state with existing state
+		 * get the current state by siteID
 		 *
-		 * @param update new state
+		 * @param siteID
 		 */
-		setState(newState: CancelCompression) {
-			state = {
-				...state,
-				...newState,
-			};
+		getStateBySiteID(siteID) {
+			return state[siteID] || {};
 		},
+
+		/**
+		 * set if a compression process should be canceled
+		 *
+		 * @param siteID
+		 * @param cancelCompression
+		 */
+		setCancelCompressionBySiteID(siteID, cancelCompression) {
+			if (!state[siteID]) {
+				state[siteID] = {}
+			}
+
+			state[siteID].cancelCompression = cancelCompression;
+		}
 	};
 }
