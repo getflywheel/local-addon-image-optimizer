@@ -130,7 +130,7 @@
 }
 
 .spinner-svg svg path {
-	fill: #c7c4c4;
+	fill: #c7c4c4 !important;
 }
 
 .fileList_File_Name_Row {
@@ -219,3 +219,31 @@
 .preferences_PaddingBottom_11px {
 	padding: 0 0 11px 0;
 }
+
+.SiteInfoMenuItem {
+	display: flex;
+	align-items: center;
+}
+
+.SiteInfoMenuItem_Badge {
+	width: fit-content;
+	height: fit-content;
+	padding: 5px;
+	font-size: 1.1rem;
+	line-height: normal;
+	font-weight: bold;
+	color: #fff;
+	letter-spacing: 0.22px;
+	background: #c7c4c4;
+	border-radius: 2px; }
+.Theme__Dark .Theme__Light .Badge {
+	background: #c7c4c4; }
+.Theme__Dark .Badge .Theme__Light {
+	background: #c7c4c4; }
+.Theme__Dark .Badge {
+	background: #5d5e5e; }
+.Theme__Light .Theme__Dark .Badge {
+	background: #5d5e5e; }
+.Theme__Light .Badge .Theme__Dark {
+	background: #5d5e5e; }
+

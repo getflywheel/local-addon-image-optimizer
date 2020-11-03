@@ -1,19 +1,19 @@
 import {
 	SiteData,
-	SiteDataBySiteID,
+	CachedImageDataBySiteID,
 	Store,
 	RuntimeData,
 	RuntimeStore,
 } from '../types';
 
-export function createStore(initialState: SiteDataBySiteID = {}): Store {
+export function createStore(initialState: CachedImageDataBySiteID = {}): Store {
 	let state = initialState;
 
 	return {
 		/**
 		 * returns the current state
 		 */
-		getState(): SiteDataBySiteID {
+		getState(): CachedImageDataBySiteID {
 			return state;
 		},
 
@@ -31,7 +31,7 @@ export function createStore(initialState: SiteDataBySiteID = {}): Store {
 		 *
 		 * @param update new state
 		 */
-		setState(newState: SiteDataBySiteID): void {
+		setState(newState: CachedImageDataBySiteID): void {
 			state = {
 				...state,
 				...newState,

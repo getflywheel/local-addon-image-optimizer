@@ -1,5 +1,5 @@
 import * as LocalMain from '@getflywheel/local/main';
-import { SiteData, SiteDataBySiteID } from '../types';
+import { SiteData, CachedImageDataBySiteID } from '../types';
 import { COMPRESSED_IMAGE_DATA_FILE_NAME, PREFERENCES_FILE_NAME } from '../constants';
 import { Preferences } from '../types';
 import { scanImagesFactory } from './scanImages';
@@ -29,7 +29,7 @@ export function getImageData(siteID: string): SiteData {
 	return imageDataStore.getStateBySiteID(siteID);
 }
 
-export function getImageDataStore(): SiteDataBySiteID {
+export function getImageDataStore(): CachedImageDataBySiteID {
 	return imageDataStore.getState();
 }
 

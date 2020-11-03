@@ -1,5 +1,5 @@
 import { createSelector } from '@reduxjs/toolkit';
-import { ImageData, SiteData } from '../../types';
+import { OptimizerStatus, ImageData, SiteData } from '../../types';
 import { store } from './store';
 
 
@@ -24,31 +24,47 @@ const getSelectedIDCountByKey = (key: 'compressedSize' | 'originalSize') => (sit
 
 export const erroredImageFilter = ({ errorMessage, compressedImageHash}: ImageData) => errorMessage && !compressedImageHash;
 
-const siteStateSelector = () => {
+const selectActiveSite = (): SiteData | undefined => {
 	const state = store.getState();
 	return state.sites[state.activeSiteID];
 }
 
-const siteDataSelector = createSelector(
-	siteStateSelector,
-	(siteState) => siteState.imageData,
+const selectActiveSiteIsSelectableTable = createSelector(
+	selectActiveSite,
+	(siteState) =>
+		siteState
+			? siteState.isOverviewSelected === false && siteState.optimizationStatus === OptimizerStatus.BEFORE
+			: false,
+);
+
+const selectActiveSiteIsStatusRunning = createSelector(
+	selectActiveSite,
+	(siteState) =>
+		siteState
+			? siteState.optimizationStatus === OptimizerStatus.RUNNING
+			: false,
 );
 
 const uncompressedSiteImages = createSelector(
-	siteStateSelector,
-	(siteState: SiteData) => Object.values(siteState.imageData).filter(
-		(d) => !d.compressedImageHash && !d.errorMessage
-	),
+	selectActiveSite,
+	(siteState) =>
+		siteState
+			? Object.values(siteState.imageData).filter(
+				(d) => !d.compressedImageHash && !d.errorMessage
+			)
+			: [],
 );
 
-
 const compressedSiteImages = createSelector(
-	siteStateSelector,
-	(siteState: SiteData) => Object.values(siteState.imageData).filter(((d) => d.compressedImageHash)),
+	selectActiveSite,
+	(siteState) =>
+		siteState
+			? Object.values(siteState.imageData).filter(((d) => d.compressedImageHash))
+			: [],
 );
 
 const totalImagesSizeBeforeCompression = createSelector(
-	siteDataSelector,
+	selectActiveSite,
 	(imageData) => Object.values(imageData).reduce((totalSize, d) => {
 		totalSize += d.originalSize;
 
@@ -57,7 +73,7 @@ const totalImagesSizeBeforeCompression = createSelector(
 );
 
 const originalSizeOfCompressedImages = createSelector(
-	siteDataSelector,
+	selectActiveSite,
 	(imageData) => Object.values(imageData).reduce((size, d) => {
 		if (d.compressedImageHash) {
 			size += d.originalSize;
@@ -68,7 +84,7 @@ const originalSizeOfCompressedImages = createSelector(
 );
 
 const sizeOfCompressedImages = createSelector(
-	siteDataSelector,
+	selectActiveSite,
 	(imageData) => Object.values(imageData).reduce((size, d) => {
 		if (d.compressedImageHash) {
 			size += d.compressedSize;
@@ -79,17 +95,20 @@ const sizeOfCompressedImages = createSelector(
 );
 
 const selectedSiteImages = createSelector(
-	siteStateSelector,
-	({ imageData }) => Object.values(imageData).filter((d) => d.isChecked),
+	selectActiveSite,
+	(siteState) =>
+		siteState
+			? Object.values(siteState.imageData).filter((d) => d.isChecked)
+			: [],
 );
 
 const siteImageCount = createSelector(
-	siteStateSelector,
+	selectActiveSite,
 	(siteState) => Object.values(siteState?.imageData || []).length,
 );
 
 const erroredTotalCount = createSelector(
-	siteStateSelector,
+	selectActiveSite,
 	(siteState) => Object.values(siteState.imageData).filter(erroredImageFilter).length,
 );
 
@@ -111,12 +130,12 @@ const imageStats = createSelector(
 );
 
 const originalSizeOfSelectedImages = createSelector(
-	siteStateSelector,
+	selectActiveSite,
 	getSelectedIDCountByKey('originalSize'),
 );
 
 const compressedSizeOfSelectedImages = createSelector(
-	siteStateSelector,
+	selectActiveSite,
 	getSelectedIDCountByKey('compressedSize'),
 );
 
@@ -130,13 +149,15 @@ const compressionCompletionStats = createSelector(
 );
 
 export const selectors = {
-	uncompressedSiteImages: () => uncompressedSiteImages(store.getState()),
-	compressedSiteImages: () => compressedSiteImages(store.getState()),
-	totalImagesSizeBeforeCompression: () => totalImagesSizeBeforeCompression(store.getState()),
-	originalSizeOfCompressedImages: () => originalSizeOfCompressedImages(store.getState()),
-	sizeOfCompressedImages: () => sizeOfCompressedImages(store.getState()),
-	selectedSiteImages: () => selectedSiteImages(store.getState()),
-	siteImageCount: () => siteImageCount(store.getState()),
-	imageStats: () => imageStats(store.getState()),
-	compressionCompletionStats: () => compressionCompletionStats(store.getState()),
+	uncompressedSiteImages,
+	compressedSiteImages,
+	totalImagesSizeBeforeCompression,
+	originalSizeOfCompressedImages,
+	sizeOfCompressedImages,
+	selectActiveSiteIsSelectableTable,
+	selectActiveSiteIsStatusRunning,
+	selectedSiteImages,
+	siteImageCount,
+	imageStats,
+	compressionCompletionStats,
 };
