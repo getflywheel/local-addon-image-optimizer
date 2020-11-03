@@ -34,8 +34,12 @@ export interface CachedImageDataBySiteID {
 	[siteID: string]: SiteImageData;
 }
 
-export interface CancelCompression {
-	cancelCompression: boolean;
+export interface SiteRuntimeData {
+	cancelCompression?: boolean;
+}
+
+export interface RuntimeData {
+	[siteID: string]: SiteRuntimeData;
 }
 
 export interface Store {
@@ -46,8 +50,9 @@ export interface Store {
 }
 
 export interface RuntimeStore {
-	getState: () => CancelCompression;
-	setState: (newState: CancelCompression) => void;
+	getState: () => RuntimeData;
+	getStateBySiteID: (siteID: string) => SiteRuntimeData;
+	setCancelCompressionBySiteID: (siteID: string, cancelCompression: boolean) => void;
 }
 
 export enum FileStatus {

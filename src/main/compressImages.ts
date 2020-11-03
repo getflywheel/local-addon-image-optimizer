@@ -44,7 +44,7 @@ if (!fs.existsSync(jpegRecompressBin)) {
  *
  * @param imageIds
  */
-export function compressImagesFactory(serviceContainer: LocalMain.ServiceContainerServices, imageDataStore: Store, createRuntimeStore: RuntimeStore) {
+export function compressImagesFactory(serviceContainer: LocalMain.ServiceContainerServices, imageDataStore: Store, runtimeStore: RuntimeStore) {
 	return async function (siteID: Local.Site['id'], imageMD5s: string[], stripMetaData?: boolean) {
 		try {
 			reportCompressRequest(siteID);
@@ -70,6 +70,10 @@ export function compressImagesFactory(serviceContainer: LocalMain.ServiceContain
 			const updatedImageData: SiteImageData['imageData'] = {};
 
 			for (const md5Hash of imageMD5s) {
+				if (runtimeStore.getStateBySiteID(siteID).cancelCompression) {
+					break;
+				}
+
 				serviceContainer.sendIPCEvent(IPC_EVENTS.COMPRESS_IMAGE_STARTED, siteID, md5Hash);
 
 				const currentImageData = siteImageData.imageData[md5Hash];
@@ -170,12 +174,9 @@ export function compressImagesFactory(serviceContainer: LocalMain.ServiceContain
 					},
 				});
 				saveImageDataToDisk(imageDataStore, serviceContainer);
-				if (!createRuntimeStore.getState().cancelCompression) {
-					break;
-				}
 			}
 
-			updateCancelCompression(true);
+			updateCancelCompression(siteID, false);
 			serviceContainer.sendIPCEvent(IPC_EVENTS.COMPRESS_ALL_IMAGES_COMPLETE, siteID);
 			reportCompressSuccess(siteID, imageMD5s.length);
 		} catch (error) {
