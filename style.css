@@ -78,13 +78,13 @@
 }
 
 .fileListViewer_Column_Original_Size {
-	min-width: 85px;
+	min-width: 70px;
 	margin-left: 30px;
 	white-space: nowrap;
 }
 
 .fileListViewer_Column_Compressed_Size {
-	min-width: 115px;
+	min-width: 90px;
 	margin-right: 20px;
 	margin-left: 30px;
 	word-break: break-all;
@@ -95,7 +95,7 @@
 .fileListViewer_Column_File_Name {
 	flex: 1 1 300px;
 	align-self: center;
-	word-break: break-all;
+	min-width: 0;
 }
 
 .warning-svg svg path {
@@ -131,14 +131,12 @@
 	fill: #c7c4c4;
 }
 
-.fileList_Virtual_Table_Row {
-	min-height: 27px;
-	height: auto !important;
-}
-
 .fileList_File_Name_Row {
-	padding-top: 6px;
-	padding-bottom: 6px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	direction: rtl;
+	text-align: left;
 }
 
 .fileList_File_Name_Header {
@@ -152,15 +150,6 @@
 
 .colFileSize_Error_Text {
 	color: #ef4e65;
-}
-
-/* This is a hacky way to set height, but it's necessary to get a scroll bar to show up.
-*	Further work needs to be done here to set a specific height property on the Tertiary_Content div in Local.
-*/
-
-.fileListViewer_File_List {
-	max-height: calc(100vh - 340px);
-	overflow-y: auto;
 }
 
 /* File List View Header */

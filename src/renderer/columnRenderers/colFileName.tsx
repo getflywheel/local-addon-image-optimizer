@@ -1,5 +1,4 @@
 import React from 'react';
-import path from 'path';
 import { IVirtualTableCellRendererDataArgs } from '@getflywheel/local-components';
 import { OptimizerStatus } from '../../types';
 
@@ -11,14 +10,14 @@ interface IFileNameProps {
 export const ColFileName = ( props: IFileNameProps ) =>  {
 	const { dataArgs } = props;
 
+	const formatFileName = () => {
+		return dataArgs.cellData.replace(/^.*\/app\/public\/wp-content/g, 'wp-content');
+	}
+
 	const getSelectedCount = () => {
 		return dataArgs.data.filter(
 			data => data.isChecked
 		).length;
-	}
-
- 	const formatFileName = () => {
-		return dataArgs.cellData.replace(/^.*\/app\/public\/wp-content/g, `.${path.sep}wp-content`);
 	}
 
 	if (dataArgs.isHeader) {
@@ -28,10 +27,13 @@ export const ColFileName = ( props: IFileNameProps ) =>  {
 			</div>
 		);
 	} else {
-		return(
-			<div className='fileList_File_Name_Row'>
+		return (
+			<div
+				className='fileList_File_Name_Row'
+				title={formatFileName()}
+			>
 				{formatFileName()}
 			</div>
-		);
+		)
 	}
 };
