@@ -1,12 +1,14 @@
+import * as React from 'react';
 import path from 'path';
 import { Provider } from 'react-redux';
 import * as LocalRenderer from '@getflywheel/local/renderer';
 import { IPC_EVENTS } from './constants';
-import { Preferences, SiteDataBySiteID } from './types';
+import { Preferences, CachedImageDataBySiteID } from './types';
 import { store, actions } from './renderer/store/store';
 import ImageOptimizer from './renderer/index';
 import { MetaDataRow } from './renderer/preferencesRows';
 import { setupListeners } from './renderer/setupListeners';
+import SiteInfoMenuItem from './renderer/SiteInfoMenuItem';
 
 const stylesheetPath = path.resolve(__dirname, '../style.css');
 
@@ -19,7 +21,7 @@ export default async function (context) {
 		IPC_EVENTS.READ_PREFERENCES_FROM_DISK
 	);
 
-	const cachedImageDataBySiteID: SiteDataBySiteID = await LocalRenderer.ipcAsync(
+	const cachedImageDataBySiteID: CachedImageDataBySiteID = await LocalRenderer.ipcAsync(
 		IPC_EVENTS.GET_IMAGE_DATA_STORE,
 	);
 
@@ -36,8 +38,6 @@ export default async function (context) {
 		</Provider>
 	);
 
-	const Component = withStoreProvider(ImageOptimizer);
-
 	hooks.addContent('stylesheets', () => (
 		<link
 			rel="stylesheet"
@@ -46,10 +46,20 @@ export default async function (context) {
 		/>
 	));
 
-	hooks.addContent('siteToolsImageOptimizer', ({ match }) => {
+	const SiteInfoMenuItemHOC = withStoreProvider(SiteInfoMenuItem);
+
+	hooks.addContent('local-addon-image-optimizer:site-info-menu-item', () => {
 		return (
-			<Component match={match} />
-		);
+			<SiteInfoMenuItemHOC />
+		)
+	});
+
+	const ImageOptimizerHOC = withStoreProvider(ImageOptimizer);
+
+	hooks.addContent('local-addon-image-optimizer:site-info-content', ({ match }) => {
+		return (
+			<ImageOptimizerHOC match={match} />
+		)
 	});
 
 	hooks.addFilter(

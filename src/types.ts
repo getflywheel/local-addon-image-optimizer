@@ -28,7 +28,7 @@ export interface SiteData {
 	isOverviewSelected?: boolean;
 }
 
-export interface SiteDataBySiteID {
+export interface CachedImageDataBySiteID {
 	[siteID: string]: SiteData;
 }
 
@@ -41,9 +41,9 @@ export interface RuntimeData {
 }
 
 export interface Store {
-	getState: () => SiteDataBySiteID;
+	getState: () => CachedImageDataBySiteID;
 	getStateBySiteID: (siteID: string) => SiteData;
-	setState: (newState: SiteDataBySiteID) => void;
+	setState: (newState: CachedImageDataBySiteID) => void;
 	setStateBySiteID: (siteID: string, newState: Partial<SiteData>) => void;
 }
 
