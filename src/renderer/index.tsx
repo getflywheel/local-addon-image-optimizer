@@ -37,8 +37,8 @@ const ImageOptimizer = (props: IProps) => {
 		[siteID],
 	);
 
-	const setOverviewSelected = (overviewSelected: boolean) => {
-		store.dispatch(actions.overviewSelected({ siteID, overviewSelected }));
+	const setOverviewSelected = (isOverviewSelected: boolean) => {
+		store.dispatch(actions.isOverviewSelected({ siteID, isOverviewSelected }));
 	}
 
 	// handles file selection for final optimization list
@@ -88,9 +88,9 @@ const ImageOptimizer = (props: IProps) => {
 		return null;
 	}
 
-	const { overviewSelected } = siteImageData;
+	const { isOverviewSelected } = siteImageData;
 
-	switch (overviewSelected) {
+	switch (isOverviewSelected) {
 		case false:
 			return (
 				<FileListView

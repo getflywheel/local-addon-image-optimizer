@@ -231,9 +231,9 @@ export const sitesSlice = createSlice({
 			reportAnalytics(ANALYTIC_EVENT_TYPES.OPTIMIZE_FAILURE, { errorCount: siteState.erroredTotalCount });
 			return state;
 		},
-		overviewSelected: (state, action: PayloadAction<{ siteID: string, overviewSelected: boolean }>) => {
-			const { siteID, overviewSelected } = action.payload;
-			state[siteID].overviewSelected = overviewSelected;
+		isOverviewSelected: (state, action: PayloadAction<{ siteID: string, isOverviewSelected: boolean }>) => {
+			const { siteID, isOverviewSelected } = action.payload;
+			state[siteID].isOverviewSelected = isOverviewSelected;
 
 			return state;
 		},
