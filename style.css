@@ -70,6 +70,7 @@
 	margin-right: 31px;
 	margin-left: 20px;
 	align-self: center;
+	text-align: center;
 }
 
 .fileListViewer_Column_Compressed_Size, .fileListViewer_Column_Original_Size {
@@ -123,8 +124,9 @@
 }
 
 .spinner-svg {
-	margin: 0 !important;
+	margin: 0 auto !important;
 	width: 10px !important;
+	text-align: center;
 }
 
 .spinner-svg svg path {
