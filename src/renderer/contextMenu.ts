@@ -1,12 +1,13 @@
-import {
-	remote,
-	shell,
-} from 'electron';
+import { remote, shell } from 'electron';
 import { useEffect } from 'react';
 
 const { Menu, MenuItem } = remote;
 
-const isMac = process.platform === 'darwin'
+const isMac = process.platform === 'darwin';
+const contextEvent = 'contextmenu';
+const menuWillCloseEvent = 'menu-will-close';
+export const noContextMenuId = 'no-context-menu';
+export const ioFileListContextMenuId = 'io-file-list-context-menu';
 
 const revealPathMenuItem = (path: string) => {
 	return new MenuItem({
@@ -26,18 +27,18 @@ const openPathMenuItem = (path: string) => {
 	})
 }
 
-export default function useContextMenu() {
+export function useContextMenu() {
 	useEffect(() => {
-		const element = document.getElementById('no-context-menu');
+		const element = document.getElementById(noContextMenuId);
 		if (element) {
-			element.addEventListener('contextmenu', (e) => {
+			element.addEventListener(contextEvent, (e) => {
 				e.preventDefault();
 			});
 		}
 
-		const IOFileListElement = document.getElementById('io-file-list');
+		const IOFileListElement = document.getElementById(ioFileListContextMenuId);
 		if (IOFileListElement) {
-			IOFileListElement.addEventListener('contextmenu', (e) => {
+			IOFileListElement.addEventListener(contextEvent, (e) => {
 				e.preventDefault();
 				const path = e.target.dataset.path;
 				if (path) {
@@ -45,7 +46,7 @@ export default function useContextMenu() {
 					menu.append(revealPathMenuItem(path));
 					menu.append(openPathMenuItem(path));
 					menu.popup({ window: remote.getCurrentWindow() });
-					menu.once('menu-will-close', () => {
+					menu.once(menuWillCloseEvent, () => {
 						menu.closePopup();
 					});
 				}
