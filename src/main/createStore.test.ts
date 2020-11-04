@@ -2,7 +2,7 @@ import 'jest-extended';
 
 import { createStore } from './createStore';
 import {
-	CachedImageDataBySiteID,
+	SiteDataBySiteID,
 	SiteData
 } from '../types';
 
@@ -13,17 +13,17 @@ describe('createStore', () => {
 	const siteIDTwo = 4321;
 	const siteIDThree = 6789;
 
-	const initialState: CachedImageDataBySiteID = {
+	const initialState: SiteDataBySiteID = {
 		[siteIDOne]: {
 			imageData: {},
 		} as SiteData,
 	};
 
-	const secondState: CachedImageDataBySiteID = {
+	const secondState: SiteDataBySiteID = {
 		[siteIDTwo]: {} as SiteData,
 	};
 
-	const thirdState: CachedImageDataBySiteID = {
+	const thirdState: SiteDataBySiteID = {
 		[siteIDThree]: {
 			imageData: {},
 			lastScan: 1601675284054,

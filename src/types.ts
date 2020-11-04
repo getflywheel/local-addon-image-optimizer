@@ -30,7 +30,7 @@ export interface SiteData {
 }
 
 
-export interface CachedImageDataBySiteID {
+export interface SiteDataBySiteID {
 	[siteID: string]: SiteData;
 }
 
@@ -43,9 +43,9 @@ export interface RuntimeData {
 }
 
 export interface Store {
-	getState: () => CachedImageDataBySiteID;
+	getState: () => SiteDataBySiteID;
 	getStateBySiteID: (siteID: string) => SiteData;
-	setState: (newState: CachedImageDataBySiteID) => void;
+	setState: (newState: SiteDataBySiteID) => void;
 	setStateBySiteID: (siteID: string, newState: Partial<SiteData>) => void;
 }
 

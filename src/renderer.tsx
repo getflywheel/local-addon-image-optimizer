@@ -2,7 +2,7 @@ import path from 'path';
 import { Provider } from 'react-redux';
 import * as LocalRenderer from '@getflywheel/local/renderer';
 import { IPC_EVENTS } from './constants';
-import { Preferences, CachedImageDataBySiteID } from './types';
+import { Preferences, SiteDataBySiteID } from './types';
 import { store, actions } from './renderer/store/store';
 import ImageOptimizer from './renderer/index';
 import { MetaDataRow } from './renderer/preferencesRows';
@@ -19,7 +19,7 @@ export default async function (context) {
 		IPC_EVENTS.READ_PREFERENCES_FROM_DISK
 	);
 
-	const cachedImageDataBySiteID: CachedImageDataBySiteID = await LocalRenderer.ipcAsync(
+	const cachedImageDataBySiteID: SiteDataBySiteID = await LocalRenderer.ipcAsync(
 		IPC_EVENTS.GET_IMAGE_DATA_STORE,
 	);
 
