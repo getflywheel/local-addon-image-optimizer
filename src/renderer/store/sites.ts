@@ -123,8 +123,8 @@ export const sitesSlice = createSlice({
 			const { siteID, imageID, isChecked } = action.payload;
 			const siteState = state[siteID];
 
-			isChecked ? reportAnalytics(ANALYTIC_EVENT_TYPES.OPTIMIZE_INCLUDE_ALL_FILES) :
-				reportAnalytics(ANALYTIC_EVENT_TYPES.OPTIMIZE_EXCLUDE_ALL_FILES);
+			isChecked ? reportAnalytics(ANALYTIC_EVENT_TYPES.OPTIMIZE_INCLUDE_SINGLE_FILE) :
+				reportAnalytics(ANALYTIC_EVENT_TYPES.OPTIMIZE_EXLUDE_SINGLE_FILE);
 
 			siteState.imageData[imageID].isChecked = isChecked;
 
@@ -138,8 +138,8 @@ export const sitesSlice = createSlice({
 			const { siteID, isChecked } = action.payload;
 			const siteState = state[siteID];
 
-			isChecked ? reportAnalytics(ANALYTIC_EVENT_TYPES.OPTIMIZE_INCLUDE_SINGLE_FILE) :
-				reportAnalytics(ANALYTIC_EVENT_TYPES.OPTIMIZE_EXLUDE_SINGLE_FILE);
+			isChecked ? reportAnalytics(ANALYTIC_EVENT_TYPES.OPTIMIZE_INCLUDE_ALL_FILES) :
+				reportAnalytics(ANALYTIC_EVENT_TYPES.OPTIMIZE_EXCLUDE_ALL_FILES);
 
 			Object.values(siteState.imageData).forEach((d) => d.isChecked = isChecked);
 			siteState.selectAllFilesValue = isChecked;
