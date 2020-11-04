@@ -47,7 +47,7 @@ const ImageOptimizer = (props: IProps) => {
 	};
 
 	// select or deselect all files
-	const toggleSelectAll = (isChecked) => {
+	const toggleSelectAll = (isChecked: boolean) => {
 		store.dispatch(actions.setAllImagesSelected({ siteID, isChecked }));
 	};
 
