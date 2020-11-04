@@ -75,12 +75,14 @@ export const FileListView = (props: IFileListViewProps) => {
 				return (
 					<ColFileSize
 						dataArgs={dataArgs}
+						optimizerStatus={siteImageData.optimizationStatus}
 					/>
 				);
 			case 'compressedSize':
 				return (
 					<ColFileSize
 						dataArgs={dataArgs}
+						optimizerStatus={siteImageData.optimizationStatus}
 					/>
 				);
 			default: return null;
