@@ -8,7 +8,7 @@ import CheckmarkMedSVG from './_assets/svg/Checkmark-med.svg';
 import WarningSVG from './_assets/svg/warning.svg';
 
 interface IProps {
-	siteImageData: SiteData,
+	siteData: SiteData,
 	handleScanForImages: () => void,
 	imageCount: number;
 	totalCompressedCount: number;
@@ -21,7 +21,7 @@ interface IProps {
 const LastOptimizeStatus: React.FC<IProps> = (props: IProps) => {
 	const {
 		imageCount,
-		siteImageData,
+		siteData,
 		totalCompressedCount,
 		originalTotalSize,
 		compressedImagesOriginalSize,
@@ -29,7 +29,7 @@ const LastOptimizeStatus: React.FC<IProps> = (props: IProps) => {
 		erroredTotalCount,
 	} = props;
 
-	const { lastScan, scanInProgress } = siteImageData;
+	const { lastScan, scanInProgress } = siteData;
 
 	const totalImageOptimized = `${totalCompressedCount}/${imageCount}`;
 	const totalImageErrored = `${erroredTotalCount}/${imageCount}`;

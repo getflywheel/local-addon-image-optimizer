@@ -7,7 +7,7 @@ import { SiteData } from '../types';
 interface IProps {
 	setOverviewSelected: (x: boolean) => void,
 	handleScanForImages: () => void,
-	siteImageData: SiteData,
+	siteData: SiteData,
 	siteID: string,
 }
 
@@ -15,13 +15,13 @@ export const Overview = (props: IProps) => {
 	const {
 		setOverviewSelected,
 		handleScanForImages,
-		siteImageData,
+		siteData,
 	} = props;
 
 	const {
 		lastScan,
 		scanInProgress,
-	} = siteImageData;
+	} = siteData;
 
 	const onClickViewImages = () => {
 		setOverviewSelected(false);
@@ -54,7 +54,7 @@ export const Overview = (props: IProps) => {
 		}
 
 		<LastOptimizeStatus
-			siteImageData={siteImageData}
+			siteData={siteData}
 			handleScanForImages={handleScanForImages}
 			imageCount={imageCount}
 			totalCompressedCount={totalCompressedCount}

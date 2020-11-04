@@ -18,7 +18,7 @@ import { selectors, useStoreSelector } from '../store/store';
 import {useContextMenu, noContextMenuId, ioFileListContextMenuId } from '../contextMenu';
 
 interface IFileListViewProps {
-	siteImageData: SiteData;
+	siteData: SiteData;
 	handleCheckBoxChange: (imageID: string) => (isChecked: boolean) => void;
 	toggleSelectAll: (isChecked: boolean) => void;
 	compressSelectedImages: () => void;
@@ -39,7 +39,7 @@ interface IModalProps {
 
 export const FileListView = (props: IFileListViewProps) => {
 	const {
-		siteImageData,
+		siteData,
 		handleCheckBoxChange,
 		toggleSelectAll,
 		compressSelectedImages,
@@ -62,29 +62,29 @@ export const FileListView = (props: IFileListViewProps) => {
 						dataArgs={dataArgs}
 						handleCheckBoxChange={handleCheckBoxChange}
 						toggleSelectAll={toggleSelectAll}
-						areAllFilesSelected={siteImageData.areAllFilesSelected}
-						optimizationStatus={siteImageData.optimizationStatus}
+						areAllFilesSelected={siteData.areAllFilesSelected}
+						optimizationStatus={siteData.optimizationStatus}
 					/>
 				);
 			case 'filePath':
 				return (
 					<ColFileName
 						dataArgs={dataArgs}
-						optimizationStatus={siteImageData.optimizationStatus}
+						optimizationStatus={siteData.optimizationStatus}
 					/>
 				);
 			case 'originalSize':
 				return (
 					<ColFileSize
 						dataArgs={dataArgs}
-						optimizerStatus={siteImageData.optimizationStatus}
+						optimizerStatus={siteData.optimizationStatus}
 					/>
 				);
 			case 'compressedSize':
 				return (
 					<ColFileSize
 						dataArgs={dataArgs}
-						optimizerStatus={siteImageData.optimizationStatus}
+						optimizerStatus={siteData.optimizationStatus}
 					/>
 				);
 			default: return null;
@@ -133,7 +133,7 @@ export const FileListView = (props: IFileListViewProps) => {
 	return (
 		<div className='fileView_Container'>
 			<FileListHeader
-				siteImageData={siteImageData}
+				siteData={siteData}
 				resetToOverview={resetToOverview}
 				invokeModal={invokeModal}
 				selectedImages={selectedImages}
@@ -141,13 +141,13 @@ export const FileListView = (props: IFileListViewProps) => {
 				setOverviewSelected={setOverviewSelected}
 				siteID={siteID}
 			/>
-			<ProgressBar progress={siteImageData.compressionListCompletionPercentage} />
+			<ProgressBar progress={siteData.compressionListCompletionPercentage} />
 			<div className='fileListViewer_File_List' id={noContextMenuId}>
 				<VirtualTable
 					id={ioFileListContextMenuId}
 					rowClassName='fileList_Virtual_Table_Row'
 					cellRenderer={cellRender}
-					data={siteImageData.optimizationStatus === OptimizerStatus.BEFORE ? uncompressedImages : selectedImages}
+					data={siteData.optimizationStatus === OptimizerStatus.BEFORE ? uncompressedImages : selectedImages}
 					headers={[
 						{ key: 'fileStatus', value: '', className: 'fileListViewer_Column_Selected'},
 						{ key: 'filePath', value: 'Filename', className: 'fileListViewer_Column_File_Name'},
