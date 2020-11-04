@@ -25,10 +25,8 @@ export interface SiteData {
 	compressionListCounter?: number;
 	compressionListCompletionPercentage?: number;
 	selectedImageIDs?: string[];
-	erroredTotalCount?: number;
 	isOverviewSelected?: boolean;
 }
-
 
 export interface SiteDataBySiteID {
 	[siteID: string]: SiteData;

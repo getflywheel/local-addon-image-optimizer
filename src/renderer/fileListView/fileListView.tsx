@@ -141,7 +141,7 @@ export const FileListView = (props: IFileListViewProps) => {
 				setOverviewSelected={setOverviewSelected}
 				siteID={siteID}
 			/>
-				<ProgressBar progress={siteImageData.compressionListCompletionPercentage} />
+			<ProgressBar progress={siteImageData.compressionListCompletionPercentage} />
 			<div className='fileListViewer_File_List' id={noContextMenuId}>
 				<VirtualTable
 					id={ioFileListContextMenuId}

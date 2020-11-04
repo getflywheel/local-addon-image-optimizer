@@ -1,5 +1,5 @@
 import { createSelector } from '@reduxjs/toolkit';
-import { SiteData } from '../../types';
+import { ImageData, SiteData } from '../../types';
 import { store } from './store';
 
 
@@ -22,6 +22,8 @@ const getSelectedIDCountByKey = (key: 'compressedSize' | 'originalSize') => (sit
 	}, 0);
 }
 
+export const erroredImageFilter = ({ errorMessage, compressedImageHash}: ImageData) => errorMessage && !compressedImageHash;
+
 const siteStateSelector = () => {
 	const state = store.getState();
 	return state.sites[state.activeSiteID];
@@ -34,7 +36,9 @@ const siteImageDataSelector = createSelector(
 
 const uncompressedSiteImages = createSelector(
 	siteStateSelector,
-	(siteState: SiteData) => Object.values(siteState.imageData).filter((d) => !d.compressedImageHash),
+	(siteState: SiteData) => Object.values(siteState.imageData).filter(
+		(d) => !d.compressedImageHash && !d.errorMessage
+	),
 );
 
 
@@ -76,7 +80,7 @@ const sizeOfCompressedImages = createSelector(
 
 const selectedSiteImages = createSelector(
 	siteStateSelector,
-	(siteState: SiteData) => Object.values(siteState.imageData).filter((d) => d.isChecked),
+	({ imageData }) => Object.values(imageData).filter((d) => d.isChecked),
 );
 
 const siteImageCount = createSelector(
@@ -86,12 +90,7 @@ const siteImageCount = createSelector(
 
 const erroredTotalCount = createSelector(
 	siteStateSelector,
-	(siteState) => {
-		if (!siteState.erroredTotalCount) {
-			return 0;
-		}
-		return siteState.erroredTotalCount
-	},
+	(siteState) => Object.values(siteState.imageData).filter(erroredImageFilter).length,
 );
 
 const imageStats = createSelector(
