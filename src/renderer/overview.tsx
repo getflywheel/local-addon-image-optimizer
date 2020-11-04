@@ -36,7 +36,7 @@ export const Overview = (props: IProps) => {
 		erroredTotalCount,
 	} = useStoreSelector(selectors.imageStats);
 
-	const remainingUncompressedImages = imageCount - totalCompressedCount;
+	const remainingUncompressedImages = imageCount - totalCompressedCount - erroredTotalCount;
 
 	return <div className="overview_Container">
 		{remainingUncompressedImages > 0 &&

@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction, current } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {
 	SiteDataBySiteID,
 	SiteData,
@@ -7,6 +7,7 @@ import {
 	FileStatus,
 } from '../../types';
 import { reportAnalytics, ANALYTIC_EVENT_TYPES } from '../analytics';
+import { erroredImageFilter } from './selectors';
 
 interface SiteActionPayload {
 	siteID: string;
@@ -148,6 +149,7 @@ export const sitesSlice = createSlice({
 		},
 		optimizationRequested: (state, action: PayloadAction<{ siteID: string, selectedImageIDs: string[] }>) => {
 			reportAnalytics(ANALYTIC_EVENT_TYPES.OPTIMIZE_START);
+
 			return mergeSiteState(
 				state,
 				action.payload,
@@ -155,7 +157,6 @@ export const sitesSlice = createSlice({
 					optimizationStatus: OptimizerStatus.RUNNING,
 					selectedImageIDs: action.payload.selectedImageIDs,
 					compressionListCounter: 0,
-					erroredTotalCount: 0,
 				},
 			);
 		},
@@ -171,7 +172,7 @@ export const sitesSlice = createSlice({
 			 * isChecked field
 			 */
 			forEachImageDataObject(state[siteID], (d) => {
-				if (d.compressedImageHash) {
+				if (d.compressedImageHash || d.errorMessage) {
 					d.isChecked = false
 				}
 			});
@@ -226,9 +227,10 @@ export const sitesSlice = createSlice({
 
 			siteState.compressionListCounter = siteState.compressionListCounter + 1;
 			siteState.compressionListCompletionPercentage = (siteState.compressionListCounter / siteState.selectedImageIDs.length) * 100;
-			siteState.erroredTotalCount = siteState.erroredTotalCount + 1;
 
-			reportAnalytics(ANALYTIC_EVENT_TYPES.OPTIMIZE_FAILURE, { errorCount: siteState.erroredTotalCount });
+			const errorCount = Object.values(siteState.imageData).filter(erroredImageFilter).length;
+
+			reportAnalytics(ANALYTIC_EVENT_TYPES.OPTIMIZE_FAILURE, { errorCount });
 			return state;
 		},
 		isOverviewSelected: (state, action: PayloadAction<{ siteID: string, isOverviewSelected: boolean }>) => {

@@ -8,6 +8,7 @@ import {
 	SiteData,
 	Store,
 	RuntimeStore,
+	ImageData,
 } from '../types';
 import { BACKUP_DIR_NAME, IPC_EVENTS } from '../constants';
 import { getFileHash, saveImageDataToDisk } from './utils';
@@ -35,6 +36,13 @@ const jpegRecompressBin = path.join(__dirname, '..', '..', 'vendor', process.pla
 
 if (!fs.existsSync(jpegRecompressBin)) {
 	reportNoBinFound(jpegRecompressBin);
+}
+
+function mergeImageData(imageData: ImageData, newFields: Partial<ImageData>): ImageData {
+	return {
+		...imageData,
+		...newFields,
+	}
 }
 
 /**
@@ -65,7 +73,7 @@ export function compressImagesFactory(serviceContainer: LocalMain.ServiceContain
 			/**
 			 * deep clone this so that the existing store doesn not get corrupted and remains intact until we explicity update it
 			 */
-			const siteImageData: SiteData = cloneDeep(imageDataStore.getStateBySiteID(siteID));
+			const siteData: SiteData = cloneDeep(imageDataStore.getStateBySiteID(siteID));
 
 			const updatedImageData: SiteData['imageData'] = {};
 
@@ -76,16 +84,19 @@ export function compressImagesFactory(serviceContainer: LocalMain.ServiceContain
 
 				serviceContainer.sendIPCEvent(IPC_EVENTS.COMPRESS_IMAGE_STARTED, siteID, md5Hash);
 
-				const currentImageData = siteImageData.imageData[md5Hash];
+				const currentImageData = siteData.imageData[md5Hash];
 				const { filePath } = currentImageData;
 
 				if (!fs.existsSync(filePath)) {
+					const errorMessage = 'File not found!';
 					serviceContainer.sendIPCEvent(
 						IPC_EVENTS.COMPRESS_IMAGE_FAIL,
 						siteID,
 						md5Hash,
-						'File not found!',
+						errorMessage
 					);
+
+					updatedImageData[md5Hash] = mergeImageData(currentImageData, { errorMessage });
 
 					continue;
 				}
@@ -145,31 +156,35 @@ export function compressImagesFactory(serviceContainer: LocalMain.ServiceContain
 
 					cp.on('close', async (code) => {
 						if (code !== 0) {
+							const errorMessage = `Failed to process ${filePath}. Exited with code ${code}`;
 							serviceContainer.sendIPCEvent(
 								IPC_EVENTS.COMPRESS_IMAGE_FAIL,
 								siteID,
 								md5Hash,
-								`Failed to process ${filePath}. Exited with code ${code}`,
+								errorMessage,
 							);
+
+							updatedImageData[md5Hash] = mergeImageData(currentImageData, { errorMessage });
+
 							resolve();
 							return;
 						}
 
-						updatedImageData[md5Hash] = {
-							...currentImageData,
+						updatedImageData[md5Hash] = mergeImageData(currentImageData, {
 							compressedImageHash: await getFileHash(filePath),
 							compressedSize: fs.statSync(filePath).size,
-						};
+						});
 
 						serviceContainer.sendIPCEvent(IPC_EVENTS.COMPRESS_IMAGE_SUCCESS, siteID, updatedImageData[md5Hash]);
 
 						resolve();
 					});
 				});
+
 				imageDataStore.setStateBySiteID(siteID, {
-					...siteImageData,
+					...siteData,
 					imageData: {
-						...siteImageData.imageData,
+						...siteData.imageData,
 						...updatedImageData
 					},
 				});
