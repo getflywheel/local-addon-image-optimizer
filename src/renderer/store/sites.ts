@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction, current } from '@reduxjs/toolkit';
 import {
 	CachedImageDataBySiteID,
-	SiteImageData,
+	SiteData,
 	OptimizerStatus,
 	ImageData,
 	FileStatus,
@@ -10,11 +10,11 @@ import { reportAnalytics, ANALYTIC_EVENT_TYPES } from '../analytics';
 
 interface SiteActionPayload {
 	siteID: string;
-	siteImageData: SiteImageData;
+	siteImageData: SiteData;
 	error: Error;
 }
 
-function mergeSiteState(state, payload: Partial<SiteActionPayload>, newState?: Partial<SiteImageData>) {
+function mergeSiteState(state, payload: Partial<SiteActionPayload>, newState?: Partial<SiteData>) {
 	const { siteID, siteImageData } = payload;
 
 	state[siteID] = {
@@ -26,7 +26,7 @@ function mergeSiteState(state, payload: Partial<SiteActionPayload>, newState?: P
 	return state;
 }
 
-function generateInitialSiteState(): Partial<SiteImageData> {
+function generateInitialSiteState(): Partial<SiteData> {
 	return {
 		scanInProgress: false,
 		areAllFilesSelected: true,
@@ -35,7 +35,7 @@ function generateInitialSiteState(): Partial<SiteImageData> {
 	};
 }
 
-function forEachImageDataObject(state: SiteImageData, cb: (d: ImageData) => void) {
+function forEachImageDataObject(state: SiteData, cb: (d: ImageData) => void) {
 	Object.values(state.imageData).forEach((d) => {
 		cb(d);
 	});
@@ -116,7 +116,7 @@ export const sitesSlice = createSlice({
 			reportAnalytics(ANALYTIC_EVENT_TYPES.SCAN_FAILURE);
 			return state;
 		},
-		setSiteImageData: (state, action: PayloadAction<Omit<SiteActionPayload, 'error'>>) => {
+		setSiteData: (state, action: PayloadAction<Omit<SiteActionPayload, 'error'>>) => {
 			return mergeSiteState(state, action.payload);
 		},
 		setImageSelected: (state, action: PayloadAction<{ siteID: string, imageID: string, isChecked: boolean }>) => {

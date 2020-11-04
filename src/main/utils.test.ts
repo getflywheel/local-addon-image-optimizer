@@ -5,7 +5,7 @@ import md5 from 'md5';
 import * as Local from '@getflywheel/local';
 import * as LocalMain from '@getflywheel/local/main';
 import {
-	SiteImageData,
+	SiteData,
 } from '../types';
 import {
 	saveImageDataToDisk,
@@ -180,6 +180,6 @@ describe('hasImageBeenCompressed', () => {
 			},
 		};
 
-		expect(getImageIfCompressed(originalImageHash, imageData as SiteImageData['imageData'])).toBeFalsy();
+		expect(getImageIfCompressed(originalImageHash, imageData as SiteData['imageData'])).toBeFalsy();
 	});
 });

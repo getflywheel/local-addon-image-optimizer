@@ -3,12 +3,12 @@ import { getFormattedTimestamp } from './utils';
 import { Button, Text, TableList, TableListRow } from '@getflywheel/local-components';
 import classnames from 'classnames';
 import { formatCompressedPercentage, convertBytesToMb } from './utils';
-import { SiteImageData } from '../types';
+import { SiteData } from '../types';
 import CheckmarkMedSVG from './_assets/svg/Checkmark-med.svg';
 import WarningSVG from './_assets/svg/warning.svg';
 
 interface IProps {
-	siteImageData: SiteImageData,
+	siteImageData: SiteData,
 	handleScanForImages: () => void,
 	imageCount: number;
 	totalCompressedCount: number;

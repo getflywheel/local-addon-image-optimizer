@@ -1,6 +1,6 @@
 import { ipcRenderer } from 'electron';
 import { IPC_EVENTS } from '../constants';
-import { ImageData, SiteImageData } from '../types';
+import { ImageData, SiteData } from '../types';
 import { store, actions } from './store/store';
 
 export function setupListeners() {
@@ -31,7 +31,7 @@ export function setupListeners() {
 		},
 		{
 			channel: IPC_EVENTS.SCAN_IMAGES_COMPLETE,
-			cb: (_, siteID: string, siteImageData: SiteImageData) => {
+			cb: (_, siteID: string, siteImageData: SiteData) => {
 				store.dispatch(actions.scanSuccess({ siteID, siteImageData }));
 			},
 		},

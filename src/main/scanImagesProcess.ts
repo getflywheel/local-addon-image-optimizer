@@ -1,6 +1,6 @@
 import fs from 'fs-extra';
 import { getImageFilePaths, getImageIfCompressed, getFileHash } from './utils';
-import { SiteImageData, Store } from '../types';
+import { SiteData, Store } from '../types';
 
 const scanImages = async (payload) => {
 	const { webRoot } = payload;
@@ -13,7 +13,7 @@ const getImageStats = async (payload) => {
 	const { filePaths, imageData } = payload;
 
 	return await filePaths.reduce(async (
-		imageDataAccumulator: Promise<SiteImageData['imageData']>,
+		imageDataAccumulator: Promise<SiteData['imageData']>,
 		filePath: string,
 	) => {
 		const fileSize = fs.statSync(filePath).size;
@@ -36,7 +36,7 @@ const getImageStats = async (payload) => {
 				originalSize: fileSize,
 			},
 		};
-	}, Promise.resolve({})) as SiteImageData['imageData'];
+	}, Promise.resolve({})) as SiteData['imageData'];
 };
 
 function processSafeSend(name) {

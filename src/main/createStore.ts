@@ -1,5 +1,5 @@
 import {
-	SiteImageData,
+	SiteData,
 	CachedImageDataBySiteID,
 	Store,
 	RuntimeData,
@@ -22,8 +22,8 @@ export function createStore(initialState: CachedImageDataBySiteID = {}): Store {
 		 *
 		 * @param siteID
 		 */
-		getStateBySiteID(siteID: string): SiteImageData {
-			return state[siteID] || ({ imageData: {}} as SiteImageData);
+		getStateBySiteID(siteID: string): SiteData {
+			return state[siteID] || ({ imageData: {}} as SiteData);
 		},
 
 		/**
@@ -39,17 +39,17 @@ export function createStore(initialState: CachedImageDataBySiteID = {}): Store {
 		},
 
 		/**
-		 * Merges in new SiteImageData with existing SiteImageData or
-		 * creates a new entry for that SiteImageData
+		 * Merges in new SiteData with existing SiteData or
+		 * creates a new entry for that SiteData
 		 *
 		 * @param siteID
 		 * @param newState
 		 */
-		setStateBySiteID(siteID: string, newState: Partial<SiteImageData>): void {
+		setStateBySiteID(siteID: string, newState: Partial<SiteData>): void {
 			state = {
 				...state,
 				[siteID]: {
-					...(state[siteID] || {} as SiteImageData),
+					...(state[siteID] || {} as SiteData),
 					...newState,
 				}
 			};

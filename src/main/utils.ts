@@ -7,7 +7,7 @@ import * as Local from '@getflywheel/local';
 
 import {
 	ImageData,
-	SiteImageData,
+	SiteData,
 } from '../types';
 
 import { COMPRESSED_IMAGE_DATA_FILE_NAME } from '../constants';
@@ -93,6 +93,6 @@ export async function getImageFilePaths(webRoot: Local.Site['paths']['webRoot'])
  * @param fileHash
  * @param imageData
  */
-export function getImageIfCompressed(fileHash: string, imageData: SiteImageData['imageData']) {
+export function getImageIfCompressed(fileHash: string, imageData: SiteData['imageData']) {
 	return Object.values(imageData).find((data: ImageData) => data.compressedImageHash === fileHash);
 }

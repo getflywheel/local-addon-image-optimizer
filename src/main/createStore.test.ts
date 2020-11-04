@@ -3,7 +3,7 @@ import 'jest-extended';
 import { createStore } from './createStore';
 import {
 	CachedImageDataBySiteID,
-	SiteImageData
+	SiteData
 } from '../types';
 
 describe('createStore', () => {
@@ -16,11 +16,11 @@ describe('createStore', () => {
 	const initialState: CachedImageDataBySiteID = {
 		[siteIDOne]: {
 			imageData: {},
-		} as SiteImageData,
+		} as SiteData,
 	};
 
 	const secondState: CachedImageDataBySiteID = {
-		[siteIDTwo]: {} as SiteImageData,
+		[siteIDTwo]: {} as SiteData,
 	};
 
 	const thirdState: CachedImageDataBySiteID = {
@@ -30,7 +30,7 @@ describe('createStore', () => {
 			originalTotalSize: 120303,
 			compressedTotalSize: 494,
 			imageCount: 394,
-		} as SiteImageData,
+		} as SiteData,
 	}
 
 	beforeAll(() => {

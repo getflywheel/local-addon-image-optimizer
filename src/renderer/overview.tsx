@@ -2,12 +2,12 @@ import React from 'react';
 import { Banner } from '@getflywheel/local-components';
 import LastOptimizeStatus from './lastOptimizeStatus';
 import { selectors, useStoreSelector } from './store/store';
-import { SiteImageData } from '../types';
+import { SiteData } from '../types';
 
 interface IProps {
 	setOverviewSelected: (x: boolean) => void,
 	handleScanForImages: () => void,
-	siteImageData: SiteImageData,
+	siteImageData: SiteData,
 	siteID: string,
 }
 
