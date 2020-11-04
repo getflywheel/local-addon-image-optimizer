@@ -29,6 +29,7 @@ export const ColFileName = ( props: IFileNameProps ) =>  {
 			<div
 				className='fileList_File_Name_Row'
 				title={formattedFilePath}
+				data-path={dataArgs.cellData}
 			>
 				{formattedFilePath}
 			</div>
