@@ -62,7 +62,7 @@ export const FileListView = (props: IFileListViewProps) => {
 						dataArgs={dataArgs}
 						handleCheckBoxChange={handleCheckBoxChange}
 						toggleSelectAll={toggleSelectAll}
-						toggleSelectAllValue={siteImageData.selectAllFilesValue}
+						areAllFilesSelected={siteImageData.areAllFilesSelected}
 						optimizationStatus={siteImageData.optimizationStatus}
 					/>
 				);

@@ -20,7 +20,7 @@ export interface SiteImageData {
 	lastScan?: number;
 	scanInProgress?: boolean;
 	scanError?: GenericObject;
-	selectAllFilesValue?: boolean;
+	areAllFilesSelected?: boolean;
 	optimizationStatus?: OptimizerStatus;
 	compressionListCounter?: number;
 	compressionListCompletionPercentage?: number;
