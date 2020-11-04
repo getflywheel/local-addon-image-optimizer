@@ -14,7 +14,7 @@ interface IFileStatusProps {
 	dataArgs: IVirtualTableCellRendererDataArgs,
 	handleCheckBoxChange: (imageID: string) => (isChecked: boolean) => void,
 	toggleSelectAll: (isChecked: boolean) => void,
-	toggleSelectAllValue: boolean,
+	areAllFilesSelected: boolean,
 	optimizationStatus: OptimizerStatus,
 }
 
@@ -23,7 +23,7 @@ export const ColFileStatus = (props: IFileStatusProps) =>  {
 		dataArgs,
 		handleCheckBoxChange,
 		toggleSelectAll,
-		toggleSelectAllValue,
+		areAllFilesSelected,
 		optimizationStatus,
 	} = props;
 
@@ -33,7 +33,7 @@ export const ColFileStatus = (props: IFileStatusProps) =>  {
 		return (
 			<div>
 				<Checkbox
-					checked={dataArgs.isHeader ? toggleSelectAllValue : dataArgs.rowData.isChecked}
+					checked={dataArgs.isHeader ? areAllFilesSelected : dataArgs.rowData.isChecked}
 					onChange={onChange}
 				/>
 			</div>

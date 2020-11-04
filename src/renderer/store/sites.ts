@@ -29,7 +29,7 @@ function mergeSiteState(state, payload: Partial<SiteActionPayload>, newState?: P
 function generateInitialSiteState(): Partial<SiteImageData> {
 	return {
 		scanInProgress: false,
-		selectAllFilesValue: true,
+		areAllFilesSelected: true,
 		optimizationStatus: OptimizerStatus.BEFORE,
 		compressionListCompletionPercentage: 0,
 	};
@@ -79,7 +79,7 @@ export const sitesSlice = createSlice({
 		},
 		scanSuccess: (state, action: PayloadAction<Omit<SiteActionPayload, 'error'>>) => {
 			const { siteID, siteImageData } = action.payload;
-			const { selectAllFilesValue } = state[siteID];
+			const { areAllFilesSelected } = state[siteID];
 
 			/**
 			 * merge in UI specific things (like whether or not an image is selected)
@@ -88,7 +88,7 @@ export const sitesSlice = createSlice({
 				acc[key] = {
 					...state[siteID].imageData[key],
 					...data,
-					isChecked: selectAllFilesValue ? true : acc[key].isChecked,
+					isChecked: areAllFilesSelected ? true : acc[key].isChecked,
 				};
 
 				return acc;
@@ -129,7 +129,7 @@ export const sitesSlice = createSlice({
 			siteState.imageData[imageID].isChecked = isChecked;
 
 			if (!isChecked) {
-				siteState.selectAllFilesValue = false;
+				siteState.areAllFilesSelected = false;
 			}
 
 			return state;
@@ -142,7 +142,7 @@ export const sitesSlice = createSlice({
 				reportAnalytics(ANALYTIC_EVENT_TYPES.OPTIMIZE_EXCLUDE_ALL_FILES);
 
 			Object.values(siteState.imageData).forEach((d) => d.isChecked = isChecked);
-			siteState.selectAllFilesValue = isChecked;
+			siteState.areAllFilesSelected = isChecked;
 
 			return state;
 		},
