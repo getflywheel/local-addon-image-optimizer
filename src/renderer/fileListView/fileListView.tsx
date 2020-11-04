@@ -15,7 +15,7 @@ import { FileListHeader } from './fileListHeader';
 import { OptimizerStatus, SiteImageData, Preferences } from '../../types';
 import { IPC_EVENTS } from '../../constants';
 import { selectors, useStoreSelector } from '../store/store';
-import useContextMenu from '../contextMenu';
+import {useContextMenu, noContextMenuId, ioFileListContextMenuId } from '../contextMenu';
 
 interface IFileListViewProps {
 	siteImageData: SiteImageData;
@@ -142,9 +142,9 @@ export const FileListView = (props: IFileListViewProps) => {
 				siteID={siteID}
 			/>
 				<ProgressBar progress={siteImageData.compressionListCompletionPercentage} />
-			<div className='fileListViewer_File_List' id="no-context-menu">
+			<div className='fileListViewer_File_List' id={noContextMenuId}>
 				<VirtualTable
-					id="io-file-list"
+					id={ioFileListContextMenuId}
 					rowClassName='fileList_Virtual_Table_Row'
 					cellRenderer={cellRender}
 					data={siteImageData.optimizationStatus === OptimizerStatus.BEFORE ? uncompressedImages : selectedImages}
