@@ -29,7 +29,7 @@ const siteStateSelector = () => {
 	return state.sites[state.activeSiteID];
 }
 
-const siteImageDataSelector = createSelector(
+const siteDataSelector = createSelector(
 	siteStateSelector,
 	(siteState) => siteState.imageData,
 );
@@ -48,7 +48,7 @@ const compressedSiteImages = createSelector(
 );
 
 const totalImagesSizeBeforeCompression = createSelector(
-	siteImageDataSelector,
+	siteDataSelector,
 	(imageData) => Object.values(imageData).reduce((totalSize, d) => {
 		totalSize += d.originalSize;
 
@@ -57,7 +57,7 @@ const totalImagesSizeBeforeCompression = createSelector(
 );
 
 const originalSizeOfCompressedImages = createSelector(
-	siteImageDataSelector,
+	siteDataSelector,
 	(imageData) => Object.values(imageData).reduce((size, d) => {
 		if (d.compressedImageHash) {
 			size += d.originalSize;
@@ -68,7 +68,7 @@ const originalSizeOfCompressedImages = createSelector(
 );
 
 const sizeOfCompressedImages = createSelector(
-	siteImageDataSelector,
+	siteDataSelector,
 	(imageData) => Object.values(imageData).reduce((size, d) => {
 		if (d.compressedImageHash) {
 			size += d.compressedSize;

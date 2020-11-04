@@ -31,8 +31,8 @@ export function setupListeners() {
 		},
 		{
 			channel: IPC_EVENTS.SCAN_IMAGES_COMPLETE,
-			cb: (_, siteID: string, siteImageData: SiteData) => {
-				store.dispatch(actions.scanSuccess({ siteID, siteImageData }));
+			cb: (_, siteID: string, siteData: SiteData) => {
+				store.dispatch(actions.scanSuccess({ siteID, siteData }));
 			},
 		},
 		{

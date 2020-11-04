@@ -11,7 +11,7 @@ import { ConfirmOptimizationModal } from './ConfirmOptimizationModal';
 import { selectors, useStoreSelector } from '../store/store';
 
 interface IFileListHeaderProps {
-	siteImageData: SiteData,
+	siteData: SiteData,
 	setOverviewSelected: (x: boolean) => void,
     invokeModal: (ModalContents: React.FC, onCancel?: Function, onConfirm?: Function) => void,
 	selectedImages: ImageData[],
@@ -22,7 +22,7 @@ interface IFileListHeaderProps {
 
 export const FileListHeader = (props: IFileListHeaderProps) => {
 	const {
-		siteImageData,
+		siteData,
 		setOverviewSelected,
 		invokeModal,
 		selectedImages,
@@ -37,7 +37,7 @@ export const FileListHeader = (props: IFileListHeaderProps) => {
 
     const disableOptimizeButton = selectedImages.length > 0 ? false : true;
 
-    if (siteImageData.optimizationStatus === OptimizerStatus.BEFORE) {
+    if (siteData.optimizationStatus === OptimizerStatus.BEFORE) {
         return (
             <div className='fileView_Header'>
                 <TextButton
@@ -61,7 +61,7 @@ export const FileListHeader = (props: IFileListHeaderProps) => {
                 </Button>
             </div>
         );
-    } else if (siteImageData.optimizationStatus === OptimizerStatus.RUNNING) {
+    } else if (siteData.optimizationStatus === OptimizerStatus.RUNNING) {
         return (
             <div className='fileView_Header'>
                 <div className='fileView_Header_Text'>
@@ -80,7 +80,7 @@ export const FileListHeader = (props: IFileListHeaderProps) => {
                 </Button>
             </div>
         );
-    } else if (siteImageData.optimizationStatus === OptimizerStatus.COMPLETE) {
+    } else if (siteData.optimizationStatus === OptimizerStatus.COMPLETE) {
         return (
             <div className='fileView_Header'>
                 <div className='fileView_Header_Text'>

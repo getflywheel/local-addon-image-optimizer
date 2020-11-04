@@ -15,7 +15,7 @@ const ImageOptimizer = (props: IProps) => {
 	const { match } = props;
 	const { siteID } = match.params;
 
-	const [activeSiteID, preferences, siteImageData] = useStoreSelector((state) => ([
+	const [activeSiteID, preferences, siteData] = useStoreSelector((state) => ([
 		state.activeSiteID,
 		state.preferences,
 		state.sites[siteID],
@@ -82,19 +82,19 @@ const ImageOptimizer = (props: IProps) => {
 		return null;
 	}
 
-	if (!siteImageData) {
+	if (!siteData) {
 		store.dispatch(actions.addSite({ siteID }));
 
 		return null;
 	}
 
-	const { isOverviewSelected } = siteImageData;
+	const { isOverviewSelected } = siteData;
 
 	switch (isOverviewSelected) {
 		case false:
 			return (
 				<FileListView
-					siteImageData={siteImageData}
+					siteData={siteData}
 					handleCheckBoxChange={handleCheckBoxChange}
 					toggleSelectAll={toggleSelectAll}
 					compressSelectedImages={compressSelectedImages}
@@ -109,7 +109,7 @@ const ImageOptimizer = (props: IProps) => {
 		default:
 			return (
 				<Overview
-					siteImageData={siteImageData}
+					siteData={siteData}
 					setOverviewSelected={setOverviewSelected}
 					handleScanForImages={scanForImages}
 					siteID={siteID}

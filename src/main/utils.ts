@@ -14,14 +14,14 @@ import { COMPRESSED_IMAGE_DATA_FILE_NAME } from '../constants';
 
 
 export function saveImageDataToDisk(imageDataStore, serviceContainer: LocalMain.ServiceContainerServices): void {
-	const siteImageData = serviceContainer.userData.get(COMPRESSED_IMAGE_DATA_FILE_NAME, {});
+	const siteData = serviceContainer.userData.get(COMPRESSED_IMAGE_DATA_FILE_NAME, {});
 
 	/**
 	 * @todo We will likely need to figure out how to clean this up when sites are deleted
 	 */
 
 	serviceContainer.userData.set(COMPRESSED_IMAGE_DATA_FILE_NAME, {
-		...siteImageData,
+		...siteData,
 		...imageDataStore.getState(),
 	});
 };

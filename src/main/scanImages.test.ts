@@ -42,11 +42,11 @@ describe('scanImages', () => {
 		imageDataStore
 	);
 	const siteID = '1234';
-	let siteImageData;
+	let siteData;
 
 
 	beforeAll(async () => {
-		siteImageData = await scanImages(siteID);
+		siteData = await scanImages(siteID);
 	});
 
 	it('calls serviceContainer.getSite', () => {
@@ -76,11 +76,11 @@ describe('scanImages', () => {
 	});
 
 	it('updates imageDataStore[siteID] with the newly scanned imageData', () => {
-		expect(imageDataStore.getStateBySiteID(siteID)).toEqual(siteImageData);
+		expect(imageDataStore.getStateBySiteID(siteID)).toEqual(siteData);
 	});
 
-	it('siteImageData.imageData contains keys and the appropriate fields for each of the hashed files', () => {
-		const { imageData } = siteImageData;
+	it('siteData.imageData contains keys and the appropriate fields for each of the hashed files', () => {
+		const { imageData } = siteData;
 
 		expect(imageData).toContainAllKeys(mockFilePaths.map(md5));
 

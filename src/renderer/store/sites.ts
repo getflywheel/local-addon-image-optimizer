@@ -11,16 +11,16 @@ import { erroredImageFilter } from './selectors';
 
 interface SiteActionPayload {
 	siteID: string;
-	siteImageData: SiteData;
+	siteData: SiteData;
 	error: Error;
 }
 
 function mergeSiteState(state, payload: Partial<SiteActionPayload>, newState?: Partial<SiteData>) {
-	const { siteID, siteImageData } = payload;
+	const { siteID, siteData } = payload;
 
 	state[siteID] = {
 		...state[siteID],
-		...siteImageData,
+		...siteData,
 		...newState,
 	};
 
@@ -49,9 +49,9 @@ export const sitesSlice = createSlice({
 	initialState: {} as SiteDataBySiteID,
 	reducers: {
 		hydrateSites: (_, action: PayloadAction<SiteDataBySiteID>) => {
-			const initialState = Object.entries(action.payload).reduce((acc, [id, siteImageData]) => {
+			const initialState = Object.entries(action.payload).reduce((acc, [id, siteData]) => {
 				acc[id] = {
-					...siteImageData,
+					...siteData,
 					...generateInitialSiteState(),
 				};
 
@@ -79,13 +79,13 @@ export const sitesSlice = createSlice({
 			return state;
 		},
 		scanSuccess: (state, action: PayloadAction<Omit<SiteActionPayload, 'error'>>) => {
-			const { siteID, siteImageData } = action.payload;
+			const { siteID, siteData } = action.payload;
 			const { areAllFilesSelected } = state[siteID];
 
 			/**
 			 * merge in UI specific things (like whether or not an image is selected)
 			 */
-			const imageData = Object.entries(siteImageData.imageData).reduce((acc, [key, data]) => {
+			const imageData = Object.entries(siteData.imageData).reduce((acc, [key, data]) => {
 				acc[key] = {
 					...state[siteID].imageData[key],
 					...data,
@@ -93,11 +93,11 @@ export const sitesSlice = createSlice({
 				};
 
 				return acc;
-			}, siteImageData.imageData);
+			}, siteData.imageData);
 
 			state[siteID] = {
 				...state[siteID],
-				...siteImageData,
+				...siteData,
 				scanInProgress: false,
 				imageData,
 			};
@@ -105,7 +105,7 @@ export const sitesSlice = createSlice({
 			reportAnalytics(ANALYTIC_EVENT_TYPES.SCAN_SUCCESS);
 			return state;
 		},
-		scanFailure: (state, action: PayloadAction<Omit<SiteActionPayload, 'siteImageData'>>) => {
+		scanFailure: (state, action: PayloadAction<Omit<SiteActionPayload, 'siteData'>>) => {
 			const { siteID, error } = action.payload;
 
 			state[siteID] = {
