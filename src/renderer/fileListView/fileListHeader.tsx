@@ -4,14 +4,14 @@ import {
 	TextButton,
 } from '@getflywheel/local-components';
 import { ImageData } from '../../types';
-import { OptimizerStatus, SiteImageData } from '../../types';
+import { OptimizerStatus, SiteData } from '../../types';
 import { convertBytesToMb } from '../utils';
 import ChevronArrowSVG from '../_assets/svg/chevron-arrow-right.svg';
 import { ConfirmOptimizationModal } from './ConfirmOptimizationModal';
 import { selectors, useStoreSelector } from '../store/store';
 
 interface IFileListHeaderProps {
-	siteImageData: SiteImageData,
+	siteImageData: SiteData,
 	setOverviewSelected: (x: boolean) => void,
     invokeModal: (ModalContents: React.FC, onCancel?: Function, onConfirm?: Function) => void,
 	selectedImages: ImageData[],

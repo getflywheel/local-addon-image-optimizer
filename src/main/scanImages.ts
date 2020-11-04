@@ -1,6 +1,6 @@
 import path from 'path';
 import * as LocalMain from '@getflywheel/local/main';
-import { SiteImageData, Store } from '../types';
+import { SiteData, Store } from '../types';
 import { saveImageDataToDisk } from './utils';
 import { IPC_EVENTS } from '../constants';
 import { reportScanRequest, reportScanSuccess, reportScanFailure } from './errorReporting';
@@ -62,7 +62,7 @@ export function scanImagesFactory(serviceContainer: LocalMain.ServiceContainerSe
 			 * @todo - remove @ts-ignore once the new Local api changes are published
 			 */
 			// @ts-ignore
-			const updatedImageData = await processMessageHelper<SiteImageData['imageData']>(
+			const updatedImageData = await processMessageHelper<SiteData['imageData']>(
 				'get-image-stats',
 				{
 					filePaths,
@@ -71,7 +71,7 @@ export function scanImagesFactory(serviceContainer: LocalMain.ServiceContainerSe
 				/**
 				 * @todo - kill the type casting once this is exposed in Local API
 				 */
-			) as SiteImageData['imageData'];
+			) as SiteData['imageData'];
 
 			const totalCompressedCount = Object.values(updatedImageData).reduce(
 				(acc, data) => {
@@ -83,17 +83,17 @@ export function scanImagesFactory(serviceContainer: LocalMain.ServiceContainerSe
 				}, 0
 			);
 
-			const nextSiteImageData: SiteImageData = {
+			const nextSiteData: SiteData = {
 				...siteData,
 				imageData: updatedImageData,
 				lastScan: Date.now(),
 			};
 
-			imageDataStore.setStateBySiteID(siteID, nextSiteImageData);
+			imageDataStore.setStateBySiteID(siteID, nextSiteData);
 
 			saveImageDataToDisk(imageDataStore, serviceContainer);
 
-			serviceContainer.sendIPCEvent(IPC_EVENTS.SCAN_IMAGES_COMPLETE, siteID, nextSiteImageData);
+			serviceContainer.sendIPCEvent(IPC_EVENTS.SCAN_IMAGES_COMPLETE, siteID, nextSiteData);
 
 			reportScanSuccess(siteID, filePaths.length, totalCompressedCount);
 		} catch (error) {

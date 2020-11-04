@@ -1,9 +1,9 @@
 import { createSelector } from '@reduxjs/toolkit';
-import { SiteImageData } from '../../types';
+import { SiteData } from '../../types';
 import { store } from './store';
 
 
-const getSelectedIDCountByKey = (key: 'compressedSize' | 'originalSize') => (siteState: SiteImageData) => {
+const getSelectedIDCountByKey = (key: 'compressedSize' | 'originalSize') => (siteState: SiteData) => {
 	const { selectedImageIDs, imageData } = siteState;
 
 	if (!selectedImageIDs) {
@@ -34,13 +34,13 @@ const siteImageDataSelector = createSelector(
 
 const uncompressedSiteImages = createSelector(
 	siteStateSelector,
-	(siteState: SiteImageData) => Object.values(siteState.imageData).filter((d) => !d.compressedImageHash),
+	(siteState: SiteData) => Object.values(siteState.imageData).filter((d) => !d.compressedImageHash),
 );
 
 
 const compressedSiteImages = createSelector(
 	siteStateSelector,
-	(siteState: SiteImageData) => Object.values(siteState.imageData).filter(((d) => d.compressedImageHash)),
+	(siteState: SiteData) => Object.values(siteState.imageData).filter(((d) => d.compressedImageHash)),
 );
 
 const totalImagesSizeBeforeCompression = createSelector(
@@ -76,7 +76,7 @@ const sizeOfCompressedImages = createSelector(
 
 const selectedSiteImages = createSelector(
 	siteStateSelector,
-	(siteState: SiteImageData) => Object.values(siteState.imageData).filter((d) => d.isChecked),
+	(siteState: SiteData) => Object.values(siteState.imageData).filter((d) => d.isChecked),
 );
 
 const siteImageCount = createSelector(

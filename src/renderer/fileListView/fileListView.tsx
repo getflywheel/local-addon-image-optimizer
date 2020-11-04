@@ -12,13 +12,13 @@ import {
 	FlyModal
 } from '@getflywheel/local-components';
 import { FileListHeader } from './fileListHeader';
-import { OptimizerStatus, SiteImageData, Preferences } from '../../types';
+import { OptimizerStatus, SiteData, Preferences } from '../../types';
 import { IPC_EVENTS } from '../../constants';
 import { selectors, useStoreSelector } from '../store/store';
 import {useContextMenu, noContextMenuId, ioFileListContextMenuId } from '../contextMenu';
 
 interface IFileListViewProps {
-	siteImageData: SiteImageData;
+	siteImageData: SiteData;
 	handleCheckBoxChange: (imageID: string) => (isChecked: boolean) => void;
 	toggleSelectAll: (isChecked: boolean) => void;
 	compressSelectedImages: () => void;

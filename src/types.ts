@@ -15,7 +15,7 @@ export enum OptimizerStatus {
 	COMPLETE = 'complete'
 }
 
-export interface SiteImageData {
+export interface SiteData {
 	imageData: { [imageID: string]: ImageData };
 	lastScan?: number;
 	scanInProgress?: boolean;
@@ -31,7 +31,7 @@ export interface SiteImageData {
 
 
 export interface CachedImageDataBySiteID {
-	[siteID: string]: SiteImageData;
+	[siteID: string]: SiteData;
 }
 
 export interface SiteRuntimeData {
@@ -44,9 +44,9 @@ export interface RuntimeData {
 
 export interface Store {
 	getState: () => CachedImageDataBySiteID;
-	getStateBySiteID: (siteID: string) => SiteImageData;
+	getStateBySiteID: (siteID: string) => SiteData;
 	setState: (newState: CachedImageDataBySiteID) => void;
-	setStateBySiteID: (siteID: string, newState: Partial<SiteImageData>) => void;
+	setStateBySiteID: (siteID: string, newState: Partial<SiteData>) => void;
 }
 
 export interface RuntimeStore {
