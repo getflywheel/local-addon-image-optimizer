@@ -73,16 +73,6 @@ export function scanImagesFactory(serviceContainer: LocalMain.ServiceContainerSe
 				 */
 			) as SiteData['imageData'];
 
-			const totalCompressedCount = Object.values(updatedImageData).reduce(
-				(acc, data) => {
-					if (data.compressedImageHash) {
-						return acc + 1;
-					} else {
-						return acc;
-					}
-				}, 0
-			);
-
 			const nextSiteData: SiteData = {
 				...siteData,
 				imageData: updatedImageData,
@@ -95,7 +85,7 @@ export function scanImagesFactory(serviceContainer: LocalMain.ServiceContainerSe
 
 			serviceContainer.sendIPCEvent(IPC_EVENTS.SCAN_IMAGES_COMPLETE, siteID, nextSiteData);
 
-			reportScanSuccess(siteID, filePaths.length, totalCompressedCount);
+			reportScanSuccess(siteID, filePaths.length);
 		} catch (error) {
 			reportScanFailure(siteID, error);
 			return error;

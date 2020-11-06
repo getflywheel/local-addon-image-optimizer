@@ -17,8 +17,8 @@ export const reportScanRequest = (siteID: string) => {
     logger.info(`Scanning REQUEST for site ${siteID}`);
 }
 
-export const reportScanSuccess = (siteID: string, imageCount: number, totalCompressedCount: number) => {
-    logger.info(`Scanning SUCCESS for site ${siteID}. Found ${imageCount} image(s). ${totalCompressedCount} already compressed.`);
+export const reportScanSuccess = (siteID: string, imageCount: number) => {
+    logger.info(`Scanning SUCCESS for site ${siteID}. Found ${imageCount} image(s).`);
 }
 
 export const reportScanFailure = (siteID: string, error: typeof Error) => {

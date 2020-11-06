@@ -4,7 +4,6 @@ import { createMockServiceContainer } from '../test/mockCreators';
 import { scanImagesFactory } from './scanImages';
 import { createStore } from './createStore';
 
-
 const sitePath = '/Users/cool-man-joe/Local Sites/twice-baked-potato';
 const serviceContainer = createMockServiceContainer(sitePath);
 
@@ -26,7 +25,6 @@ describe('scanImages', () => {
 	);
 	const siteID = '1234';
 	let siteData;
-
 
 	beforeAll(async () => {
 
@@ -71,30 +69,8 @@ describe('scanImages', () => {
 
 	it('confirms siteData contains appropriate keys', () => {
 		expect(siteData).toContainAllKeys([
-			'scanInProgress',
 			'imageData',
-			'lastScan',
-			'originalTotalSize',
-			'compressedTotalSize',
-			'imageCount',
-			'totalCompressedCount',
-			'compressedImagesOriginalSize'
+			'lastScan'
 		]);
-	});
-
-	it('confirms originalTotalSize is calculated correctly', () => {
-		expect(siteData.originalTotalSize).toBe(17000000);
-	});
-
-	it('confirms compressedTotalSize is calculated correctly', () => {
-		expect(siteData.compressedTotalSize).toBe(8500000);
-	});
-
-	it('confirms totalCompressedCount is calculated correctly', () => {
-		expect(siteData.totalCompressedCount).toBe(2);
-	});
-
-	it('confirms compressedImagesOriginalSize is calculated correctly', () => {
-		expect(siteData.compressedImagesOriginalSize).toBe(17000000);
 	});
 });
