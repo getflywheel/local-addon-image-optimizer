@@ -1,4 +1,14 @@
-export const ServiceContainer = { cradle: { localLogger: {child: jest.fn()}}};
+import { COMPRESSED_IMAGE_DATA_FILE_NAME, PREFERENCES_FILE_NAME } from '../constants';
+
+export const ServiceContainer = {
+	cradle: {
+		localLogger: { child: jest.fn() },
+		userData: {
+			get: jest.fn(() => ({ a: 'brian eno' })),
+			set: jest.fn(),
+		},
+	},
+};
 
 export const getServiceContainer = () => ServiceContainer;
 
