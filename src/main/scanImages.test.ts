@@ -3,17 +3,14 @@ import * as LocalMain from '@getflywheel/local/main';
 import { createMockServiceContainer } from '../test/mockCreators';
 import { scanImagesFactory } from './scanImages';
 import { createStore } from './createStore';
+import { workerFork } from '../test/mockLocalMain';
 
 const sitePath = '/Users/cool-man-joe/Local Sites/twice-baked-potato';
 const serviceContainer = createMockServiceContainer(sitePath);
 
 const imageDataStore = createStore();
 
-jest.mock('./errorReporting', () => ({
-	reportScanRequest: jest.fn(),
-	reportScanSuccess: jest.fn(),
-	reportScanFailure: jest.fn()
-}));
+jest.mock('./errorReporting');
 
 jest.mock('./utils');
 const utils = require('./utils');
@@ -35,6 +32,10 @@ describe('scanImages', () => {
 
 	it('calls serviceContainer.getSite', () => {
 		expect(serviceContainer.siteData.getSite.mock.calls).toBeArrayOfSize(1);
+	});
+
+	it('calls LocalMain.workerFork with the correct args', () => {
+		expect(workerFork.mock.calls).toBeArrayOfSize(1);
 	});
 
 	it('calls saveImageDataToDisk with the correct args', () => {
