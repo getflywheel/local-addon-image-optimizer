@@ -15,6 +15,8 @@ fs.statSync.mockImplementation((filePath: string) => ({
 	size: Math.floor(Math.random() * 99999) + 700
 }));
 
+const mockFileHashOne = '40cf40c608bab653903bec92ab8bd26a';
+const mockFileHashTwo = 'b47c61eec6e37403c6be0cea67aa7a8e';
 
 const mockFilePaths = [
 	'fake/path/file1.jpeg',
@@ -22,8 +24,8 @@ const mockFilePaths = [
 ];
 
 const mockImageData = {
-	'40cf40c608bab653903bec92ab8bd26a': {
-		originalImageHash: '40cf40c608bab653903bec92ab8bd26a',
+	[mockFileHashOne]: {
+		originalImageHash: mockFileHashOne,
 		compressedImageHash: 'snthsnthsnthstnh',
 		filePath: 'fake/path/file1.jpeg',
 		originalSize: 10000000,
@@ -31,8 +33,8 @@ const mockImageData = {
 		fileStatus: 'succeeded',
 		isChecked: true,
 	},
-	'b47c61eec6e37403c6be0cea67aa7a8e': {
-		originalImageHash: 'b47c61eec6e37403c6be0cea67aa7a8e',
+	[mockFileHashTwo]: {
+		originalImageHash: mockFileHashTwo,
 		compressedImageHash: 'hdhdhdhdhdhdhdhdhd',
 		filePath: 'fake/path/file2.jpeg',
 		originalSize: 7000000,
@@ -53,8 +55,8 @@ utils.getFileHash.mockImplementation((filePath) => {
 	return md5(filePath);
 });
 utils.getImageIfCompressed.mockImplementation((fileHash, imageData) => {
-	if(fileHash === '40cf40c608bab653903bec92ab8bd26a') {
-		return mockImageData["40cf40c608bab653903bec92ab8bd26a"];
+	if(fileHash === mockFileHashOne) {
+		return mockImageData[mockFileHashOne];
 	}
 	return undefined;
 });
@@ -77,8 +79,8 @@ describe('scanImagesProcess', () => {
 	it('calls getImageIfCompressed with the correct args', () => {
 		const { mock } = utils.getImageIfCompressed;
 		expect(mock.calls).toBeArrayOfSize(mockFilePaths.length);
-		expect(mock.calls[0][0]).toBe('40cf40c608bab653903bec92ab8bd26a');
-		expect(mock.calls[1][0]).toBe('b47c61eec6e37403c6be0cea67aa7a8e');
+		expect(mock.calls[0][0]).toBe(mockFileHashOne);
+		expect(mock.calls[1][0]).toBe(mockFileHashTwo);
 	});
 
 	it('calls getFileHash once for each file ', () => {
@@ -88,9 +90,9 @@ describe('scanImagesProcess', () => {
 	});
 
 	it('confirms getImageStats returns data in the correct format', () => {
-		expect(imageStats).toContainAllKeys(['40cf40c608bab653903bec92ab8bd26a', 'b47c61eec6e37403c6be0cea67aa7a8e']);
-		expect(imageStats['40cf40c608bab653903bec92ab8bd26a']).toContainKey('compressedImageHash');
-		expect(imageStats['b47c61eec6e37403c6be0cea67aa7a8e'].compressedImageHash).toBeUndefined;
+		expect(imageStats).toContainAllKeys([mockFileHashOne, mockFileHashTwo]);
+		expect(imageStats[mockFileHashOne]).toContainKey('compressedImageHash');
+		expect(imageStats[mockFileHashTwo].compressedImageHash).toBeUndefined;
 	});
 
 });

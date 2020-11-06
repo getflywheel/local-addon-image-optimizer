@@ -1,10 +1,8 @@
-import 'jest-extended';
-
 export const ServiceContainer = { cradle: { localLogger: {child: jest.fn()}}};
 
 export const getServiceContainer = () => ServiceContainer;
 
-export const workerFork = () => '';
+export const workerFork = jest.fn();
 
 export const childProcessMessagePromiseFactory = () => async (name: string, payload?: any) => {
 	if (name === 'get-file-paths') {
