@@ -1,6 +1,6 @@
 import fs from 'fs-extra';
 import { getImageFilePaths, getImageIfCompressed, getFileHash } from './utils';
-import { SiteImageData } from '../types';
+import { SiteData } from '../types';
 
 export const scanImages = async (payload) => {
 	const { webRoot } = payload;
@@ -21,7 +21,6 @@ export const getImageStats = async (payload) => {
 		const fileHash = await getFileHash(filePath);
 
 		let compressedImage = getImageIfCompressed(fileHash, imageData)
-
 		if (compressedImage) {
 			return {
 				...(await imageDataAccumulator),
