@@ -177,13 +177,16 @@ describe('compressImages', () => {
 
 	it('calls sendIPCEvent with the correct args when successful', () => {
 		const mock = mockServiceContainer.sendIPCEvent.mock;
+
 		let call = mock.calls[0];
 		expect(call[0]).toEqual(IPC_EVENTS.COMPRESS_IMAGE_STARTED);
-		expect(call[1]).toEqual(imageOneID);
+		expect(call[1]).toEqual(siteID);
+		expect(call[2]).toEqual(imageOneID);
 
 		call = mock.calls[1];
 		expect(call[0]).toEqual(IPC_EVENTS.COMPRESS_IMAGE_SUCCESS);
-		expect(call[1]).toContainKeys(expectedImageDataKeys);
+		expect(call[1]).toEqual(siteID);
+		expect(call[2]).toContainKeys(expectedImageDataKeys);
 	});
 
 	it('updates the store correctly when successful', () => {
@@ -191,27 +194,19 @@ describe('compressImages', () => {
 		let imageData = allImageData[imageOneID];
 
 		expect(imageData).toContainAllKeys(expectedImageDataKeys);
-
-		imageData = allImageData[imageTwoID];
-
-		expect(imageData).toContainAllKeys([
-			'originalImageHash',
-			'filePath',
-			'originalSize',
-		]);
 	});
 
 	it('calls sendIPCEvent with the correct args when unnsuccessful', () => {
 		const { mock } = mockServiceContainer.sendIPCEvent;
-
 		let call = mock.calls[3];
-		expect(call[0]).toEqual(IPC_EVENTS.COMPRESS_IMAGE_FAIL);
 
-		expect(call[1].originalImageHash).toEqual(imageTwoID);
-		expect(call[1].errorMessage).toBeString();
+		expect(call[0]).toEqual(IPC_EVENTS.COMPRESS_IMAGE_FAIL);
+		expect(call[1]).toEqual(siteID);
+		expect(call[2]).toEqual(imageTwoID);
+		expect(call[3]).toBeString();
 	});
 
-	it('does not update the store if the file did not successfully compress', () => {
+	it('updates the store with an error message if the file did not successfully compress', () => {
 		const { imageData: allImageData } = imageDataStore.getStateBySiteID(siteID);
 		let imageData = allImageData[imageTwoID];
 
@@ -219,6 +214,7 @@ describe('compressImages', () => {
 			'originalImageHash',
 			'filePath',
 			'originalSize',
+			'errorMessage'
 		]);
 	});
 
@@ -235,7 +231,8 @@ describe('compressImages', () => {
 		const call = mock.calls[5];
 
 		expect(call[0]).toEqual(IPC_EVENTS.COMPRESS_IMAGE_FAIL);
-		expect(call[1]).toEqual(imageThreeID);
-		expect(call[2]).toBeString();
+		expect(call[1]).toEqual(siteID);
+		expect(call[2]).toEqual(imageThreeID);
+		expect(call[3]).toBeString();
 	});
 });

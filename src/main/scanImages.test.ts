@@ -32,7 +32,7 @@ describe('scanImages', () => {
 
 		await scanImages(siteID);
 
-		siteImageData = imageDataStore.getStateBySiteID(siteID);
+		siteData = imageDataStore.getStateBySiteID(siteID);
 	});
 
 	it('calls serviceContainer.getSite', () => {
@@ -69,8 +69,8 @@ describe('scanImages', () => {
 		});
 	});
 
-	it('confirms siteImageData contains appropriate keys', () => {
-		expect(siteImageData).toContainAllKeys([
+	it('confirms siteData contains appropriate keys', () => {
+		expect(siteData).toContainAllKeys([
 			'scanInProgress',
 			'imageData',
 			'lastScan',
@@ -83,18 +83,18 @@ describe('scanImages', () => {
 	});
 
 	it('confirms originalTotalSize is calculated correctly', () => {
-		expect(siteImageData.originalTotalSize).toBe(17000000);
+		expect(siteData.originalTotalSize).toBe(17000000);
 	});
 
 	it('confirms compressedTotalSize is calculated correctly', () => {
-		expect(siteImageData.compressedTotalSize).toBe(8500000);
+		expect(siteData.compressedTotalSize).toBe(8500000);
 	});
 
 	it('confirms totalCompressedCount is calculated correctly', () => {
-		expect(siteImageData.totalCompressedCount).toBe(2);
+		expect(siteData.totalCompressedCount).toBe(2);
 	});
 
 	it('confirms compressedImagesOriginalSize is calculated correctly', () => {
-		expect(siteImageData.compressedImagesOriginalSize).toBe(17000000);
+		expect(siteData.compressedImagesOriginalSize).toBe(17000000);
 	});
 });
