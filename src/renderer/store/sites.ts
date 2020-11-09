@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {
-	CachedImageDataBySiteID,
+	SiteDataBySiteID,
 	SiteData,
 	OptimizerStatus,
 	ImageData,
@@ -46,9 +46,9 @@ function forEachImageDataObject(state: SiteData, cb: (d: ImageData) => void) {
 
 export const sitesSlice = createSlice({
 	name: 'sites',
-	initialState: {} as CachedImageDataBySiteID,
+	initialState: {} as SiteDataBySiteID,
 	reducers: {
-		hydrateSites: (_, action: PayloadAction<CachedImageDataBySiteID>) => {
+		hydrateSites: (_, action: PayloadAction<SiteDataBySiteID>) => {
 			const initialState = Object.entries(action.payload).reduce((acc, [id, siteData]) => {
 				acc[id] = {
 					...siteData,
@@ -58,7 +58,7 @@ export const sitesSlice = createSlice({
 				Object.values(acc[id].imageData).forEach((d) => d.isChecked = true);
 
 				return acc;
-			}, {} as CachedImageDataBySiteID);
+			}, {} as SiteDataBySiteID);
 
 			return initialState;
 		},
