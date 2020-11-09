@@ -6,6 +6,7 @@ import { scanImagesFactory } from './scanImages';
 import { compressImagesFactory } from './compressImages';
 import { createStore, createRuntimeStore}  from './createStore';
 import { purgeDeletedSiteData } from './purgeDeletedSiteData';
+import { saveImageDataToDisk } from './utils';
 
 const serviceContainer = LocalMain.getServiceContainer().cradle;
 
@@ -36,6 +37,11 @@ export function getImageData(siteID: string): SiteData {
 
 export function getImageDataStore(): SiteDataBySiteID {
 	return imageDataStore.getState();
+}
+
+export function deleteSiteData(siteID: string) {
+	imageDataStore.deleteSiteData(siteID);
+	saveImageDataToDisk(imageDataStore, serviceContainer);
 }
 
 export const scanImages = scanImagesFactory(serviceContainer, imageDataStore);

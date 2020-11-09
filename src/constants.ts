@@ -13,7 +13,8 @@ export const IPC_EVENTS = {
 	GO_TO_PREFERENCES: 'image-optimizer:go-to-preferences',
 	CANCEL_COMPRESSION: 'image-optimizer:cancel-compression',
 	SCAN_IMAGES_COMPLETE: 'image-optimizer:scan-images-complete',
-	SCAN_IMAGES_FAILURE: 'image-optimizer:scan-images-failure'
+	SCAN_IMAGES_FAILURE: 'image-optimizer:scan-images-failure',
+	SITE_DELETED: 'image-optimizer:site-deleted',
 };
 
 export const BACKUP_DIR_NAME = 'backups/addon-image-optimizer';

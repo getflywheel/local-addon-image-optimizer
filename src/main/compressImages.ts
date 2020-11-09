@@ -71,7 +71,7 @@ export function compressImagesFactory(serviceContainer: LocalMain.ServiceContain
 			fs.ensureDir(backupDirPath);
 
 			/**
-			 * deep clone this so that the existing store doesn not get corrupted and remains intact until we explicity update it
+			 * deep clone this so that the existing store does not get corrupted until we explicity update it
 			 */
 			const siteData: SiteData = cloneDeep(imageDataStore.getStateBySiteID(siteID));
 

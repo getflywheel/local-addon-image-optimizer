@@ -41,6 +41,12 @@ export function setupListeners() {
 				store.dispatch(actions.scanFailure({ siteID, error }));
 			},
 		},
+		{
+			channel: IPC_EVENTS.SITE_DELETED,
+			cb: (_, siteID: string) => {
+				store.dispatch(actions.siteDeleted(siteID));
+			}
+		},
 	];
 
 	listeners.forEach(({ channel, cb }) => {

@@ -239,5 +239,10 @@ export const sitesSlice = createSlice({
 
 			return state;
 		},
+		siteDeleted: (state, action: PayloadAction<string>) => {
+			delete state[action.payload];
+
+			return state;
+		},
 	},
 });
