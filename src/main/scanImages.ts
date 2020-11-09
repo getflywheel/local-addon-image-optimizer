@@ -29,8 +29,6 @@ export function scanImagesFactory(serviceContainer: LocalMain.ServiceContainerSe
 				return;
 			}
 
-			saveImageDataToDisk(imageDataStore, serviceContainer);
-
 			siteData = imageDataStore.getStateBySiteID(siteID);
 
 			/**

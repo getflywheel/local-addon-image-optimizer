@@ -7,6 +7,7 @@ import {
 	readPreferencesFromDisk,
 	savePreferencesToDisk,
 	updateCancelCompression,
+	deleteSiteData,
 } from './main/index';
 import { IPC_EVENTS } from './constants';
 import { Preferences } from './types';
@@ -15,6 +16,15 @@ import { Preferences } from './types';
 export default function (context) {
 	const { electron } = context;
 	const { ipcMain } = electron;
+
+	LocalMain.HooksMain.addAction('siteDeleted', (siteID) => {
+		deleteSiteData(siteID);
+
+		LocalMain.sendIPCEvent(
+			IPC_EVENTS.SITE_DELETED,
+			siteID,
+		);
+	});
 
 	/**
 	 * Scan a site for images and return the list of all images found

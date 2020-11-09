@@ -44,6 +44,7 @@ export interface Store {
 	getState: () => SiteDataBySiteID;
 	getStateBySiteID: (siteID: string) => SiteData;
 	setState: (newState: SiteDataBySiteID) => void;
+	deleteSiteData: (siteID: string) => void;
 	setStateBySiteID: (siteID: string, newState: Partial<SiteData>) => void;
 }
 

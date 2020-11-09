@@ -14,10 +14,7 @@ import { COMPRESSED_IMAGE_DATA_FILE_NAME } from '../constants';
 
 
 export function saveImageDataToDisk(imageDataStore, serviceContainer: LocalMain.ServiceContainerServices): void {
-	const siteData = serviceContainer.userData.get(COMPRESSED_IMAGE_DATA_FILE_NAME, {});
-
 	serviceContainer.userData.set(COMPRESSED_IMAGE_DATA_FILE_NAME, {
-		...siteData,
 		...imageDataStore.getState(),
 	});
 };

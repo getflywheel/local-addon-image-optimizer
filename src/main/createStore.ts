@@ -39,6 +39,15 @@ export function createStore(initialState: SiteDataBySiteID = {}): Store {
 		},
 
 		/**
+		 * remove a site by id
+		 *
+		 * @param siteID
+		 */
+		deleteSiteData(siteID) {
+			delete state[siteID];
+		},
+
+		/**
 		 * Merges in new SiteData with existing SiteData or
 		 * creates a new entry for that SiteData
 		 *
