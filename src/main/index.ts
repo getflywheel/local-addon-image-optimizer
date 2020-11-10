@@ -5,7 +5,7 @@ import { Preferences } from '../types';
 import { scanImagesFactory } from './scanImages';
 import { compressImagesFactory } from './compressImages';
 import { createStore, createRuntimeStore}  from './createStore';
-import { purgeDeletedSiteData } from './purgeDeletedSiteData';
+import { filterDeletedSiteData } from './filterDeletedSiteData';
 import { saveImageDataToDisk } from './utils';
 
 const serviceContainer = LocalMain.getServiceContainer().cradle;
@@ -13,7 +13,7 @@ const serviceContainer = LocalMain.getServiceContainer().cradle;
 const existingSiteData: SiteDataBySiteID = serviceContainer.userData.get(COMPRESSED_IMAGE_DATA_FILE_NAME, {});
 
 const imageDataStore = createStore(
-	purgeDeletedSiteData(existingSiteData, serviceContainer)
+	filterDeletedSiteData(existingSiteData, serviceContainer)
 );
 
 serviceContainer.userData.set(COMPRESSED_IMAGE_DATA_FILE_NAME, imageDataStore.getState());

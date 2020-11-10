@@ -1,7 +1,7 @@
 import 'jest-extended';
 import * as LocalMain from '@getflywheel/local/main';
 import { SiteDataBySiteID, SiteData } from '../types';
-import { purgeDeletedSiteData } from './purgeDeletedSiteData';
+import { filterDeletedSiteData } from './filterDeletedSiteData';
 
 const mockServiceContainer = {
 	siteData: {
@@ -22,9 +22,9 @@ siteIDs.forEach((id) => {
 	siteDataBySiteID[id] = {} as SiteData;
 });
 
-describe('purgeDeletedSiteData', () => {
+describe('filterDeletedSiteData', () => {
 	it('purges site from sites that no longer exist within Local', () => {
-		const purgedSiteData = purgeDeletedSiteData(siteDataBySiteID, mockServiceContainer);
+		const purgedSiteData = filterDeletedSiteData(siteDataBySiteID, mockServiceContainer);
 
 		expect(purgedSiteData).toContainAllKeys(['a', 'b']);
 		expect(purgedSiteData).not.toContainAnyKeys(['c', 'd']);
