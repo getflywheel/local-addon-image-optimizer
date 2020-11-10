@@ -1,16 +1,16 @@
 import 'jest-extended';
 import * as LocalMain from '@getflywheel/local/main';
-import { purgeDeletedSiteData } from './purgeDeletedSiteData';
+import { filterDeletedSiteData } from './filterDeletedSiteData';
 import { createStore, createRuntimeStore } from './createStore';
 import { COMPRESSED_IMAGE_DATA_FILE_NAME, PREFERENCES_FILE_NAME } from '../constants';
 
 const serviceContainer = LocalMain.getServiceContainer().cradle;
 
-jest.mock('./purgeDeletedSiteData');
+jest.mock('./filterDeletedSiteData');
 jest.mock('./createStore');
 
 // @ts-ignore
-purgeDeletedSiteData.mockReturnValue({
+filterDeletedSiteData.mockReturnValue({
 	fakeID: {},
 });
 // @ts-ignore
@@ -50,9 +50,9 @@ describe('index.ts', () => {
 		expect(mock.calls[1]).toBeUndefined();
 	});
 
-	it('calls purgeDeletedSiteData once with the correct args', () => {
+	it('calls filterDeletedSiteData once with the correct args', () => {
 		// @ts-ignore
-		const { mock } = purgeDeletedSiteData;
+		const { mock } = filterDeletedSiteData;
 
 		expect(mock.calls[0][0]).toContainAllKeys(['a']);
 		expect(mock.calls[0][0].a).toEqual('brian eno');
@@ -60,7 +60,7 @@ describe('index.ts', () => {
 		expect(mock.calls[1]).toBeUndefined();
 	});
 
-	it('properly creates a store using "createStore" and passes it the return value from purgeDeletedSiteData', () => {
+	it('properly creates a store using "createStore" and passes it the return value from filterDeletedSiteData', () => {
 		// @ts-ignore
 		const { mock } = createStore;
 
