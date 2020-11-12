@@ -1,0 +1,14 @@
+# dependencies
+node_modules
+
+# Build output
+lib
+
+# pre compiled binaries
+vendor
+
+# Output of 'npm pack'
+*.tgz
+
+# editor config
+.editorconfig
