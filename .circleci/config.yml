@@ -1,0 +1,53 @@
+# This CircleCI YAML file is responsible for running tests and linting the Local Image Optimizer Add-on repo
+
+version: 2.1
+
+anchors:
+  install_yarn_deps: &install_yarn_deps
+    run:
+      name: Install Dependencies
+      command: yarn install --immutable
+
+  restore_yarn_cache: &restore_yarn_cache
+    restore_cache:
+      name: Restore Yarn Package Cache
+      keys:
+        - yarn-packages-v2-{{ arch }}-{{ checksum "yarn.lock" }}
+        - yarn-packages-v2-{{ arch }}
+
+  save_yarn_cache: &save_yarn_cache
+    save_cache:
+      name: Save Yarn Package Cache
+      key: yarn-packages-v2-{{ arch }}-{{ checksum "yarn.lock" }}
+      paths:
+        - ./node_modules
+
+  build: &build
+    run:
+      name: Build Add-On
+      command: yarn build
+
+  lint: &lint
+    run:
+      name: ESLint
+      command: |
+        yarn lint
+
+  test: &test
+    run:
+      name: Integration/Unit Tests
+      command: |
+        yarn test
+
+jobs:
+  build:
+    docker:
+      - image: cimg/node:12.14
+    steps:
+      - checkout
+      - *restore_yarn_cache
+      - *install_yarn_deps
+      - *save_yarn_cache
+      - *build
+      - *lint
+      - *test
