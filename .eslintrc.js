@@ -5,8 +5,12 @@ module.exports = {
 	],
 	parser: '@typescript-eslint/parser',
 	plugins: [
-		'@typescript/eslint',
+		'@typescript-eslint',
+		'jest',
 	],
+	env: {
+		'jest/globals': true,
+	},
 	root: true,
 	rules: {
 		'import/no-unresolved': [
