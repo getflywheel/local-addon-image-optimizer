@@ -65,7 +65,7 @@ const compressedSiteImages = createSelector(
 
 const totalImagesSizeBeforeCompression = createSelector(
 	selectActiveSite,
-	(imageData) => Object.values(imageData).reduce((totalSize, d) => {
+	({ imageData }) => Object.values(imageData).reduce((totalSize, d) => {
 		totalSize += d.originalSize;
 
 		return totalSize;
@@ -74,7 +74,7 @@ const totalImagesSizeBeforeCompression = createSelector(
 
 const originalSizeOfCompressedImages = createSelector(
 	selectActiveSite,
-	(imageData) => Object.values(imageData).reduce((size, d) => {
+	({ imageData }) => Object.values(imageData).reduce((size, d) => {
 		if (d.compressedImageHash) {
 			size += d.originalSize;
 		}
@@ -85,7 +85,7 @@ const originalSizeOfCompressedImages = createSelector(
 
 const sizeOfCompressedImages = createSelector(
 	selectActiveSite,
-	(imageData) => Object.values(imageData).reduce((size, d) => {
+	({ imageData }) => Object.values(imageData).reduce((size, d) => {
 		if (d.compressedImageHash) {
 			size += d.compressedSize;
 		}
@@ -119,7 +119,14 @@ const imageStats = createSelector(
 	sizeOfCompressedImages,
 	compressedSiteImages,
 	erroredTotalCount,
-	(imageCount, originalTotalSize, compressedImagesOriginalSize, compressedTotalSize, compressedSiteImages, erroredTotalCount) => ({
+	(
+		imageCount,
+		originalTotalSize,
+		compressedImagesOriginalSize,
+		compressedTotalSize,
+		compressedSiteImages,
+		erroredTotalCount,
+	) => ({
 		imageCount,
 		originalTotalSize,
 		compressedImagesOriginalSize,
