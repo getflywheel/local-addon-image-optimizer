@@ -56,7 +56,7 @@ export default async function (context) {
 
 	const ImageOptimizerHOC = withStoreProvider(ImageOptimizer);
 
-	hooks.addContent('local-addon-image-optimizer:site-info-content', ({ match }) => {
+	hooks.addContent('siteToolsImageOptimizer', ({ match }) => {
 		return (
 			<ImageOptimizerHOC match={match} />
 		)
