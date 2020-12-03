@@ -10,22 +10,25 @@ export const noContextMenuId = 'no-context-menu';
 export const ioFileListContextMenuId = 'io-file-list-context-menu';
 
 const revealPathMenuItem = (path: string) => {
-	return new MenuItem({
-		label: isMac ? 'Reveal in Finder' : 'Show folder',
-		click() {
-			shell.showItemInFolder(path)
-		}
-	})
 }
 
 const openPathMenuItem = (path: string) => {
-	return new MenuItem({
+}
+
+const menuItems = [
+	(path: string) => new MenuItem({
+		label: isMac ? 'Reveal in Finder my dude' : 'Show folder',
+		click() {
+			shell.showItemInFolder(path)
+		}
+	}),
+	(path: string) => new MenuItem({
 		label: 'Open',
 		click() {
 			shell.openPath(path)
 		}
-	})
-}
+	}),
+];
 
 export function useContextMenu() {
 	useEffect(() => {
@@ -43,8 +46,12 @@ export function useContextMenu() {
 				const path = e.target.dataset.path;
 				if (path) {
 					const menu = new Menu()
-					menu.append(revealPathMenuItem(path));
-					menu.append(openPathMenuItem(path));
+
+					menuItems.forEach((menuItem) => menu.append(menuItem(path)));
+
+					// menu.append(revealPathMenuItem(path));
+					// menu.append(openPathMenuItem(path));
+
 					menu.popup({ window: remote.getCurrentWindow() });
 					menu.once(menuWillCloseEvent, () => {
 						menu.closePopup();

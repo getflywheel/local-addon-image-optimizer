@@ -6,6 +6,9 @@ import {
 	RuntimeStore,
 } from '../types';
 
+/**
+ * @todo rename this to imageDataStore
+ */
 export function createStore(initialState: SiteDataBySiteID = {}): Store {
 	let state = initialState;
 

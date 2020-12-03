@@ -4,6 +4,7 @@ import { COMPRESSED_IMAGE_DATA_FILE_NAME, PREFERENCES_FILE_NAME } from '../const
 import { Preferences } from '../types';
 import { scanImagesFactory } from './scanImages';
 import { compressImagesFactory } from './compressImages';
+import { restoreImageFromBackupFactory } from './restoreFromBackup';
 import { createStore, createRuntimeStore}  from './createStore';
 import { filterDeletedSiteData } from './filterDeletedSiteData';
 import { saveImageDataToDisk } from './utils';
@@ -46,6 +47,7 @@ export function deleteSiteData(siteID: string) {
 
 export const scanImages = scanImagesFactory(serviceContainer, imageDataStore);
 export const compressImages = compressImagesFactory(serviceContainer, imageDataStore, runtimeStore);
+export const restoreImageFromBackup = restoreImageFromBackupFactory(serviceContainer, imageDataStore);
 
 export const updateCancelCompression = (siteID: string, cancelCompression: boolean) => {
 	runtimeStore.setCancelCompressionBySiteID(siteID, cancelCompression);

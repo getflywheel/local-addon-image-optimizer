@@ -10,8 +10,15 @@ import {
 	SiteData,
 } from '../types';
 
-import { COMPRESSED_IMAGE_DATA_FILE_NAME } from '../constants';
+import { COMPRESSED_IMAGE_DATA_FILE_NAME, BACKUP_DIR_NAME } from '../constants';
 
+/**
+ * Utility to centralize the file extensions Image Optimizer supports
+ */
+export const getSupportedFileExtensions = () => [
+	'jpg',
+	'jpeg'
+];
 
 export function saveImageDataToDisk(imageDataStore, serviceContainer: LocalMain.ServiceContainerServices): void {
 	serviceContainer.userData.set(COMPRESSED_IMAGE_DATA_FILE_NAME, {
@@ -46,7 +53,7 @@ export async function getImageFilePathsHelper(contentPath: string): Promise<stri
 	const fileFilter = (file, stats) => {
 		const ext = path.extname(file)?.toLowerCase();
 
-		return !['.jpg', '.jpeg'].includes(ext) && !stats.isDirectory();
+		return !getSupportedFileExtensions().includes(ext) && !stats.isDirectory();
 	};
 
 	// if the directory doesn't exist, there aren't any files paths to retrieve
@@ -88,4 +95,11 @@ export async function getImageFilePaths(webRoot: Local.Site['paths']['webRoot'])
  */
 export function getImageIfCompressed(fileHash: string, imageData: SiteData['imageData']) {
 	return Object.values(imageData).find((data: ImageData) => data.compressedImageHash === fileHash);
+}
+
+export function getSiteFullBackupPath(siteId: string, site) {
+	return path.join(
+		site.longPath,
+		BACKUP_DIR_NAME,
+	);
 }
