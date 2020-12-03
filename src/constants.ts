@@ -15,6 +15,7 @@ export const IPC_EVENTS = {
 	SCAN_IMAGES_COMPLETE: 'image-optimizer:scan-images-complete',
 	SCAN_IMAGES_FAILURE: 'image-optimizer:scan-images-failure',
 	SITE_DELETED: 'image-optimizer:site-deleted',
+	RESTORE_IMAGE_FROM_BACKUP: 'image-optimizer:restore-image-from-backup',
 };
 
 export const BACKUP_DIR_NAME = 'backups/addon-image-optimizer';

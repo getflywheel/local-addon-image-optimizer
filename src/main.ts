@@ -63,6 +63,11 @@ export default function (context) {
 		async (preferences: Preferences) => savePreferencesToDisk(preferences),
 	);
 
+	LocalMain.addIpcAsyncListener(
+		IPC_EVENTS.RESTORE_IMAGE_FROM_BACKUP,
+		async (siteId: string, imageId: string) => null,
+	);
+
 	/**
 	 * Visit the preferences page
 	 */
