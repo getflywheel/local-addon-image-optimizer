@@ -12,12 +12,6 @@ import { stat } from 'fs';
 
 export function restoreImageFromBackupFactory(serviceContainer: LocalMain.ServiceContainerServices, store: Store) {
 	return async function(siteId: string, filePath: string) {
-		/**
-		 * find the image
-		 * find the backup (or backups)
-		 */
-		// stats.cTimeMs
-
 		const state = store.getStateBySiteID(siteId);
 
 		// ensure that the filePath is legit
@@ -33,15 +27,8 @@ export function restoreImageFromBackupFactory(serviceContainer: LocalMain.Servic
 
 		// path to the root of the site's backup dir
 		const baseBackupDirPath = path.join(site.longPath, BACKUP_DIR_NAME);
-		// path to the nested dir the image should be backed up in
 		let imageBackupPath = filePath.replace(path.join(site.paths.webRoot, 'wp-content'), baseBackupDirPath);
 		const { dir, name, ext } = path.parse(imageBackupPath);
-
-		// take the basename and build up a glob pattern to account for de-dupes
-		// then, get a match of files in imageBackupDir with the glob that was just built up
-		// then check each of the files for the most recently created with stats.cTimeMs.
-
-		// /(image)(\s*\(([0-9]+)\))?.(jpg|jpeg)/g
 
 		const globMatcher = `${escapeGlob(`${dir}/${name}`)}?( \\([1-9]*\\))${ext}`;
 
@@ -66,18 +53,37 @@ export function restoreImageFromBackupFactory(serviceContainer: LocalMain.Servic
 			return;
 		}
 
-		const mostRecentBackup = matches.reduce((mostRecent, match) => {
+		let mostRecentBackup;
+		let mostRecentTimeStamp = 0;
+
+		for (const match of matches) {
+			try {
+
 			const { birthtimeMs } = fs.statSync(match);
 
-			console.log(match, birthtimeMs);
-
-			if (birthtimeMs > mostRecent) {
-				mostRecent = birthtimeMs;
+			if (birthtimeMs > mostRecentTimeStamp) {
+				mostRecentTimeStamp = birthtimeMs;
+				mostRecentBackup = match;
 			}
+			}
+			catch(err) {
+				console.error(err)
+			}
+		}
 
-			return mostRecent;
-		}, 0);
+		console.log(mostRecentBackup, mostRecentTimeStamp);
 
-		console.log(mostRecentBackup);
+		try {
+			fs.copySync(mostRecentBackup, filePath);
+		} catch (err) {
+			console.error(err);
+		} finally {
+			store.setStateByImageID(siteId, fileData.originalImageHash, {
+				compressedImageHash: null,
+				compressedSize: null,
+			});
+		}
+
+		return;
 	}
 }

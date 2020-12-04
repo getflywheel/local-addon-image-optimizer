@@ -4,6 +4,7 @@ import {
 	Store,
 	RuntimeData,
 	RuntimeStore,
+	ImageData,
 } from '../types';
 
 /**
@@ -65,6 +66,29 @@ export function createStore(initialState: SiteDataBySiteID = {}): Store {
 					...newState,
 				}
 			};
+		},
+
+		/**
+		 * Merges in new image data for a single image associated with a site
+		 *
+		 * @param siteID
+		 * @param imageID
+		 * @param newState
+		 */
+		setStateByImageID(siteID, imageID, newState) {
+			state = {
+				...state,
+				[siteID]: {
+					...(state[siteID] || {} as SiteData),
+					imageData: {
+						...(state[siteID].imageData),
+						[imageID]: {
+							...state[siteID]?.imageData?.[imageID],
+							...newState,
+						}
+					}
+				}
+			}
 		},
 	};
 }
