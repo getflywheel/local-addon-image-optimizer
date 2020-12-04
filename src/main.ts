@@ -8,6 +8,7 @@ import {
 	savePreferencesToDisk,
 	updateCancelCompression,
 	deleteSiteData,
+	restoreImageFromBackup,
 } from './main/index';
 import { IPC_EVENTS } from './constants';
 import { Preferences } from './types';
@@ -63,9 +64,12 @@ export default function (context) {
 		async (preferences: Preferences) => savePreferencesToDisk(preferences),
 	);
 
+	/**
+	 * Restore an image from a backup
+	 */
 	LocalMain.addIpcAsyncListener(
 		IPC_EVENTS.RESTORE_IMAGE_FROM_BACKUP,
-		async (siteId: string, imageId: string) => null,
+		async (siteId: string, imagePath: string) => restoreImageFromBackup(siteId, imagePath),
 	);
 
 	/**

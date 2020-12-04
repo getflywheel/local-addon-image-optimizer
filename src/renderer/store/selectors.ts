@@ -29,6 +29,14 @@ const selectActiveSite = (): SiteData | undefined => {
 	return state.sites[state.activeSiteID];
 }
 
+/**
+ * @todo bind state to this
+ */
+const activeSiteID = createSelector(
+	() => store.getState(),
+	({ activeSiteID }) => activeSiteID,
+);
+
 const selectActiveSiteIsSelectableTable = createSelector(
 	selectActiveSite,
 	(siteState) =>
@@ -156,6 +164,7 @@ const compressionCompletionStats = createSelector(
 );
 
 export const selectors = {
+	activeSiteID,
 	uncompressedSiteImages,
 	compressedSiteImages,
 	totalImagesSizeBeforeCompression,
