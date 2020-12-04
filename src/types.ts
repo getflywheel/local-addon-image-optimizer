@@ -46,6 +46,7 @@ export interface Store {
 	setState: (newState: SiteDataBySiteID) => void;
 	deleteSiteData: (siteID: string) => void;
 	setStateBySiteID: (siteID: string, newState: Partial<SiteData>) => void;
+	setStateByImageID: (siteID: string, imageID: string, newState: Partial<ImageData>) => void;
 }
 
 export interface RuntimeStore {
