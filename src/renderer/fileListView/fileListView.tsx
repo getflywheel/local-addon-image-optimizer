@@ -149,10 +149,10 @@ export const FileListView = (props: IFileListViewProps) => {
 					cellRenderer={cellRender}
 					data={siteData.optimizationStatus === OptimizerStatus.BEFORE ? uncompressedImages : selectedImages}
 					headers={[
-						{ key: 'fileStatus', value: '', className: 'fileListViewer_Column_Selected'},
-						{ key: 'filePath', value: 'Filename', className: 'fileListViewer_Column_File_Name'},
-						{ key: 'originalSize', value: 'Original', className: 'fileListViewer_Column_Original_Size'},
-						{ key: 'compressedSize', value: 'Compressed', className: 'fileListViewer_Column_Compressed_Size'}
+						{ key: 'fileStatus', value: '', className: 'fileListViewer_Column_Selected' },
+						{ key: 'filePath', value: 'Filename', className: 'fileListViewer_Column_File_Name' },
+						{ key: 'originalSize', value: 'Original', className: 'fileListViewer_Column_Original_Size' },
+						{ key: 'compressedSize', value: 'Compressed', className: 'fileListViewer_Column_Compressed_Size' },
 					]}
 					headersCapitalize='none'
 					striped

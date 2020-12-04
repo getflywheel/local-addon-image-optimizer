@@ -16,8 +16,8 @@ import { COMPRESSED_IMAGE_DATA_FILE_NAME, BACKUP_DIR_NAME } from '../constants';
  * Utility to centralize the file extensions Image Optimizer supports
  */
 export const getSupportedFileExtensions = () => [
-	'jpg',
-	'jpeg'
+	'.jpg',
+	'.jpeg'
 ];
 
 export function saveImageDataToDisk(imageDataStore, serviceContainer: LocalMain.ServiceContainerServices): void {
