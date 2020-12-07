@@ -9,13 +9,11 @@ import {
 	VirtualTableCellRenderer,
 	IVirtualTableCellRendererDataArgs,
 	ProgressBar,
-	FlyModal
 } from '@getflywheel/local-components';
 import { FileListHeader } from './fileListHeader';
 import { OptimizerStatus, SiteData, Preferences } from '../../types';
-import { IPC_EVENTS } from '../../constants';
 import { selectors, useStoreSelector } from '../store/store';
-import {useContextMenu, noContextMenuId, ioFileListContextMenuId } from '../contextMenu';
+import { useContextMenu, noContextMenuId, ioFileListContextMenuId } from '../contextMenu';
 
 interface IFileListViewProps {
 	siteData: SiteData;
@@ -29,13 +27,6 @@ interface IFileListViewProps {
 	siteID: string;
 }
 
-interface IModalProps {
-	onSubmit: () => void;
-	openPreferencesModal: () => void;
-	onConfirm: () => void;
-	onCancel: () => void;
-	preferences: Preferences;
-}
 
 export const FileListView = (props: IFileListViewProps) => {
 	const {
@@ -91,51 +82,12 @@ export const FileListView = (props: IFileListViewProps) => {
 		}
 	};
 
-	const openPreferencesModal = () => {
-		FlyModal.onRequestClose();
-		ipcRenderer.send(IPC_EVENTS.GO_TO_PREFERENCES);
-	}
-
-	const invokeModal = (ModalContents: React.FC<IModalProps>, onCancel?: Function, onConfirm?: Function) =>  {
-
-		const onSubmit = () => {
-			compressSelectedImages();
-			FlyModal.onRequestClose();
-		};
-
-		const onCancelSelect = () => {
-			onCancel?.();
-			FlyModal.onRequestClose();
-		}
-
-		const onConfirmSelect = () => {
-			onConfirm?.();
-			FlyModal.onRequestClose();
-		}
-
-		ReactDOM.render(
-			(
-				<FlyModal
-					contentLabel='Confirm Optimization'
-				>
-					<ModalContents
-						onSubmit={onSubmit}
-						openPreferencesModal={openPreferencesModal}
-						onConfirm={onConfirmSelect}
-						onCancel={onCancelSelect}
-						preferences={preferences}
-					/>
-				</FlyModal>
-			), document.getElementById('popup-container'),
-		);
-	};
 
 	return (
 		<div className='fileView_Container'>
 			<FileListHeader
 				siteData={siteData}
 				resetToOverview={resetToOverview}
-				invokeModal={invokeModal}
 				selectedImages={selectedImages}
 				cancelImageCompression={cancelImageCompression}
 				setOverviewSelected={setOverviewSelected}

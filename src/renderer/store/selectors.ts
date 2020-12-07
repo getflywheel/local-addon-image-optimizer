@@ -170,6 +170,8 @@ const siteImages = createSelector(
 	(siteState) => siteState.imageData || {},
 );
 
+const preferences = (state) => state.preferences;
+
 export const selectors = {
 	activeSiteID: () => activeSiteID(store.getState()),
 	uncompressedSiteImages,
@@ -183,5 +185,10 @@ export const selectors = {
 	siteImageCount,
 	imageStats,
 	compressionCompletionStats,
-	siteImages: () => siteImages(store.getState()),
+	// siteImages: () => siteImages(store.getState()),
+	siteImages,
+	// preferences: () => preferences(store.getState()),
+	preferences,
 };
+
+console.log('store\ ------', store)

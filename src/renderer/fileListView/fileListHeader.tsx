@@ -3,28 +3,31 @@ import {
 	Button,
 	TextButton,
 } from '@getflywheel/local-components';
-import { ImageData } from '../../types';
+import { ImageData, Preferences } from '../../types';
 import { OptimizerStatus, SiteData } from '../../types';
 import { convertBytesToMb } from '../utils';
 import ChevronArrowSVG from '../_assets/svg/chevron-arrow-right.svg';
 import { ConfirmOptimizationModal } from './ConfirmOptimizationModal';
 import { selectors, useStoreSelector } from '../store/store';
+import invokeModal from '../invokeModal';
 
 interface IFileListHeaderProps {
 	siteData: SiteData,
 	setOverviewSelected: (x: boolean) => void,
-    invokeModal: (ModalContents: React.FC, onCancel?: Function, onConfirm?: Function) => void,
 	selectedImages: ImageData[],
 	cancelImageCompression: () => void,
 	resetToOverview: () => void,
 	siteID: string,
 }
 
+export interface ModalContentsProps {
+	preferences: Preferences;
+}
+
 export const FileListHeader = (props: IFileListHeaderProps) => {
 	const {
 		siteData,
 		setOverviewSelected,
-		invokeModal,
 		selectedImages,
 		cancelImageCompression,
 		resetToOverview,
@@ -34,6 +37,10 @@ export const FileListHeader = (props: IFileListHeaderProps) => {
 		compressedImagesOriginalSize,
 		compressedTotalSize,
 	} = useStoreSelector(selectors.compressionCompletionStats);
+
+	const preferences = useStoreSelector((state) => state.preferences);
+
+	console.log('filelistheader')
 
     const disableOptimizeButton = selectedImages.length > 0 ? false : true;
 
@@ -50,7 +57,10 @@ export const FileListHeader = (props: IFileListHeaderProps) => {
 
                 <Button
                     className='fileView_Button_Optimization'
-                    onClick={() => invokeModal(ConfirmOptimizationModal as React.FC)}
+                    onClick={() => invokeModal<ModalContentsProps>({
+						ModalContents: ConfirmOptimizationModal,
+						modalContentsProps: { preferences },
+					})}
                     privateOptions={{
                         color: 'green',
                         form: 'fill'
