@@ -163,8 +163,15 @@ const compressionCompletionStats = createSelector(
 	}),
 );
 
+const dummySelectActiveSite = (state) => state.sites[state.activeSiteID];
+
+const siteImages = createSelector(
+	dummySelectActiveSite,
+	(siteState) => siteState.imageData || {},
+);
+
 export const selectors = {
-	activeSiteID,
+	activeSiteID: () => activeSiteID(store.getState()),
 	uncompressedSiteImages,
 	compressedSiteImages,
 	totalImagesSizeBeforeCompression,
@@ -176,4 +183,5 @@ export const selectors = {
 	siteImageCount,
 	imageStats,
 	compressionCompletionStats,
+	siteImages: () => siteImages(store.getState()),
 };
