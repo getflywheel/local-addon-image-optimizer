@@ -9,6 +9,7 @@ interface IFileNameProps {
 
 export const ColFileName = ( props: IFileNameProps ) =>  {
 	const { dataArgs } = props;
+	const { rowData } = dataArgs;
 
 	const formattedFilePath = dataArgs.cellData.replace(/^.*\/app\/public\/wp-content/g, 'wp-content');
 
@@ -29,7 +30,7 @@ export const ColFileName = ( props: IFileNameProps ) =>  {
 			<div
 				className='fileList_File_Name_Row'
 				title={formattedFilePath}
-				data-path={dataArgs.cellData}
+				data-imageid={rowData.originalImageHash}
 			>
 				{formattedFilePath}
 			</div>

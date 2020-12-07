@@ -30,13 +30,12 @@ const openPathMenuItem = (path: string) => {
 	});
 }
 
-const revertToBackupMenuItem = (path: string) => {
+const revertToBackupMenuItem = (imageID: string) => {
 	return new MenuItem({
 		label: 'Revert to backup',
 		async click() {
 			const siteId = selectors.activeSiteID();
-			console.log('siteid', siteId, path)
-			LocalRenderer.ipcAsync(IPC_EVENTS.RESTORE_IMAGE_FROM_BACKUP, siteId, path);
+			LocalRenderer.ipcAsync(IPC_EVENTS.RESTORE_IMAGE_FROM_BACKUP, siteId, imageID);
 		},
 	});
 };
@@ -54,19 +53,31 @@ export function useContextMenu() {
 		if (IOFileListElement) {
 			IOFileListElement.addEventListener(contextEvent, (e) => {
 				e.preventDefault();
-				const path = e.target.dataset.path;
+				const { imageid: imageID } = e.target.dataset;
 
-				if (path) {
+				if (imageID) {
 					const menu = new Menu()
 
-					menu.append(revealPathMenuItem(path));
-					menu.append(openPathMenuItem(path));
-					menu.append(revertToBackupMenuItem(path));
+					/**
+					 * @todo get these selectors shaped up so
+					 */
+					const { filePath, compressedImageHash } = selectors.siteImages()[imageID];
+
+					menu.append(revealPathMenuItem(filePath));
+					menu.append(openPathMenuItem(filePath));
+
+					if (compressedImageHash) {
+						menu.append(revertToBackupMenuItem(imageID));
+					}
 
 					menu.popup({ window: remote.getCurrentWindow() });
 					menu.once(menuWillCloseEvent, () => {
 						menu.closePopup();
 					});
+				}
+
+				if (imageID) {
+
 				}
 			});
 		}
