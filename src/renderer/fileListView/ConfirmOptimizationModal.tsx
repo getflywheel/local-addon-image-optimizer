@@ -1,27 +1,23 @@
 import React from 'react';
-import { PrimaryButton, TextButton, Divider, Title } from '@getflywheel/local-components';
-import { Preferences } from '../../types';
-
-interface IModalProps {
-	onSubmit: () => void
-	openPreferencesModal: () => void
-	onConfirmSelect?: () => void
-	onCancelSelect?: () => void
-	preferences: Preferences;
-}
+import { ipcRenderer } from 'electron';
+import { PrimaryButton, TextButton, Divider, Title, FlyModal } from '@getflywheel/local-components';
+import { IPC_EVENTS } from '../../constants';
+import { BaseModalProps } from '../invokeModal';
+import { ModalContentsProps } from './fileListHeader';
 
 
-export const ConfirmOptimizationModal = (props: IModalProps) => {
-	const {
-		openPreferencesModal,
-		onSubmit,
-		preferences,
-	} = props;
+export const ConfirmOptimizationModal = (props: BaseModalProps & ModalContentsProps) => {
+	const { onSubmit, preferences } = props;
 
 	let displayText = 'Optimizing images will not strip metadata and will reduce image sizes to improve your site\'s performance.';
 
 	if (preferences.stripMetaData) {
 		displayText = 'Optimizing images will strip metadata and reduce image sizes to improve your site\'s performance.';
+	}
+
+	const openPreferencesModal = () => {
+		FlyModal.onRequestClose();
+		ipcRenderer.send(IPC_EVENTS.GO_TO_PREFERENCES);
 	}
 
 	return (
