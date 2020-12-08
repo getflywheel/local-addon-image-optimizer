@@ -69,7 +69,7 @@ export default function (context) {
 	 */
 	LocalMain.addIpcAsyncListener(
 		IPC_EVENTS.RESTORE_IMAGE_FROM_BACKUP,
-		async (siteId: string, imagePath: string) => restoreImageFromBackup(siteId, imagePath),
+		async (siteId: string, imageId: string) => restoreImageFromBackup(siteId, imageId),
 	);
 
 	/**

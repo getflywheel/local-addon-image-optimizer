@@ -1,10 +1,11 @@
-import React from 'react';
 import { remote, shell } from 'electron';
 import { useEffect } from 'react';
 import * as LocalRenderer from '@getflywheel/local/renderer';
 import { IPC_EVENTS } from '../constants';
 import { selectors } from './store/store';
 import invokeModal, { BaseModalProps } from './invokeModal';
+import ConfirmRestoreBackupModalContents from './confirmRestoreBackupModalContents';
+import ErrorBackingUpImageModalContents from './errorBackingUpImageModalContents';
 
 const { Menu, MenuItem } = remote;
 
@@ -36,16 +37,25 @@ const openPathMenuItem = (path: string) => {
 	});
 }
 
-const revertToBackupMenuItem = (imageID: string) => {
+const revertToBackupMenuItem = (imageID: string, filePath: string) => {
 	return new MenuItem({
 		label: 'Revert to backup',
 		async click() {
 			const siteId = selectors.activeSiteID();
-			// LocalRenderer.ipcAsync(IPC_EVENTS.RESTORE_IMAGE_FROM_BACKUP, siteId, imageID);
-			// invokeModal({
-			// 	ModalContents: Comp,
-			// 	modalContentsProps: { hello: 'hey' },
-			// });
+			invokeModal({
+				ModalContents: ConfirmRestoreBackupModalContents,
+				onSubmit: () => {
+					LocalRenderer.ipcAsync(IPC_EVENTS.RESTORE_IMAGE_FROM_BACKUP, siteId, imageID)
+						.then(({ success, error }) => {
+							if (!success) {
+								invokeModal({
+									ModalContents: ErrorBackingUpImageModalContents,
+									modalContentsProps: { error, filePath },
+								});
+							}
+						});
+				}
+			});
 		},
 	});
 };
@@ -86,7 +96,7 @@ export function useContextMenu(parentNodeId: string, contextMenuAreaId: string) 
 			menu.append(openPathMenuItem(filePath));
 
 			if (compressedImageHash) {
-				menu.append(revertToBackupMenuItem(imageID));
+				menu.append(revertToBackupMenuItem(imageID, filePath));
 			}
 
 			menu.popup({ window: remote.getCurrentWindow() });
