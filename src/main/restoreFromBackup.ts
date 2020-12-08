@@ -2,7 +2,7 @@ import path from 'path';
 import fs from 'fs-extra';
 import glob from 'glob';
 import escapeGlob from 'glob-escape';
-import * as LocalMain from '@getflywheel/local/main';
+import type * as LocalMain from '@getflywheel/local/main';
 import { BACKUP_DIR_NAME } from '../constants';
 import { Store } from '../types';
 import { reportRestoreBackupFailure } from './errorReporting';
@@ -10,7 +10,7 @@ import { saveImageDataToDisk } from './utils';
 
 
 export function restoreImageFromBackupFactory(serviceContainer: LocalMain.ServiceContainerServices, store: Store) {
-	return async function(siteId: string, imageId: string): Promise<{ success: boolean }> {
+	return async function(siteId: string, imageId: string): Promise<{ success: boolean }>{
 		/**
 		 * Return a properly formatted error response, update the in-memory store and write that value to disk
 		 */
@@ -76,11 +76,11 @@ export function restoreImageFromBackupFactory(serviceContainer: LocalMain.Servic
 			return formatErrorReplyAndSetState();
 		}
 
-		store.setStateByImageID(siteId, fileData.originalImageHash, {
+		store.setStateByImageID(siteId, imageId, {
 			compressedImageHash: null,
 			compressedSize: null,
 			errorMessage: null,
-			errorRevertingFromBackup: true,
+			errorRevertingFromBackup: false,
 		});
 
 		saveImageDataToDisk(store, serviceContainer);

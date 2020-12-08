@@ -253,8 +253,6 @@ export const sitesSlice = createSlice({
 			image.errorMessage = null;
 			image.errorRevertingFromBackup = false;
 
-			console.log('success action', current(state))
-
 			return state;
 		},
 		revertToBackupFailure: (state, action: PayloadAction<{ siteID: string, imageID: string}>) => {
@@ -262,8 +260,6 @@ export const sitesSlice = createSlice({
 			const image = state[siteID].imageData[imageID];
 
 			image.errorRevertingFromBackup = true;
-
-			console.log('failure action', current(state))
 
 			return state;
 		},

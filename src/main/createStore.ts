@@ -79,9 +79,9 @@ export function createStore(initialState: SiteDataBySiteID = {}): Store {
 			state = {
 				...state,
 				[siteID]: {
-					...(state[siteID] || {} as SiteData),
+					...state[siteID],
 					imageData: {
-						...(state[siteID].imageData),
+						...state[siteID]?.imageData,
 						[imageID]: {
 							...state[siteID]?.imageData?.[imageID],
 							...newState,
