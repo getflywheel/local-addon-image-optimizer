@@ -86,7 +86,6 @@ export const FileListView = (props: IFileListViewProps) => {
 				return (
 					<ColFileSize
 						dataArgs={dataArgs}
-						optimizerStatus={siteData.optimizationStatus}
 					/>
 				);
 			}
@@ -94,7 +93,6 @@ export const FileListView = (props: IFileListViewProps) => {
 				return (
 					<ColFileSize
 						dataArgs={dataArgs}
-						optimizerStatus={siteData.optimizationStatus}
 					/>
 				);
 			}

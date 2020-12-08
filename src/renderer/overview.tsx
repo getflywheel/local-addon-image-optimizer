@@ -68,20 +68,10 @@ export const Overview = (props: IProps) => {
 			);
 		}
 
-		if (colKey === 'originalSize') {
+		if (colKey === 'originalSize' || colKey === 'compressedSize') {
 			return (
 				<ColFileSize
 					dataArgs={dataArgs}
-					optimizerStatus={siteData.optimizationStatus}
-				/>
-			);
-		}
-
-		if (colKey === 'compressedSize') {
-			return (
-				<ColFileSize
-					dataArgs={dataArgs}
-					optimizerStatus={siteData.optimizationStatus}
 				/>
 			);
 		}
