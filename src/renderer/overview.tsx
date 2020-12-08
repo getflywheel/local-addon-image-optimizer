@@ -12,7 +12,11 @@ import { selectors, useStoreSelector } from './store/store';
 import { SiteData } from '../types';
 import WarningSVG from './_assets/svg/warning.svg';
 import CheckmarkSmallSVG from './_assets/svg/checkmark--sm.svg';
-import { useContextMenu } from './contextMenu';
+import {
+	useContextMenu,
+	comprepssedImageListNoContextMenu,
+	compressedImageListContextMenu,
+} from './contextMenu';
 
 interface IProps {
 	setOverviewSelected: (x: boolean) => void,
@@ -33,7 +37,7 @@ export const Overview = (props: IProps) => {
 		scanInProgress,
 	} = siteData;
 
-	useContextMenu();
+	useContextMenu(comprepssedImageListNoContextMenu, compressedImageListContextMenu);
 
 	const onClickViewImages = () => {
 		setOverviewSelected(false);
@@ -54,8 +58,6 @@ export const Overview = (props: IProps) => {
 
 	const cellRenderer: VirtualTableCellRenderer = (dataArgs: IVirtualTableCellRendererDataArgs) => {
 		const { colKey, rowData: { compressedImageHash, errorMessage }} = dataArgs;
-
-		console.log(dataArgs)
 
 		if (colKey ==='filePath') {
 			return (
@@ -102,7 +104,7 @@ export const Overview = (props: IProps) => {
 	};
 
 	return (
-		<div className="overview_Container">
+		<div className="overview_Container" id={comprepssedImageListNoContextMenu}>
 			{remainingUncompressedImages > 0 &&
 				<Banner className="imageNotificationBanner" variant="success" icon="false" buttonText={'View Images'} buttonOnClick={() => onClickViewImages()}>
 					We've found{' '}<strong>{remainingUncompressedImages}</strong>images slowing down your site.
@@ -111,10 +113,11 @@ export const Overview = (props: IProps) => {
 			{imageCount === 0
 				&& lastScan > 0
 				&& !scanInProgress
-				&&
+				&& (
 					<Banner variant="warning" icon="warning">
 						No images found on site.
 					</Banner>
+				)
 			}
 
 			<LastOptimizeStatus
@@ -129,6 +132,7 @@ export const Overview = (props: IProps) => {
 			/>
 
 			<VirtualTable
+				id={compressedImageListContextMenu}
 				data={compressedAndErroredImages}
 						rowClassName='fileList_Virtual_Table_Row'
 				headers={[
