@@ -1,14 +1,14 @@
 import React from 'react';
 import { IVirtualTableCellRendererDataArgs, Text } from '@getflywheel/local-components';
-import { FileStatus } from '../../types';
 import { convertBytesToMb } from '../utils';
 
 interface IFileSizeProps {
 	dataArgs: IVirtualTableCellRendererDataArgs
+	errorOverrideMessage?: string;
 }
 
 export const ColFileSize = (props: IFileSizeProps) =>  {
-	const { dataArgs } = props;
+	const { dataArgs, errorOverrideMessage } = props;
 	const { colKey, rowData } = dataArgs;
 
 	if (dataArgs.isHeader) {
@@ -19,12 +19,17 @@ export const ColFileSize = (props: IFileSizeProps) =>  {
 
 	let content = null;
 
-	if (
+	const shouldDisplayErrorMessage = () => {
+		return
+	}
+
+	const errorCompressingImage = (
 		colKey === 'compressedSize'
-		&& rowData.errorMessage
+		&& rowData.errorOverrideMessage
 		&& !rowData.compressedSize
-		// && rowData.fileStatus === FileStatus.FAILED
-	) {
+	);
+
+	if (errorCompressingImage || errorOverrideMessage) {
 		content = (
 			<Text
 				privateOptions={{
@@ -32,7 +37,7 @@ export const ColFileSize = (props: IFileSizeProps) =>  {
 				}}
 				className={'colFileSize_Error_Text'}
 			>
-				Error
+				{errorOverrideMessage ? errorOverrideMessage : 'Error'}
 			</Text>
 		);
 	} else {

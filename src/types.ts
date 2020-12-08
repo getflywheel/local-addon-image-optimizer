@@ -5,6 +5,7 @@ export interface ImageData {
 	originalSize: number;
 	compressedSize?: number;
 	errorMessage?: string;
+	errorRevertingFromBackup?: boolean;
 	fileStatus?: string;
 	isChecked?: boolean;
 }

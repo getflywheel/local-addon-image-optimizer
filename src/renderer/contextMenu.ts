@@ -2,10 +2,9 @@ import { remote, shell } from 'electron';
 import { useEffect } from 'react';
 import * as LocalRenderer from '@getflywheel/local/renderer';
 import { IPC_EVENTS } from '../constants';
-import { selectors } from './store/store';
-import invokeModal, { BaseModalProps } from './invokeModal';
+import { selectors, actions, store } from './store/store';
+import invokeModal from './invokeModal';
 import ConfirmRestoreBackupModalContents from './confirmRestoreBackupModalContents';
-import ErrorBackingUpImageModalContents from './errorBackingUpImageModalContents';
 
 const { Menu, MenuItem } = remote;
 
@@ -41,19 +40,18 @@ const revertToBackupMenuItem = (imageID: string, filePath: string) => {
 	return new MenuItem({
 		label: 'Revert to backup',
 		async click() {
-			const siteId = selectors.activeSiteID();
+			const siteID = selectors.activeSiteID();
 			invokeModal({
 				ModalContents: ConfirmRestoreBackupModalContents,
-				onSubmit: () => {
-					LocalRenderer.ipcAsync(IPC_EVENTS.RESTORE_IMAGE_FROM_BACKUP, siteId, imageID)
-						.then(({ success, error }) => {
-							if (!success) {
-								invokeModal({
-									ModalContents: ErrorBackingUpImageModalContents,
-									modalContentsProps: { error, filePath },
-								});
-							}
-						});
+				onSubmit: async () => {
+					const { success } = await LocalRenderer.ipcAsync(IPC_EVENTS.RESTORE_IMAGE_FROM_BACKUP, siteID, imageID)
+					let action = actions.revertToBackupSuccess;
+
+					if (!success) {
+						action = actions.revertToBackupFailure;
+					}
+
+					store.dispatch(action({ siteID, imageID }));
 				}
 			});
 		},
