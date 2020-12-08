@@ -35,23 +35,26 @@ const LastOptimizeStatus: React.FC<IProps> = (props: IProps) => {
 	const totalImageErrored = `${erroredTotalCount}/${imageCount}`;
 
 	return (
-		<TableList className="lastOptimizeStatus_Table">
-			<TableListRow className={classnames(
+		<div>
+			<TableList className="lastOptimizeStatus_Table">
+				<TableListRow
+					className={classnames(
 						"lastOptimizeStatus_Row",
 						"lastOptimizeStatus_Header_Row",
-					)}>
-				{lastScan
-					? <Text
-							className="lastOptimizeStatus_Text"
-							privateOptions={{
-								fontWeight: "bold"
-							}}
-						>
-							Last updated:{' '}{getFormattedTimestamp(lastScan)}
-						</Text>
-					: null
-				}
-				<Button
+					)}
+				>
+					{lastScan
+						? <Text
+								className="lastOptimizeStatus_Text"
+								privateOptions={{
+									fontWeight: "bold"
+								}}
+							>
+								Last updated:{' '}{getFormattedTimestamp(lastScan)}
+							</Text>
+						: null
+					}
+					<Button
 						className="lastOptimizeStatus_Rescan_Button"
 						onClick={() => props.handleScanForImages()}
 						privateOptions={{
@@ -65,31 +68,32 @@ const LastOptimizeStatus: React.FC<IProps> = (props: IProps) => {
 					>
 						{scanInProgress ? 'Scanning...' : 'Scan for Images'}
 					</Button>
-			</TableListRow>
-			<TableListRow className="lastOptimizeStatus_Row">
-				<Text className="lastOptimizeStatus_Text">Total reductions</Text>
-				<Text className="lastOptimizeStatus_TextAlignRight">
-					{
-						originalTotalSize === 0
-							? '0'
-							: formatCompressedPercentage((compressedImagesOriginalSize - compressedTotalSize) / originalTotalSize)
-					}%</Text>
-			</TableListRow>
-			<TableListRow className="lastOptimizeStatus_Row">
-				<Text className="lastOptimizeStatus_Text">Total file size reductions</Text>
-				<Text className="lastOptimizeStatus_TextAlignRight">{convertBytesToMb(compressedImagesOriginalSize - compressedTotalSize)}{' '}MB</Text>
-			</TableListRow>
-			<TableListRow className="lastOptimizeStatus_Row">
-				<CheckmarkMedSVG className="success-count-svg"/>
-				<Text className="lastOptimizeStatus_TextWithIcon">Total images optimized</Text>
-				<Text className="lastOptimizeStatus_TextAlignRight">{totalImageOptimized}</Text>
-			</TableListRow>
-			<TableListRow className="lastOptimizeStatus_Row">
-				<WarningSVG className="error-count-svg"/>
-				<Text className="lastOptimizeStatus_TextWithIcon">Total errors</Text>
-				<Text className="lastOptimizeStatus_TextAlignRight">{totalImageErrored}</Text>
-			</TableListRow>
-		</TableList>
+				</TableListRow>
+				<TableListRow className="lastOptimizeStatus_Row">
+					<Text className="lastOptimizeStatus_Text">Total reductions</Text>
+					<Text className="lastOptimizeStatus_TextAlignRight">
+						{
+							originalTotalSize === 0
+								? '0'
+								: formatCompressedPercentage((compressedImagesOriginalSize - compressedTotalSize) / originalTotalSize)
+						}%</Text>
+				</TableListRow>
+				<TableListRow className="lastOptimizeStatus_Row">
+					<Text className="lastOptimizeStatus_Text">Total file size reductions</Text>
+					<Text className="lastOptimizeStatus_TextAlignRight">{convertBytesToMb(compressedImagesOriginalSize - compressedTotalSize)}{' '}MB</Text>
+				</TableListRow>
+				<TableListRow className="lastOptimizeStatus_Row">
+					<CheckmarkMedSVG className="success-count-svg"/>
+					<Text className="lastOptimizeStatus_TextWithIcon">Total images optimized</Text>
+					<Text className="lastOptimizeStatus_TextAlignRight">{totalImageOptimized}</Text>
+				</TableListRow>
+				<TableListRow className="lastOptimizeStatus_Row">
+					<WarningSVG className="error-count-svg"/>
+					<Text className="lastOptimizeStatus_TextWithIcon">Total errors</Text>
+					<Text className="lastOptimizeStatus_TextAlignRight">{totalImageErrored}</Text>
+				</TableListRow>
+			</TableList>
+		</div>
 	);
 }
 

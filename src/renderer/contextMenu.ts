@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import * as LocalRenderer from '@getflywheel/local/renderer';
 import { IPC_EVENTS } from '../constants';
 import { selectors } from './store/store';
+import invokeModal, { BaseModalProps } from './invokeModal';
 
 const { Menu, MenuItem } = remote;
 
@@ -11,6 +12,7 @@ const contextEvent = 'contextmenu';
 const menuWillCloseEvent = 'menu-will-close';
 export const noContextMenuId = 'no-context-menu';
 export const ioFileListContextMenuId = 'io-file-list-context-menu';
+export const compressedFileList = 'io-compressed-file-list';
 
 const revealPathMenuItem = (path: string) => {
 	return new MenuItem({
@@ -35,10 +37,16 @@ const revertToBackupMenuItem = (imageID: string) => {
 		label: 'Revert to backup',
 		async click() {
 			const siteId = selectors.activeSiteID();
-			LocalRenderer.ipcAsync(IPC_EVENTS.RESTORE_IMAGE_FROM_BACKUP, siteId, imageID);
+			// LocalRenderer.ipcAsync(IPC_EVENTS.RESTORE_IMAGE_FROM_BACKUP, siteId, imageID);
+			// invokeModal({
+			// 	ModalContents: Comp,
+			// 	modalContentsProps: { hello: 'hey' },
+			// });
 		},
 	});
 };
+
+type TableType = 'revealPath' | 'openPath' | 'revertToBackup';
 
 export function useContextMenu() {
 	useEffect(() => {
@@ -49,9 +57,9 @@ export function useContextMenu() {
 			});
 		}
 
-		const IOFileListElement = document.getElementById(ioFileListContextMenuId);
-		if (IOFileListElement) {
-			IOFileListElement.addEventListener(contextEvent, (e) => {
+		const uncompressedImageList = document.getElementById(ioFileListContextMenuId);
+		if (uncompressedImageList) {
+			uncompressedImageList.addEventListener(contextEvent, (e) => {
 				e.preventDefault();
 				const { imageid: imageID } = e.target.dataset;
 
@@ -59,7 +67,7 @@ export function useContextMenu() {
 					const menu = new Menu()
 
 					/**
-					 * @todo get these selectors shaped up so
+					 * @todo get these selectors shaped up so that state gets passed in appropriately
 					 */
 					const { filePath, compressedImageHash } = selectors.siteImages()[imageID];
 
@@ -74,10 +82,6 @@ export function useContextMenu() {
 					menu.once(menuWillCloseEvent, () => {
 						menu.closePopup();
 					});
-				}
-
-				if (imageID) {
-
 				}
 			});
 		}

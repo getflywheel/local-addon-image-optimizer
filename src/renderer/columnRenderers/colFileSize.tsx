@@ -1,6 +1,8 @@
 import React from 'react';
 import { IVirtualTableCellRendererDataArgs, Text } from '@getflywheel/local-components';
 import { FileStatus, OptimizerStatus } from '../../types';
+import { convertBytesToMb } from '../utils';
+
 interface IFileSizeProps {
 	dataArgs: IVirtualTableCellRendererDataArgs
 	optimizerStatus: OptimizerStatus
@@ -14,16 +16,14 @@ export const ColFileSize = (props: IFileSizeProps) =>  {
 
 	if (optimizerStatus === OptimizerStatus.BEFORE && colKey === 'compressedSize') {
 		content = dataArgs.cellData;
-	}
-	else if (colKey === 'originalSize') {
+	} else if (colKey === 'originalSize') {
 		content = dataArgs.isHeader
 			? dataArgs.cellData
-			: (rowData.originalSize / (1024*1024)).toFixed(2) + ' MB';
+			: `${convertBytesToMb(rowData.originalSize)} MB`;
 	} else if (colKey === 'compressedSize') {
-
 		content = dataArgs.isHeader
 			? dataArgs.cellData
-			: (rowData.compressedSize / (1024*1024)).toFixed(2) + ' MB';
+			: `${convertBytesToMb(rowData.originalSize)} MB`;
 
 		if (rowData.errorMessage && !rowData.compressedSize && rowData.fileStatus === FileStatus.FAILED) {
 			content = (

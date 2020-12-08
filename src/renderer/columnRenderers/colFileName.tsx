@@ -1,28 +1,21 @@
 import React from 'react';
 import { IVirtualTableCellRendererDataArgs } from '@getflywheel/local-components';
-import { OptimizerStatus } from '../../types';
 
 interface IFileNameProps {
 	dataArgs: IVirtualTableCellRendererDataArgs
-	optimizationStatus: OptimizerStatus;
+	headerText: string | null;
 }
 
-export const ColFileName = ( props: IFileNameProps ) =>  {
-	const { dataArgs } = props;
+export const ColFileName = (props: IFileNameProps) =>  {
+	const { dataArgs, headerText } = props;
 	const { rowData } = dataArgs;
 
 	const formattedFilePath = dataArgs.cellData.replace(/^.*\/app\/public\/wp-content/g, 'wp-content');
 
-	const getSelectedCount = () => {
-		return dataArgs.data.filter(
-			data => data.isChecked
-		).length;
-	}
-
 	if (dataArgs.isHeader) {
 		return(
 			<div className='fileList_File_Name_Header'>
-				{props.optimizationStatus === OptimizerStatus.BEFORE ? (getSelectedCount() + ' Images Selected') : 'File Name'}
+				{headerText}
 			</div>
 		);
 	} else {

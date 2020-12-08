@@ -18,6 +18,7 @@ interface IFileListHeaderProps {
 	cancelImageCompression: () => void,
 	resetToOverview: () => void,
 	siteID: string,
+	compressSelectedImages: () => void,
 }
 
 export interface ModalContentsProps {
@@ -31,6 +32,7 @@ export const FileListHeader = (props: IFileListHeaderProps) => {
 		selectedImages,
 		cancelImageCompression,
 		resetToOverview,
+		compressSelectedImages,
 	} = props;
 
 	const {
@@ -39,8 +41,6 @@ export const FileListHeader = (props: IFileListHeaderProps) => {
 	} = useStoreSelector(selectors.compressionCompletionStats);
 
 	const preferences = useStoreSelector((state) => state.preferences);
-
-	console.log('filelistheader')
 
     const disableOptimizeButton = selectedImages.length > 0 ? false : true;
 
@@ -60,6 +60,7 @@ export const FileListHeader = (props: IFileListHeaderProps) => {
                     onClick={() => invokeModal<ModalContentsProps>({
 						ModalContents: ConfirmOptimizationModal,
 						modalContentsProps: { preferences },
+						onSubmit: compressSelectedImages,
 					})}
                     privateOptions={{
                         color: 'green',

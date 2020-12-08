@@ -1,6 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import { ipcRenderer } from 'electron';
 import { ColFileStatus } from '../columnRenderers/ColFileStatus';
 import { ColFileName } from '../columnRenderers/ColFileName';
 import { ColFileSize } from '../columnRenderers/ColFileSize';
@@ -40,14 +38,21 @@ export const FileListView = (props: IFileListViewProps) => {
 		preferences,
 		siteID,
 	} = props;
+
 	useContextMenu();
 
 	const uncompressedImages = useStoreSelector(selectors.uncompressedSiteImages);
 	const selectedImages = useStoreSelector(selectors.selectedSiteImages);
 
 	const cellRender: VirtualTableCellRenderer = (dataArgs: IVirtualTableCellRendererDataArgs) => {
+		const getSelectedCount = () => {
+			return dataArgs.data.filter(
+				data => data.isChecked
+			).length;
+		}
+
 		switch (dataArgs.colKey) {
-			case 'fileStatus':
+			case 'fileStatus': {
 				return (
 					<ColFileStatus
 						dataArgs={dataArgs}
@@ -57,28 +62,41 @@ export const FileListView = (props: IFileListViewProps) => {
 						optimizationStatus={siteData.optimizationStatus}
 					/>
 				);
-			case 'filePath':
+			}
+			case 'filePath': {
+				let headerText = null;
+				if (dataArgs.isHeader) {
+					headerText = siteData.optimizationStatus === OptimizerStatus.BEFORE
+						? `${getSelectedCount()} Images Selected`
+						: 'File Name';
+				}
+
 				return (
 					<ColFileName
 						dataArgs={dataArgs}
-						optimizationStatus={siteData.optimizationStatus}
+						headerText={headerText}
 					/>
 				);
-			case 'originalSize':
+			}
+			case 'originalSize': {
 				return (
 					<ColFileSize
 						dataArgs={dataArgs}
 						optimizerStatus={siteData.optimizationStatus}
 					/>
 				);
-			case 'compressedSize':
+			}
+			case 'compressedSize': {
 				return (
 					<ColFileSize
 						dataArgs={dataArgs}
 						optimizerStatus={siteData.optimizationStatus}
 					/>
 				);
-			default: return null;
+			}
+			default: {
+				return null;
+			}
 		}
 	};
 
@@ -92,6 +110,7 @@ export const FileListView = (props: IFileListViewProps) => {
 				cancelImageCompression={cancelImageCompression}
 				setOverviewSelected={setOverviewSelected}
 				siteID={siteID}
+				compressSelectedImages={compressSelectedImages}
 			/>
 			<ProgressBar progress={siteData.compressionListCompletionPercentage} />
 			<div className='fileListViewer_File_List' id={noContextMenuId}>
