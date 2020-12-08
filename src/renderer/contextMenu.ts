@@ -1,3 +1,4 @@
+import React from 'react';
 import { remote, shell } from 'electron';
 import { useEffect } from 'react';
 import * as LocalRenderer from '@getflywheel/local/renderer';
@@ -10,9 +11,12 @@ const { Menu, MenuItem } = remote;
 const isMac = process.platform === 'darwin';
 const contextEvent = 'contextmenu';
 const menuWillCloseEvent = 'menu-will-close';
-export const noContextMenuId = 'no-context-menu';
-export const ioFileListContextMenuId = 'io-file-list-context-menu';
-export const compressedFileList = 'io-compressed-file-list';
+
+export const uncomprepssedImageListNoContextMenu = 'uncompressed-image-list-no-context-menu';
+export const uncompressedImageListContextMenu = 'uncompressed-image-list-context-menu';
+
+export const comprepssedImageListNoContextMenu = 'compressed-image-list-no-context-menu';
+export const compressedImageListContextMenu = 'compressed-image-list-context-menu';
 
 const revealPathMenuItem = (path: string) => {
 	return new MenuItem({
@@ -46,44 +50,49 @@ const revertToBackupMenuItem = (imageID: string) => {
 	});
 };
 
-type TableType = 'revealPath' | 'openPath' | 'revertToBackup';
-
-export function useContextMenu() {
+export function useContextMenu(parentNodeId: string, contextMenuAreaId: string) {
 	useEffect(() => {
-		const element = document.getElementById(noContextMenuId);
+		/**
+		 * Remove any other context menu's.
+		 *
+		 * This is necessary because Local will expose a context menu with developer options
+		 * if the "Show Developer Options" setting is on.
+		 */
+		const element = document.getElementById(parentNodeId);
 		if (element) {
 			element.addEventListener(contextEvent, (e) => {
 				e.preventDefault();
 			});
 		}
 
-		const uncompressedImageList = document.getElementById(ioFileListContextMenuId);
-		if (uncompressedImageList) {
-			uncompressedImageList.addEventListener(contextEvent, (e) => {
-				e.preventDefault();
-				const { imageid: imageID } = e.target.dataset;
+		const imageList = document.getElementById(contextMenuAreaId);
 
-				if (imageID) {
-					const menu = new Menu()
-
-					/**
-					 * @todo get these selectors shaped up so that state gets passed in appropriately
-					 */
-					const { filePath, compressedImageHash } = selectors.siteImages()[imageID];
-
-					menu.append(revealPathMenuItem(filePath));
-					menu.append(openPathMenuItem(filePath));
-
-					if (compressedImageHash) {
-						menu.append(revertToBackupMenuItem(imageID));
-					}
-
-					menu.popup({ window: remote.getCurrentWindow() });
-					menu.once(menuWillCloseEvent, () => {
-						menu.closePopup();
-					});
-				}
-			});
+		if (!imageList) {
+			return;
 		}
+
+		imageList.addEventListener(contextEvent, (e) => {
+			e.preventDefault();
+			const { imageid: imageID } = e.target.dataset;
+
+			if (!imageID) {
+				return;
+			}
+
+			const menu = new Menu()
+			const { filePath, compressedImageHash } = selectors.siteImages()[imageID];
+
+			menu.append(revealPathMenuItem(filePath));
+			menu.append(openPathMenuItem(filePath));
+
+			if (compressedImageHash) {
+				menu.append(revertToBackupMenuItem(imageID));
+			}
+
+			menu.popup({ window: remote.getCurrentWindow() });
+			menu.once(menuWillCloseEvent, () => {
+				menu.closePopup();
+			});
+		});
 	}, []);
 }
