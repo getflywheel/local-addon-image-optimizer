@@ -9,9 +9,11 @@ import { reportRestoreBackupFailure } from './errorReporting';
 import { saveImageDataToDisk } from './utils';
 
 
-
 export function restoreImageFromBackupFactory(serviceContainer: LocalMain.ServiceContainerServices, store: Store) {
 	return async function(siteId: string, imageId: string): Promise<{ success: boolean }> {
+		/**
+		 * Return a properly formatted error response, update the in-memory store and write that value to disk
+		 */
 		const formatErrorReplyAndSetState = () => {
 			store.setStateByImageID(siteId, imageId, {
 				errorRevertingFromBackup: true,
@@ -42,8 +44,6 @@ export function restoreImageFromBackupFactory(serviceContainer: LocalMain.Servic
 
 		/**
 		 * Handle any potential bad glob patterns passed to glob.sync
-		 *
-		 * @todo log/send this shit to the ui
 		 */
 		try {
 			matches = glob.sync(globMatcher);
