@@ -6,16 +6,24 @@ import * as LocalMain from '@getflywheel/local/main';
 import { BACKUP_DIR_NAME } from '../constants';
 import { Store } from '../types';
 import { reportRestoreBackupFailure } from './errorReporting';
+import { saveImageDataToDisk } from './utils';
 
-
-const formatErrorReply = (error: string) => ({
-	success: false,
-	error,
-});
 
 
 export function restoreImageFromBackupFactory(serviceContainer: LocalMain.ServiceContainerServices, store: Store) {
 	return async function(siteId: string, imageId: string): Promise<{ success: boolean }> {
+		const formatErrorReplyAndSetState = () => {
+			store.setStateByImageID(siteId, imageId, {
+				errorRevertingFromBackup: true,
+			});
+
+			saveImageDataToDisk(store, serviceContainer);
+
+			return {
+				success: false,
+			};
+		};
+
 		const state = store.getStateBySiteID(siteId);
 
 		const fileData = state.imageData[imageId];
@@ -46,7 +54,7 @@ export function restoreImageFromBackupFactory(serviceContainer: LocalMain.Servic
 		if (!matches || matches.length === 0) {
 			const errorMessage = 'No backups found for this image';
 			reportRestoreBackupFailure(errorMessage)
-			return formatErrorReply(errorMessage);
+			return formatErrorReplyAndSetState();
 		}
 
 		let mostRecentBackup;
@@ -65,13 +73,17 @@ export function restoreImageFromBackupFactory(serviceContainer: LocalMain.Servic
 			fs.copySync(mostRecentBackup, filePath);
 		} catch (err) {
 			reportRestoreBackupFailure(err);
-			return formatErrorReply('Compressed image could not be replaced with backup')
-		} finally {
-			store.setStateByImageID(siteId, fileData.originalImageHash, {
-				compressedImageHash: null,
-				compressedSize: null,
-			});
+			return formatErrorReplyAndSetState();
 		}
+
+		store.setStateByImageID(siteId, fileData.originalImageHash, {
+			compressedImageHash: null,
+			compressedSize: null,
+			errorMessage: null,
+			errorRevertingFromBackup: true,
+		});
+
+		saveImageDataToDisk(store, serviceContainer);
 
 		return {
 			success: true,

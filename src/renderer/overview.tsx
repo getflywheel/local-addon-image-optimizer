@@ -57,7 +57,11 @@ export const Overview = (props: IProps) => {
 	const remainingUncompressedImages = imageCount - totalCompressedCount - erroredTotalCount;
 
 	const cellRenderer: VirtualTableCellRenderer = (dataArgs: IVirtualTableCellRendererDataArgs) => {
-		const { colKey, rowData: { compressedImageHash, errorMessage }} = dataArgs;
+		const { colKey, rowData: {
+			compressedImageHash,
+			errorMessage,
+			errorRevertingFromBackup,
+		}} = dataArgs;
 
 		if (colKey ==='filePath') {
 			return (
@@ -68,25 +72,38 @@ export const Overview = (props: IProps) => {
 			);
 		}
 
-		if (colKey === 'originalSize' || colKey === 'compressedSize') {
+		if (colKey === 'originalSize') {
+			return (
+				<ColFileSize dataArgs={dataArgs} />
+			);
+		}
+
+		if (colKey === 'compressedSize') {
+			let errorMessage;
+
+			if (errorRevertingFromBackup) {
+				errorMessage = 'Error reverting';
+			}
+
 			return (
 				<ColFileSize
 					dataArgs={dataArgs}
+					errorOverrideMessage={errorMessage}
 				/>
+			);
+		}
+
+		if (errorRevertingFromBackup || (!compressedImageHash && errorMessage)) {
+			return (
+				<div className='warning-svg'>
+					<WarningSVG />
+				</div>
 			);
 		}
 
 		if (compressedImageHash) {
 			return (
 				<CheckmarkSmallSVG />
-			);
-		}
-
-		if (errorMessage) {
-			return (
-				<div className='warning-svg'>
-					<WarningSVG />
-				</div>
 			);
 		}
 

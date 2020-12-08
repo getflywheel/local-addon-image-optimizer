@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction, current } from '@reduxjs/toolkit';
 import {
 	SiteDataBySiteID,
 	SiteData,
@@ -241,6 +241,29 @@ export const sitesSlice = createSlice({
 		},
 		siteDeleted: (state, action: PayloadAction<string>) => {
 			delete state[action.payload];
+
+			return state;
+		},
+		revertToBackupSuccess: (state, action: PayloadAction<{siteID: string, imageID: string}>) => {
+			const { siteID, imageID  } = action.payload;
+			const image = state[siteID].imageData[imageID];
+
+			image.compressedImageHash = null;
+			image.compressedSize = null;
+			image.errorMessage = null;
+			image.errorRevertingFromBackup = false;
+
+			console.log('success action', current(state))
+
+			return state;
+		},
+		revertToBackupFailure: (state, action: PayloadAction<{ siteID: string, imageID: string}>) => {
+			const { siteID, imageID  } = action.payload;
+			const image = state[siteID].imageData[imageID];
+
+			image.errorRevertingFromBackup = true;
+
+			console.log('failure action', current(state))
 
 			return state;
 		},
