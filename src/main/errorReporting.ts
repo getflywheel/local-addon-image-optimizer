@@ -1,16 +1,18 @@
 import * as LocalMain from '@getflywheel/local/main';
 import fs from 'fs-extra';
 import path from 'path';
-import { ImageData } from '../types';
-const packageJSON = fs.readJsonSync(path.join(__dirname, '../../package.json'));
+
+const packageJSON = !process.env.JEST_WORKER_ID
+	? fs.readJsonSync(path.join(__dirname, '../../package.json'))
+	: null;
 
 const { localLogger } = LocalMain.getServiceContainer().cradle;
 
 const logger = localLogger.child({
     thread: 'main',
     class: 'AddonImageOptimizer',
-    addonName: packageJSON.name,
-    addonVersion: packageJSON.version,
+    addonName: packageJSON?.name,
+    addonVersion: packageJSON?.version,
 });
 
 export const reportScanRequest = (siteID: string) => {
