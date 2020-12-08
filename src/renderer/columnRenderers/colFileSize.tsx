@@ -1,44 +1,50 @@
 import React from 'react';
 import { IVirtualTableCellRendererDataArgs, Text } from '@getflywheel/local-components';
-import { FileStatus, OptimizerStatus } from '../../types';
+import { FileStatus } from '../../types';
 import { convertBytesToMb } from '../utils';
 
 interface IFileSizeProps {
 	dataArgs: IVirtualTableCellRendererDataArgs
-	optimizerStatus: OptimizerStatus
 }
 
 export const ColFileSize = (props: IFileSizeProps) =>  {
-	const { dataArgs, optimizerStatus } = props;
+	const { dataArgs } = props;
 	const { colKey, rowData } = dataArgs;
+
+	if (dataArgs.isHeader) {
+		return (
+			<div>{dataArgs.cellData}</div>
+		);
+	}
 
 	let content = null;
 
-	if (optimizerStatus === OptimizerStatus.BEFORE && colKey === 'compressedSize') {
-		content = dataArgs.cellData;
-	} else if (colKey === 'originalSize') {
-		content = dataArgs.isHeader
-			? dataArgs.cellData
-			: `${convertBytesToMb(rowData.originalSize)} MB`;
-	} else if (colKey === 'compressedSize') {
-		content = dataArgs.isHeader
-			? dataArgs.cellData
-			: `${convertBytesToMb(rowData.originalSize)} MB`;
-
-		if (rowData.errorMessage && !rowData.compressedSize && rowData.fileStatus === FileStatus.FAILED) {
-			content = (
-				<Text
-					privateOptions={{
-						fontWeight: 'bold',
-					}}
-					className={'colFileSize_Error_Text'}
-				>
-					Error
-				</Text>
-			);
-		} else if (!dataArgs.cellData) {
-			content = dataArgs.cellData;
-		}
+	if (
+		colKey === 'compressedSize'
+		&& rowData.errorMessage
+		&& !rowData.compressedSize
+		// && rowData.fileStatus === FileStatus.FAILED
+	) {
+		content = (
+			<Text
+				privateOptions={{
+					fontWeight: 'bold',
+				}}
+				className={'colFileSize_Error_Text'}
+			>
+				Error
+			</Text>
+		);
+	} else {
+		const bytes = rowData[colKey];
+		/**
+		 * colKey with be one of
+		 *  - originalSize
+		 * 	- compressedSize
+		 */
+		content = bytes
+			? `${convertBytesToMb(rowData[colKey])} MB`
+			: null;
 	}
 
 	return (
