@@ -5,6 +5,7 @@ import escapeGlob from 'glob-escape';
 import * as LocalMain from '@getflywheel/local/main';
 import { BACKUP_DIR_NAME } from '../constants';
 import { Store } from '../types';
+import { reportRestoreBackupFailure } from './errorReporting';
 
 
 const formatErrorReply = (error: string) => ({
@@ -18,10 +19,6 @@ export function restoreImageFromBackupFactory(serviceContainer: LocalMain.Servic
 		const state = store.getStateBySiteID(siteId);
 
 		const fileData = state.imageData[imageId];
-
-		if (!fileData) {
-			return formatErrorReply('File data not found');
-		}
 
 		const site = serviceContainer.siteData.getSite(siteId);
 		const { filePath } = fileData;
@@ -43,35 +40,31 @@ export function restoreImageFromBackupFactory(serviceContainer: LocalMain.Servic
 		try {
 			matches = glob.sync(globMatcher);
 		} catch(err) {
-			console.error(err);
+			reportRestoreBackupFailure(err);
 		}
 
-		if (matches.length === 0) {
-			return formatErrorReply('No backups found for this image');
+		if (!matches || matches.length === 0) {
+			const errorMessage = 'No backups found for this image';
+			reportRestoreBackupFailure(errorMessage)
+			return formatErrorReply(errorMessage);
 		}
 
 		let mostRecentBackup;
 		let mostRecentTimeStamp = 0;
 
 		for (const match of matches) {
-			try {
-
 			const { birthtimeMs } = fs.statSync(match);
 
 			if (birthtimeMs > mostRecentTimeStamp) {
 				mostRecentTimeStamp = birthtimeMs;
 				mostRecentBackup = match;
 			}
-			}
-			catch(err) {
-				console.error(err)
-			}
 		}
 
 		try {
 			fs.copySync(mostRecentBackup, filePath);
 		} catch (err) {
-			console.error(err);
+			reportRestoreBackupFailure(err);
 			return formatErrorReply('Compressed image could not be replaced with backup')
 		} finally {
 			store.setStateByImageID(siteId, fileData.originalImageHash, {
