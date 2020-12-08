@@ -2,28 +2,29 @@ import path from 'path';
 import fs from 'fs-extra';
 import glob from 'glob';
 import escapeGlob from 'glob-escape';
-import isString from 'lodash';
 import * as LocalMain from '@getflywheel/local/main';
-import { BACKUP_DIR_NAME, IPC_EVENTS } from '../constants';
+import { BACKUP_DIR_NAME } from '../constants';
 import { Store } from '../types';
-import { getSupportedFileExtensions } from './utils';
-import { stat } from 'fs';
+
+
+const formatErrorReply = (error: string) => ({
+	success: false,
+	error,
+});
 
 
 export function restoreImageFromBackupFactory(serviceContainer: LocalMain.ServiceContainerServices, store: Store) {
-	return async function(siteId: string, filePath: string) {
+	return async function(siteId: string, imageId: string): Promise<{ success: boolean }> {
 		const state = store.getStateBySiteID(siteId);
 
-		// ensure that the filePath is legit
-		const fileData = Object.values(state.imageData).find((d) => d.filePath === filePath);
+		const fileData = state.imageData[imageId];
+
 		if (!fileData) {
-			/**
-			 * @todo handle this as an error or something?
-			 */
-			return;
+			return formatErrorReply('File data not found');
 		}
 
 		const site = serviceContainer.siteData.getSite(siteId);
+		const { filePath } = fileData;
 
 		// path to the root of the site's backup dir
 		const baseBackupDirPath = path.join(site.longPath, BACKUP_DIR_NAME);
@@ -46,11 +47,7 @@ export function restoreImageFromBackupFactory(serviceContainer: LocalMain.Servic
 		}
 
 		if (matches.length === 0) {
-			/**
-			 * @todo send back a message saying that no backup exists
-			 */
-
-			return;
+			return formatErrorReply('No backups found for this image');
 		}
 
 		let mostRecentBackup;
@@ -71,12 +68,11 @@ export function restoreImageFromBackupFactory(serviceContainer: LocalMain.Servic
 			}
 		}
 
-		console.log(mostRecentBackup, mostRecentTimeStamp);
-
 		try {
 			fs.copySync(mostRecentBackup, filePath);
 		} catch (err) {
 			console.error(err);
+			return formatErrorReply('Compressed image could not be replaced with backup')
 		} finally {
 			store.setStateByImageID(siteId, fileData.originalImageHash, {
 				compressedImageHash: null,
@@ -84,6 +80,8 @@ export function restoreImageFromBackupFactory(serviceContainer: LocalMain.Servic
 			});
 		}
 
-		return;
+		return {
+			success: true,
+		};
 	}
 }

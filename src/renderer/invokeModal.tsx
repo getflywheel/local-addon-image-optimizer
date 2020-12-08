@@ -5,33 +5,20 @@ import { FunctionGeneric } from '@getflywheel/local-components/dist/common/struc
 
 
 export interface BaseModalProps {
-	onCancel?: FunctionGeneric;
 	onSubmit?: FunctionGeneric;
 }
 
-interface ModalProps<ModalContentsProps> extends BaseModalProps {
+interface ModalOptions<ModalContentsProps> extends BaseModalProps {
 	ModalContents: (props: BaseModalProps & ModalContentsProps) => JSX.Element;
-	modalContentsProps: ModalContentsProps;
+	modalContentsProps?: ModalContentsProps;
 }
 
-function invokeModal <ModalContentsProps>(props: ModalProps<ModalContentsProps>)  {
+function invokeModal<ModalContentsProps>(options: ModalOptions<ModalContentsProps>)  {
 	const {
 		ModalContents,
-		onCancel,
 		onSubmit,
 		modalContentsProps,
-	} = props;
-
-	// const onSubmit = () => {
-	// 	onSubmit?();
-	// 	// compressSelectedImages();
-	// 	FlyModal.onRequestClose();
-	// };
-
-	const onCancelSelect = () => {
-		onCancel?.();
-		FlyModal.onRequestClose();
-	}
+	} = options;
 
 	ReactDOM.render(
 		(
@@ -43,7 +30,6 @@ function invokeModal <ModalContentsProps>(props: ModalProps<ModalContentsProps>)
 						onSubmit?.();
 						FlyModal.onRequestClose();
 					}}
-					onCancel={onCancelSelect}
 					{...modalContentsProps}
 				/>
 			</FlyModal>
