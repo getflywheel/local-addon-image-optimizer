@@ -2,9 +2,6 @@ export function formatCompressedPercentage (num: number) {
 	return Math.round(num * 100)
 }
 
-/**
- * @todo rename: bytesToMb
- */
 export function convertBytesToMb (num: number) {
 	return (num / (1024*1024)).toFixed(2)
 }

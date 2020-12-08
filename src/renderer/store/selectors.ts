@@ -170,7 +170,12 @@ const siteImages = createSelector(
 	(siteState) => siteState.imageData || {},
 );
 
-const preferences = (state) => state.preferences;
+const compressedAndErroredImages = createSelector(
+	selectActiveSite,
+	({ imageData }) => Object.values(imageData).filter(
+		({ errorMessage, compressedImageHash }) => errorMessage || compressedImageHash
+	),
+);
 
 export const selectors = {
 	activeSiteID: () => activeSiteID(store.getState()),
@@ -185,10 +190,6 @@ export const selectors = {
 	siteImageCount,
 	imageStats,
 	compressionCompletionStats,
-	// siteImages: () => siteImages(store.getState()),
-	siteImages,
-	// preferences: () => preferences(store.getState()),
-	preferences,
+	compressedAndErroredImages,
+	siteImages: () => siteImages(store.getState()),
 };
-
-console.log('store\ ------', store)
