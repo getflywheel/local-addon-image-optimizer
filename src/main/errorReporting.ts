@@ -44,3 +44,7 @@ export const reportNoBinFound = (binaryPath: string) => {
 export const reportBinOutput = (imagePath: string, bin: string, output: string) => {
 	logger.info(`[attempting to compress] ${imagePath} [using] ${bin} [ouput] ${output}`);
 }
+
+export const reportRestoreBackupFailure = (errorMessage: string) => {
+	logger.error(errorMessage);
+}
