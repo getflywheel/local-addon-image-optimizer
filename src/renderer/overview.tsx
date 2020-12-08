@@ -121,22 +121,26 @@ export const Overview = (props: IProps) => {
 				erroredTotalCount={erroredTotalCount}
 			/>
 
-			<VirtualTable
-				id={compressedImageListContextMenu}
-				data={compressedAndErroredImages}
-						rowClassName='fileList_Virtual_Table_Row'
-				headers={[
-					{ key: 'fileStatus', value: '', className: 'fileListViewer_Column_Selected' },
-					{ key: 'filePath', value: 'Filename', className: 'fileListViewer_Column_File_Name' },
-					{ key: 'originalSize', value: 'Original', className: 'fileListViewer_Column_Original_Size' },
-					{ key: 'compressedSize', value: 'Compressed', className: 'fileListViewer_Column_Compressed_Size' },
-				]}
-				cellRenderer={cellRenderer}
-				headersCapitalize='none'
-				striped
-				rowHeightSize="s"
-				rowHeaderHeightSize="m"
-			/>
+			{compressedAndErroredImages.length > 0
+				? (
+					<VirtualTable
+						id={compressedImageListContextMenu}
+						data={compressedAndErroredImages}
+								rowClassName='fileList_Virtual_Table_Row'
+						headers={[
+							{ key: 'fileStatus', value: '', className: 'fileListViewer_Column_Selected' },
+							{ key: 'filePath', value: 'Filename', className: 'fileListViewer_Column_File_Name' },
+							{ key: 'originalSize', value: 'Original', className: 'fileListViewer_Column_Original_Size' },
+							{ key: 'compressedSize', value: 'Compressed', className: 'fileListViewer_Column_Compressed_Size' },
+						]}
+						cellRenderer={cellRenderer}
+						headersCapitalize='none'
+						striped
+						rowHeightSize="s"
+						rowHeaderHeightSize="m"
+					/>
+				) : null
+			}
 		</div>
 	);
 }
