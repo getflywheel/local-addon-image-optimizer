@@ -253,6 +253,7 @@ export const sitesSlice = createSlice({
 			image.errorMessage = null;
 			image.errorRevertingFromBackup = false;
 
+			reportAnalytics(ANALYTIC_EVENT_TYPES.CONTEXTMENU_REVERT_BACKUP_SUCCESS);
 			return state;
 		},
 		revertToBackupFailure: (state, action: PayloadAction<{ siteID: string, imageID: string}>) => {
@@ -261,6 +262,7 @@ export const sitesSlice = createSlice({
 
 			image.errorRevertingFromBackup = true;
 
+			reportAnalytics(ANALYTIC_EVENT_TYPES.CONTEXTMENU_REVERT_BACKUP_FAIL);
 			return state;
 		},
 	},

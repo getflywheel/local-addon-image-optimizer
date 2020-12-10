@@ -5,6 +5,7 @@ import { IPC_EVENTS } from '../constants';
 import { selectors, actions, store } from './store/store';
 import invokeModal from './invokeModal';
 import ConfirmRestoreBackupModalContents from './confirmRestoreBackupModalContents';
+import { reportAnalytics, ANALYTIC_EVENT_TYPES } from './analytics';
 
 const { Menu, MenuItem } = remote;
 
@@ -23,6 +24,12 @@ const revealPathMenuItem = (path: string) => {
 		label: isMac ? 'Reveal in Finder' : 'Show folder',
 		click() {
 			shell.showItemInFolder(path)
+
+			/**
+			 * Generally, these calls should live in redux reducers, but given that we do not have
+			 * reducers for these, this location makes the most sense
+			 */
+			reportAnalytics(ANALYTIC_EVENT_TYPES.CONTEXTMENU_REVEAL_IN_FINDER);
 		}
 	});
 }
@@ -32,6 +39,12 @@ const openPathMenuItem = (path: string) => {
 		label: 'Open',
 		click() {
 			shell.openPath(path)
+
+			/**
+			 * Generally, these calls should live in redux reducers, but given that we do not have
+			 * reducers for these, this location makes the most sense
+			 */
+			reportAnalytics(ANALYTIC_EVENT_TYPES.CONTEXTMENU_OPEN);
 		}
 	});
 }
