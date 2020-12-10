@@ -1,10 +1,12 @@
 import { createSlice, PayloadAction, current } from '@reduxjs/toolkit';
+import { stat } from 'fs';
 import {
 	SiteDataBySiteID,
 	SiteData,
 	OptimizerStatus,
 	ImageData,
 	FileStatus,
+	RevertToBackupStatus,
 } from '../../types';
 import { reportAnalytics, ANALYTIC_EVENT_TYPES } from '../analytics';
 import { erroredImageFilter } from './selectors';
@@ -244,6 +246,12 @@ export const sitesSlice = createSlice({
 
 			return state;
 		},
+		revertToBackupStarted: (state, action: PayloadAction<{ siteID: string, imageID: string }>) => {
+			const { siteID, imageID } = action.payload;
+			state[siteID].imageData[imageID].revertToBackupStatus = RevertToBackupStatus.IN_PROGRESS;
+
+			return state;
+		},
 		revertToBackupSuccess: (state, action: PayloadAction<{siteID: string, imageID: string}>) => {
 			const { siteID, imageID  } = action.payload;
 			const image = state[siteID].imageData[imageID];
@@ -251,7 +259,7 @@ export const sitesSlice = createSlice({
 			image.compressedImageHash = null;
 			image.compressedSize = null;
 			image.errorMessage = null;
-			image.errorRevertingFromBackup = false;
+			image.revertToBackupStatus = RevertToBackupStatus.SUCCESS;
 
 			reportAnalytics(ANALYTIC_EVENT_TYPES.CONTEXTMENU_REVERT_BACKUP_SUCCESS);
 			return state;
@@ -259,8 +267,7 @@ export const sitesSlice = createSlice({
 		revertToBackupFailure: (state, action: PayloadAction<{ siteID: string, imageID: string}>) => {
 			const { siteID, imageID  } = action.payload;
 			const image = state[siteID].imageData[imageID];
-
-			image.errorRevertingFromBackup = true;
+			image.revertToBackupStatus = RevertToBackupStatus.FAILURE;
 
 			reportAnalytics(ANALYTIC_EVENT_TYPES.CONTEXTMENU_REVERT_BACKUP_FAIL);
 			return state;
