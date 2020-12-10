@@ -57,6 +57,9 @@ const revertToBackupMenuItem = (imageID: string, filePath: string) => {
 			invokeModal({
 				ModalContents: ConfirmRestoreBackupModalContents,
 				onSubmit: async () => {
+					const actionPayload = { siteID, imageID };
+					store.dispatch(actions.revertToBackupStarted(actionPayload));
+
 					const { success } = await LocalRenderer.ipcAsync(IPC_EVENTS.RESTORE_IMAGE_FROM_BACKUP, siteID, imageID)
 					let action = actions.revertToBackupSuccess;
 
@@ -64,7 +67,7 @@ const revertToBackupMenuItem = (imageID: string, filePath: string) => {
 						action = actions.revertToBackupFailure;
 					}
 
-					store.dispatch(action({ siteID, imageID }));
+					store.dispatch(action(actionPayload));
 				}
 			});
 		},

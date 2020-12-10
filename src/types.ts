@@ -5,7 +5,7 @@ export interface ImageData {
 	originalSize: number;
 	compressedSize?: number;
 	errorMessage?: string;
-	errorRevertingFromBackup?: boolean;
+	revertToBackupStatus?: RevertToBackupStatus;
 	fileStatus?: string;
 	isChecked?: boolean;
 }
@@ -14,6 +14,12 @@ export enum OptimizerStatus {
 	BEFORE = 'before',
 	RUNNING = 'running',
 	COMPLETE = 'complete'
+}
+
+export enum RevertToBackupStatus {
+	IN_PROGRESS = 'in-progress',
+	SUCCESS = 'success',
+	FAILURE = 'failure',
 }
 
 export interface SiteData {

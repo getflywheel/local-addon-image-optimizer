@@ -3,13 +3,14 @@ import {
 	Banner,
 	VirtualTable,
 	VirtualTableCellRenderer,
-	IVirtualTableCellRendererDataArgs
+	IVirtualTableCellRendererDataArgs,
+	Spinner,
 } from '@getflywheel/local-components';
 import LastOptimizeStatus from './lastOptimizeStatus';
 import { ColFileName } from './columnRenderers/ColFileName';
 import { ColFileSize } from './columnRenderers/ColFileSize';
 import { selectors, useStoreSelector } from './store/store';
-import { SiteData } from '../types';
+import { SiteData, RevertToBackupStatus } from '../types';
 import WarningSVG from './_assets/svg/warning.svg';
 import CheckmarkSmallSVG from './_assets/svg/checkmark--sm.svg';
 import {
@@ -60,8 +61,10 @@ export const Overview = (props: IProps) => {
 		const { colKey, rowData: {
 			compressedImageHash,
 			errorMessage,
-			errorRevertingFromBackup,
+			revertToBackupStatus,
 		}} = dataArgs;
+
+		const errorRevertingFromBackup = revertToBackupStatus === RevertToBackupStatus.FAILURE;
 
 		if (colKey ==='filePath') {
 			return (
@@ -91,6 +94,12 @@ export const Overview = (props: IProps) => {
 					errorOverrideMessage={errorMessage}
 				/>
 			);
+		}
+
+		if (revertToBackupStatus === RevertToBackupStatus.IN_PROGRESS) {
+			return (
+				<Spinner className='spinner-svg' />
+			)
 		}
 
 		if (errorRevertingFromBackup || (!compressedImageHash && errorMessage)) {

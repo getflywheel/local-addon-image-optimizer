@@ -4,8 +4,8 @@ import fs from 'fs-extra';
 import glob from 'glob';
 import escapeGlob from 'glob-escape';
 import * as LocalMain from '@getflywheel/local/main';
+import { RevertToBackupStatus } from '../types';
 import { createMockServiceContainer } from '../test/mockCreators';
-import { reportRestoreBackupFailure } from './errorReporting';
 import { saveImageDataToDisk } from './utils';
 import { createStore } from './createStore';
 import { restoreImageFromBackupFactory } from './restoreFromBackup';
@@ -13,7 +13,6 @@ import { restoreImageFromBackupFactory } from './restoreFromBackup';
 jest.mock('fs-extra');
 jest.mock('glob');
 jest.mock('glob-escape');
-jest.mock('./errorReporting');
 jest.mock('./utils');
 
 escapeGlob.mockImplementation((glob: string) => glob);
@@ -78,7 +77,7 @@ describe('restoreImageFromBackupFactory', () => {
 
 		expect(image.compressedImageHash).toEqual('asdf');
 		expect(image.compressedSize).toEqual(1200);
-		expect(image.errorRevertingFromBackup).toBeTrue();
+		expect(image.revertToBackupStatus).toEqual(RevertToBackupStatus.SUCCESS);
 	});
 
 	it('glob pattern should include the site path', async () => {
@@ -134,7 +133,7 @@ describe('restoreImageFromBackupFactory', () => {
 		expect(image.compressedImageHash).toBeFalsy();
 		expect(image.compressedSize).toBeFalsy();
 		expect(image.errorMessage).toBeFalsy();
-		expect(image.errorRevertingFromBackup).toBeFalsy();
+		expect(image.revertToBackupStatus).toEqual(RevertToBackupStatus.FAILURE);
 
 		/* @ts-ignore */
 		const saveImageDataArgs = saveImageDataToDisk.mock.calls[saveImageDataToDisk.mock.calls.length - 1];

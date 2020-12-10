@@ -7,6 +7,7 @@ import { BACKUP_DIR_NAME } from '../constants';
 import { Store } from '../types';
 import { reportRestoreBackupFailure } from './errorReporting';
 import { saveImageDataToDisk } from './utils';
+import { RevertToBackupStatus } from '../types';
 
 
 export function restoreImageFromBackupFactory(serviceContainer: LocalMain.ServiceContainerServices, store: Store) {
@@ -16,7 +17,7 @@ export function restoreImageFromBackupFactory(serviceContainer: LocalMain.Servic
 		 */
 		const formatErrorReplyAndSetState = () => {
 			store.setStateByImageID(siteId, imageId, {
-				errorRevertingFromBackup: true,
+				revertToBackupStatus: RevertToBackupStatus.FAILURE;
 			});
 
 			saveImageDataToDisk(store, serviceContainer);
@@ -77,7 +78,7 @@ export function restoreImageFromBackupFactory(serviceContainer: LocalMain.Servic
 			compressedImageHash: null,
 			compressedSize: null,
 			errorMessage: null,
-			errorRevertingFromBackup: false,
+			revertToBackupStatus: RevertToBackupStatus.SUCCESS,
 		});
 
 		saveImageDataToDisk(store, serviceContainer);
