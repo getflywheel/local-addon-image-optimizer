@@ -21,7 +21,11 @@ export const ANALYTIC_EVENT_TYPES = {
 	OPTIMIZE_EXCLUDE_ALL_FILES: `${BASE}exclude_all`,
 	OPTIMIZE_INCLUDE_SINGLE_FILE: `${BASE}include`,
 	OPTIMIZE_EXLUDE_SINGLE_FILE: `${BASE}exclude`,
-	PREFERENCE_METADATA: `${BASE}preference_metadata`
+	PREFERENCE_METADATA: `${BASE}preference_metadata`,
+	CONTEXTMENU_REVEAL_IN_FINDER: `${BASE}contextmenu_reveal_in_finder`,
+	CONTEXTMENU_OPEN: `${BASE}contextmenu_open`,
+	CONTEXTMENU_REVERT_BACKUP_SUCCESS: `${BASE}contextmenu_revert_backup_success`,
+	CONTEXTMENU_REVERT_BACKUP_FAIL: `${BASE}contextmenu_revert_backup_fail`,
 }
 
 export const reportAnalytics = (eventName: string, additionalProperties?: Object) => {

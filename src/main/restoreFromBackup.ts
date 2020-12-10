@@ -42,9 +42,6 @@ export function restoreImageFromBackupFactory(serviceContainer: LocalMain.Servic
 
 		let matches;
 
-		/**
-		 * Handle any potential bad glob patterns passed to glob.sync
-		 */
 		try {
 			matches = glob.sync(globMatcher);
 		} catch(err) {
