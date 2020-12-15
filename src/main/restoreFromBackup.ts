@@ -17,7 +17,7 @@ export function restoreImageFromBackupFactory(serviceContainer: LocalMain.Servic
 		 */
 		const formatErrorReplyAndSetState = () => {
 			store.setStateByImageID(siteId, imageId, {
-				revertToBackupStatus: RevertToBackupStatus.FAILURE;
+				revertToBackupStatus: RevertToBackupStatus.FAILURE,
 			});
 
 			saveImageDataToDisk(store, serviceContainer);
