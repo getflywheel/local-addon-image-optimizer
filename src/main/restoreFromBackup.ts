@@ -4,10 +4,9 @@ import glob from 'glob';
 import escapeGlob from 'glob-escape';
 import type * as LocalMain from '@getflywheel/local/main';
 import { BACKUP_DIR_NAME } from '../constants';
-import { Store } from '../types';
 import { reportRestoreBackupFailure } from './errorReporting';
 import { saveImageDataToDisk } from './utils';
-import { RevertToBackupStatus } from '../types';
+import { RevertToBackupStatus, Store } from '../types';
 
 
 export function restoreImageFromBackupFactory(serviceContainer: LocalMain.ServiceContainerServices, store: Store) {
