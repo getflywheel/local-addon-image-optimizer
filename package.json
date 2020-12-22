@@ -84,7 +84,9 @@
     "@getflywheel/local-components",
     "classnames",
     "dateformat",
-    "fs-extra",
+	"fs-extra",
+	"glob",
+	"glob-escape",
     "lodash",
     "md5",
     "prop-types",
@@ -92,6 +94,12 @@
     "react-router-navigation-prompt",
     "recursive-readdir",
     "redux"
+  ],
+  "files": [
+	"lib/**/*",
+	"vendor/**/*",
+	"icon.svg",
+	"style.css"
   ],
   "engines": {
     "local-by-flywheel": "^5.9.2"
