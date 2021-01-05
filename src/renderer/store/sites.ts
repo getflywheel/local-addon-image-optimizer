@@ -148,7 +148,6 @@ export const sitesSlice = createSlice({
 			return state;
 		},
 		optimizationRequested: (state, action: PayloadAction<{ siteID: string, selectedImageIDs: string[] }>) => {
-			reportAnalytics(ANALYTIC_EVENT_TYPES.OPTIMIZE_START);
 
 			return mergeSiteState(
 				state,
