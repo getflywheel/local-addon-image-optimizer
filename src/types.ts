@@ -28,6 +28,7 @@ export interface SiteData {
 	imageData: { [imageID: string]: ImageData };
 	lastScan?: number;
 	scanInProgress?: boolean;
+	// eslint-disable-next-line no-undef
 	scanError?: GenericObject;
 	areAllFilesSelected?: boolean;
 	optimizationStatus?: OptimizerStatus;
