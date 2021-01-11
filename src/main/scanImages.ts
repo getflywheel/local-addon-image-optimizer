@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import path from 'path';
 import * as LocalMain from '@getflywheel/local/main';
 import { SiteData, Store } from '../types';
