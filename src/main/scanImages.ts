@@ -34,6 +34,7 @@ export function scanImagesFactory (serviceContainer: LocalMain.ServiceContainerS
 			/**
 			 * @todo - remove @ts-ignore once the new Local api changes are published
 			 */
+			// @ts-ignore
 			const childProcess = LocalMain.workerFork(
 				path.join(__dirname, 'scanImagesProcess'),
 			);
@@ -41,11 +42,13 @@ export function scanImagesFactory (serviceContainer: LocalMain.ServiceContainerS
 			/**
 			 * @todo - remove @ts-ignore once the new Local api changes are published
 			 */
+			// @ts-ignore
 			const processMessageHelper: (name: string, payload?: any) => any = LocalMain.childProcessMessagePromiseFactory(childProcess);
 
 			/**
 			 * @todo - remove @ts-ignore once the new Local api changes are published
 			 */
+			// @ts-ignore
 			const filePaths = await processMessageHelper<string[]>(
 				'get-file-paths',
 				{
@@ -56,6 +59,7 @@ export function scanImagesFactory (serviceContainer: LocalMain.ServiceContainerS
 			/**
 			 * @todo - remove @ts-ignore once the new Local api changes are published
 			 */
+			// @ts-ignore
 			const updatedImageData = await processMessageHelper<SiteData['imageData']>(
 				'get-image-stats',
 				{
