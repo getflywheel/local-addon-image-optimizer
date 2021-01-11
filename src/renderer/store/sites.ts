@@ -17,7 +17,7 @@ interface SiteActionPayload {
 	error: Error;
 }
 
-function mergeSiteState(state, payload: Partial<SiteActionPayload>, newState?: Partial<SiteData>) {
+function mergeSiteState (state, payload: Partial<SiteActionPayload>, newState?: Partial<SiteData>) {
 	const { siteID, siteData } = payload;
 
 	state[siteID] = {
@@ -29,7 +29,7 @@ function mergeSiteState(state, payload: Partial<SiteActionPayload>, newState?: P
 	return state;
 }
 
-function generateInitialSiteState(): Partial<SiteData> {
+function generateInitialSiteState (): Partial<SiteData> {
 	return {
 		scanInProgress: false,
 		areAllFilesSelected: true,
@@ -38,7 +38,7 @@ function generateInitialSiteState(): Partial<SiteData> {
 	};
 }
 
-function forEachImageDataObject(state: SiteData, cb: (d: ImageData) => void) {
+function forEachImageDataObject (state: SiteData, cb: (d: ImageData) => void) {
 	Object.values(state.imageData).forEach((d) => {
 		cb(d);
 	});
@@ -70,7 +70,7 @@ export const sitesSlice = createSlice({
 			state[siteID] = {
 				...generateInitialSiteState(),
 				imageData: {},
-			}
+			};
 
 			return state;
 		},
@@ -119,9 +119,7 @@ export const sitesSlice = createSlice({
 			reportAnalytics(ANALYTIC_EVENT_TYPES.SCAN_FAILURE);
 			return state;
 		},
-		setSiteData: (state, action: PayloadAction<Omit<SiteActionPayload, 'error'>>) => {
-			return mergeSiteState(state, action.payload);
-		},
+		setSiteData: (state, action: PayloadAction<Omit<SiteActionPayload, 'error'>>) => mergeSiteState(state, action.payload),
 		setImageSelected: (state, action: PayloadAction<{ siteID: string, imageID: string, isChecked: boolean }>) => {
 			const { siteID, imageID, isChecked } = action.payload;
 			const siteState = state[siteID];
@@ -175,7 +173,7 @@ export const sitesSlice = createSlice({
 			 */
 			forEachImageDataObject(state[siteID], (d) => {
 				if (d.compressedImageHash || d.errorMessage) {
-					d.isChecked = false
+					d.isChecked = false;
 				}
 			});
 
@@ -189,7 +187,7 @@ export const sitesSlice = createSlice({
 			reportAnalytics(ANALYTIC_EVENT_TYPES.OPTIMIZE_SUCCESS,
 				{
 					scannedCount: Object.values(siteState?.imageData || []).length,
-					optimizeCount: Object.values(siteState?.imageData).filter(((d) => d.compressedImageHash)).length
+					optimizeCount: Object.values(siteState?.imageData).filter(((d) => d.compressedImageHash)).length,
 				});
 			return state;
 		},
@@ -212,7 +210,7 @@ export const sitesSlice = createSlice({
 				fileStatus: FileStatus.SUCCEEDED,
 			};
 
-			siteState.compressionListCounter = siteState.compressionListCounter + 1;
+			siteState.compressionListCounter += 1;
 			siteState.compressionListCompletionPercentage = (siteState.compressionListCounter / siteState.selectedImageIDs.length) * 100;
 			return state;
 		},
@@ -227,7 +225,7 @@ export const sitesSlice = createSlice({
 				fileStatus: FileStatus.FAILED,
 			};
 
-			siteState.compressionListCounter = siteState.compressionListCounter + 1;
+			siteState.compressionListCounter += 1;
 			siteState.compressionListCompletionPercentage = (siteState.compressionListCounter / siteState.selectedImageIDs.length) * 100;
 
 			const errorCount = Object.values(siteState.imageData).filter(erroredImageFilter).length;
@@ -253,7 +251,7 @@ export const sitesSlice = createSlice({
 			return state;
 		},
 		revertToBackupSuccess: (state, action: PayloadAction<{siteID: string, imageID: string}>) => {
-			const { siteID, imageID  } = action.payload;
+			const { siteID, imageID } = action.payload;
 			const image = state[siteID].imageData[imageID];
 
 			image.compressedImageHash = null;
@@ -265,7 +263,7 @@ export const sitesSlice = createSlice({
 			return state;
 		},
 		revertToBackupFailure: (state, action: PayloadAction<{ siteID: string, imageID: string}>) => {
-			const { siteID, imageID  } = action.payload;
+			const { siteID, imageID } = action.payload;
 			const image = state[siteID].imageData[imageID];
 			image.revertToBackupStatus = RevertToBackupStatus.FAILURE;
 

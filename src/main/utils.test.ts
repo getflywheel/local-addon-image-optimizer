@@ -21,6 +21,7 @@ import { createMockServiceContainer } from '../test/mockCreators';
 
 jest.mock('fs-extra');
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const fsExtra = require('fs-extra');
 const mockImageBuffer = Buffer.from([1, 2, 3, 4, 5, 6, 7]);
 fsExtra.readFile.mockImplementation((filePath, cb) => {
@@ -28,7 +29,7 @@ fsExtra.readFile.mockImplementation((filePath, cb) => {
 	return {
 		filePath,
 		cb,
-	}
+	};
 });
 
 fsExtra.existsSync.mockImplementation((path: string) => true);
@@ -104,7 +105,8 @@ describe('getFileHash', () => {
 });
 
 describe('getImageFilePaths', () => {
-	const recursiveReaddir = require('recursive-readdir')
+	// eslint-disable-next-line @typescript-eslint/no-var-requires
+	const recursiveReaddir = require('recursive-readdir');
 	const contentPath = 'app/public/wp-content/uploads';
 	const fileList = ['hello.jpeg'];
 
@@ -132,7 +134,7 @@ describe('getImageFilePaths', () => {
 			expect(fsExtra.existsSync.mock.calls[0][0]).toEqual(contentPath);
 
 			expect(recursiveReaddir.mock.calls[0][0]).toEqual(contentPath);
-			expect(recursiveReaddir.mock.calls[0][1]).toSatisfyAll(filter => typeof filter === 'function');
+			expect(recursiveReaddir.mock.calls[0][1]).toSatisfyAll((filter) => typeof filter === 'function');
 			expect(typeof recursiveReaddir.mock.calls[0][2]).toEqual('function');
 
 			done();

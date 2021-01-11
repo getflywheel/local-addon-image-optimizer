@@ -23,7 +23,7 @@ import {
 
 let jpegRecompressBinName;
 
-switch(process.platform) {
+switch (process.platform) {
 	case 'win32':
 		jpegRecompressBinName = 'jpeg-recompress.exe';
 		break;
@@ -38,11 +38,11 @@ if (!fs.existsSync(jpegRecompressBin)) {
 	reportNoBinFound(jpegRecompressBin);
 }
 
-function mergeImageData(imageData: ImageData, newFields: Partial<ImageData>): ImageData {
+function mergeImageData (imageData: ImageData, newFields: Partial<ImageData>): ImageData {
 	return {
 		...imageData,
 		...newFields,
-	}
+	};
 }
 
 /**
@@ -52,7 +52,7 @@ function mergeImageData(imageData: ImageData, newFields: Partial<ImageData>): Im
  *
  * @param imageIds
  */
-export function compressImagesFactory(serviceContainer: LocalMain.ServiceContainerServices, imageDataStore: Store, runtimeStore: RuntimeStore) {
+export function compressImagesFactory (serviceContainer: LocalMain.ServiceContainerServices, imageDataStore: Store, runtimeStore: RuntimeStore) {
 	return async function (siteID: Local.Site['id'], imageMD5s: string[], stripMetaData?: boolean) {
 		try {
 			reportCompressRequest(siteID);
@@ -93,7 +93,7 @@ export function compressImagesFactory(serviceContainer: LocalMain.ServiceContain
 						IPC_EVENTS.COMPRESS_IMAGE_FAIL,
 						siteID,
 						md5Hash,
-						errorMessage
+						errorMessage,
 					);
 
 					updatedImageData[md5Hash] = mergeImageData(currentImageData, { errorMessage });
@@ -185,7 +185,7 @@ export function compressImagesFactory(serviceContainer: LocalMain.ServiceContain
 					...siteData,
 					imageData: {
 						...siteData.imageData,
-						...updatedImageData
+						...updatedImageData,
 					},
 				});
 				saveImageDataToDisk(imageDataStore, serviceContainer);
@@ -201,5 +201,5 @@ export function compressImagesFactory(serviceContainer: LocalMain.ServiceContain
 			 */
 			return error;
 		}
-	}
-};
+	};
+}

@@ -1,8 +1,8 @@
 import React from 'react';
-import { getFormattedTimestamp } from './utils';
+import { getFormattedTimestamp , formatCompressedPercentage, convertBytesToMb } from './utils';
 import { Button, Text, TableList, TableListRow } from '@getflywheel/local-components';
 import classnames from 'classnames';
-import { formatCompressedPercentage, convertBytesToMb } from './utils';
+
 import { SiteData } from '../types';
 import CheckmarkMedSVG from './_assets/svg/Checkmark-med.svg';
 import WarningSVG from './_assets/svg/warning.svg';
@@ -39,19 +39,19 @@ const LastOptimizeStatus: React.FC<IProps> = (props: IProps) => {
 			<TableList className="lastOptimizeStatus_Table">
 				<TableListRow
 					className={classnames(
-						"lastOptimizeStatus_Row",
-						"lastOptimizeStatus_Header_Row",
+						'lastOptimizeStatus_Row',
+						'lastOptimizeStatus_Header_Row',
 					)}
 				>
 					{lastScan
 						? <Text
-								className="lastOptimizeStatus_Text"
-								privateOptions={{
-									fontWeight: "bold"
-								}}
-							>
+							className="lastOptimizeStatus_Text"
+							privateOptions={{
+								fontWeight: 'bold',
+							}}
+						>
 								Last updated:{' '}{getFormattedTimestamp(lastScan)}
-							</Text>
+						</Text>
 						: null
 					}
 					<Button
@@ -59,10 +59,10 @@ const LastOptimizeStatus: React.FC<IProps> = (props: IProps) => {
 						onClick={() => props.handleScanForImages()}
 						privateOptions={{
 							color: 'green',
-							form: 'fill'
+							form: 'fill',
 						}}
 						style={{
-							marginLeft: 'auto'
+							marginLeft: 'auto',
 						}}
 						disabled={scanInProgress}
 					>
@@ -95,6 +95,6 @@ const LastOptimizeStatus: React.FC<IProps> = (props: IProps) => {
 			</TableList>
 		</div>
 	);
-}
+};
 
 export default LastOptimizeStatus;

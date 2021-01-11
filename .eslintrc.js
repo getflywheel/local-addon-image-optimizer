@@ -11,6 +11,9 @@ module.exports = {
 	env: {
 		'jest/globals': true,
 	},
+	globals: {
+		JSX: true,
+	  },
 	root: true,
 	rules: {
 		'import/no-unresolved': [

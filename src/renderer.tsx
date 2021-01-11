@@ -18,7 +18,7 @@ export default async function (context) {
 	setupListeners();
 
 	const preferences: Preferences = await LocalRenderer.ipcAsync(
-		IPC_EVENTS.READ_PREFERENCES_FROM_DISK
+		IPC_EVENTS.READ_PREFERENCES_FROM_DISK,
 	);
 
 	const cachedImageDataBySiteID: SiteDataBySiteID = await LocalRenderer.ipcAsync(
@@ -48,19 +48,15 @@ export default async function (context) {
 
 	const SiteInfoMenuItemHOC = withStoreProvider(SiteInfoMenuItem);
 
-	hooks.addContent('local-addon-image-optimizer:site-info-menu-item', () => {
-		return (
-			<SiteInfoMenuItemHOC />
-		)
-	});
+	hooks.addContent('local-addon-image-optimizer:site-info-menu-item', () => (
+		<SiteInfoMenuItemHOC />
+	));
 
 	const ImageOptimizerHOC = withStoreProvider(ImageOptimizer);
 
-	hooks.addContent('siteToolsImageOptimizer', ({ match }) => {
-		return (
-			<ImageOptimizerHOC match={match} />
-		)
-	});
+	hooks.addContent('siteToolsImageOptimizer', ({ match }) => (
+		<ImageOptimizerHOC match={match} />
+	));
 
 	hooks.addFilter(
 		'preferencesMenuItems',
@@ -87,6 +83,6 @@ export default async function (context) {
 			});
 
 			return menu;
-		}
+		},
 	);
-};
+}

@@ -13,7 +13,7 @@ import { reportScanRequest, reportScanSuccess, reportScanFailure } from './error
  *
  * @returns ImageData[]
  */
-export function scanImagesFactory(serviceContainer: LocalMain.ServiceContainerServices, imageDataStore: Store) {
+export function scanImagesFactory (serviceContainer: LocalMain.ServiceContainerServices, imageDataStore: Store) {
 	return async function (siteID: string) {
 		try {
 			reportScanRequest(siteID);
@@ -34,7 +34,6 @@ export function scanImagesFactory(serviceContainer: LocalMain.ServiceContainerSe
 			/**
 			 * @todo - remove @ts-ignore once the new Local api changes are published
 			 */
-			// @ts-ignore
 			const childProcess = LocalMain.workerFork(
 				path.join(__dirname, 'scanImagesProcess'),
 			);
@@ -42,13 +41,11 @@ export function scanImagesFactory(serviceContainer: LocalMain.ServiceContainerSe
 			/**
 			 * @todo - remove @ts-ignore once the new Local api changes are published
 			 */
-			// @ts-ignore
 			const processMessageHelper: (name: string, payload?: any) => any = LocalMain.childProcessMessagePromiseFactory(childProcess);
 
 			/**
 			 * @todo - remove @ts-ignore once the new Local api changes are published
 			 */
-			// @ts-ignore
 			const filePaths = await processMessageHelper<string[]>(
 				'get-file-paths',
 				{
@@ -59,7 +56,6 @@ export function scanImagesFactory(serviceContainer: LocalMain.ServiceContainerSe
 			/**
 			 * @todo - remove @ts-ignore once the new Local api changes are published
 			 */
-			// @ts-ignore
 			const updatedImageData = await processMessageHelper<SiteData['imageData']>(
 				'get-image-stats',
 				{
@@ -88,5 +84,5 @@ export function scanImagesFactory(serviceContainer: LocalMain.ServiceContainerSe
 			reportScanFailure(siteID, error);
 			return error;
 		}
-	}
-};
+	};
+}

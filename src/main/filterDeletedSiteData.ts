@@ -7,7 +7,7 @@ import { SiteDataBySiteID } from '../types';
  * @param existingSiteDataBySiteID
  * @param serviceContainer
  */
-export function filterDeletedSiteData(existingSiteDataBySiteID: SiteDataBySiteID, serviceContainer: LocalMain.ServiceContainerServices) {
+export function filterDeletedSiteData (existingSiteDataBySiteID: SiteDataBySiteID, serviceContainer: LocalMain.ServiceContainerServices) {
 	const siteDataBySiteID: SiteDataBySiteID = {};
 
 	for (const [id, siteData] of Object.entries(existingSiteDataBySiteID)) {

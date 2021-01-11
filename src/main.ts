@@ -12,13 +12,14 @@ import {
 } from './main/index';
 import { IPC_EVENTS } from './constants';
 import { Preferences } from './types';
+import * as Electron from 'electron';
 
 
-export default function (context) {
+export default function (context: { electron: typeof Electron }): void {
 	const { electron } = context;
 	const { ipcMain } = electron;
 
-	LocalMain.HooksMain.addAction('siteDeleted', (siteID) => {
+	LocalMain.HooksMain.addAction('siteDeleted', (siteID: string) => {
 		deleteSiteData(siteID);
 
 		LocalMain.sendIPCEvent(
@@ -79,7 +80,7 @@ export default function (context) {
 		IPC_EVENTS.GO_TO_PREFERENCES,
 		() => {
 			const serviceContainer = LocalMain.getServiceContainer().cradle;
-			serviceContainer.sendIPCEvent('goToRoute', '/settings/image-optimizer')
+			serviceContainer.sendIPCEvent('goToRoute', '/settings/image-optimizer');
 		},
 	);
 

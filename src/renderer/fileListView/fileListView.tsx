@@ -1,7 +1,7 @@
 import React from 'react';
-import { ColFileStatus } from '../columnRenderers/ColFileStatus';
-import { ColFileName } from '../columnRenderers/ColFileName';
-import { ColFileSize } from '../columnRenderers/ColFileSize';
+import { ColFileStatus } from '../columnRenderers/colFileStatus';
+import { ColFileName } from '../columnRenderers/colFileName';
+import { ColFileSize } from '../columnRenderers/colFileSize';
 import {
 	VirtualTable,
 	VirtualTableCellRenderer,
@@ -14,7 +14,7 @@ import { selectors, useStoreSelector } from '../store/store';
 import {
 	useContextMenu,
 	uncomprepssedImageListNoContextMenu,
-	uncompressedImageListContextMenu
+	uncompressedImageListContextMenu,
 } from '../contextMenu';
 
 interface IFileListViewProps {
@@ -39,7 +39,6 @@ export const FileListView = (props: IFileListViewProps) => {
 		resetToOverview,
 		cancelImageCompression,
 		setOverviewSelected,
-		preferences,
 		siteID,
 	} = props;
 
@@ -49,11 +48,9 @@ export const FileListView = (props: IFileListViewProps) => {
 	const selectedImages = useStoreSelector(selectors.selectedSiteImages);
 
 	const cellRender: VirtualTableCellRenderer = (dataArgs: IVirtualTableCellRendererDataArgs) => {
-		const getSelectedCount = () => {
-			return dataArgs.data.filter(
-				data => data.isChecked
-			).length;
-		}
+		const getSelectedCount = () => dataArgs.data.filter(
+			(data) => data.isChecked,
+		).length;
 
 		switch (dataArgs.colKey) {
 			case 'fileStatus': {

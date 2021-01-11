@@ -3,7 +3,7 @@ import { IPC_EVENTS } from '../constants';
 import { ImageData, SiteData } from '../types';
 import { store, actions } from './store/store';
 
-export function setupListeners() {
+export function setupListeners () {
 	const listeners = [
 		{
 			channel: IPC_EVENTS.COMPRESS_IMAGE_SUCCESS,
@@ -45,7 +45,7 @@ export function setupListeners() {
 			channel: IPC_EVENTS.SITE_DELETED,
 			cb: (_, siteID: string) => {
 				store.dispatch(actions.siteDeleted(siteID));
-			}
+			},
 		},
 	];
 

@@ -28,7 +28,7 @@ const ImageOptimizer = (props: IProps) => {
 			IPC_EVENTS.SCAN_FOR_IMAGES,
 			siteID,
 		);
-	}
+	};
 
 	useEffect(
 		() => {
@@ -39,7 +39,7 @@ const ImageOptimizer = (props: IProps) => {
 
 	const setOverviewSelected = (isOverviewSelected: boolean) => {
 		store.dispatch(actions.isOverviewSelected({ siteID, isOverviewSelected }));
-	}
+	};
 
 	// handles file selection for final optimization list
 	const handleCheckBoxChange = (imageID: string) => (isChecked: boolean) => {
@@ -62,13 +62,13 @@ const ImageOptimizer = (props: IProps) => {
 			selectedImageIDs,
 			preferences.stripMetaData,
 		);
-	}
+	};
 
 	const resetToOverview = () => {
 		setOverviewSelected(true);
 
 		store.dispatch(actions.optimizationStatusBefore({ siteID }));
-	}
+	};
 
 	const cancelImageCompression = () => {
 		ipcRenderer.send(
@@ -76,7 +76,7 @@ const ImageOptimizer = (props: IProps) => {
 			siteID,
 		);
 		reportAnalytics(ANALYTIC_EVENT_TYPES.OPTIMIZE_CANCEL);
-	}
+	};
 
 	if (!activeSiteID) {
 		return null;

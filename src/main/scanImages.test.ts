@@ -13,12 +13,13 @@ const imageDataStore = createStore();
 jest.mock('./errorReporting');
 
 jest.mock('./utils');
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const utils = require('./utils');
 
 describe('scanImages', () => {
 	const scanImages = scanImagesFactory(
 		serviceContainer as unknown as LocalMain.ServiceContainerServices,
-		imageDataStore
+		imageDataStore,
 	);
 	const siteID = '1234';
 	let siteData;
@@ -55,7 +56,7 @@ describe('scanImages', () => {
 
 		expect(imageData).toContainAllKeys(['aoeuaoeuaoeuaou', 'yfyfyfyfyfyfyfyfy']);
 
-		Object.values(imageData).forEach(singleImageDataObject => {
+		Object.values(imageData).forEach((singleImageDataObject) => {
 			expect(singleImageDataObject).toContainAllKeys([
 				'originalImageHash',
 				'compressedImageHash',
@@ -63,7 +64,7 @@ describe('scanImages', () => {
 				'originalSize',
 				'compressedSize',
 				'fileStatus',
-				'isChecked'
+				'isChecked',
 			]);
 		});
 	});
@@ -71,7 +72,7 @@ describe('scanImages', () => {
 	it('confirms siteData contains appropriate keys', () => {
 		expect(siteData).toContainAllKeys([
 			'imageData',
-			'lastScan'
+			'lastScan',
 		]);
 	});
 });

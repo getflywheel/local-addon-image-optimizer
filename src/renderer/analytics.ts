@@ -1,12 +1,12 @@
-import { ipcRenderer } from "electron";
+import { ipcRenderer } from 'electron';
 
-const BASE = `v2_image_optimizer_`
+const BASE = `v2_image_optimizer_`;
 const EVENT_LIFECYCLES = {
 	START: `_start`,
 	SUCCESS: `_success`,
 	FAILURE: `_failure`,
 	CANCEL: `_cancel`,
-}
+};
 
 export const ANALYTIC_EVENT_TYPES = {
 	SCAN_START: `${BASE}scan${EVENT_LIFECYCLES.START}`,
@@ -26,13 +26,13 @@ export const ANALYTIC_EVENT_TYPES = {
 	CONTEXTMENU_OPEN: `${BASE}contextmenu_open`,
 	CONTEXTMENU_REVERT_BACKUP_SUCCESS: `${BASE}contextmenu_revert_backup_success`,
 	CONTEXTMENU_REVERT_BACKUP_FAIL: `${BASE}contextmenu_revert_backup_fail`,
-}
+};
 
-export const reportAnalytics = (eventName: string, additionalProperties?: Object) => {
+export const reportAnalytics = (eventName: string, additionalProperties?: unknown): void => {
 	const channel = 'analyticsV2:trackEvent';
 	if (additionalProperties) {
 		ipcRenderer.send(channel, eventName, additionalProperties);
 	} else {
 		ipcRenderer.send(channel, eventName);
 	}
-}
+};

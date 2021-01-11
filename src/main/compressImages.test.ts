@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
+/* eslint-disable @typescript-eslint/no-var-requires */
 import 'jest-extended';
 import { EventEmitter } from 'events';
 import { Readable } from 'stream';
@@ -54,7 +56,7 @@ jest.mock('./index', () => ({
 jest.mock('fs-extra');
 const fsExtra = require('fs-extra');
 
-fsExtra.statSync.mockImplementation((path: string) => ({
+fsExtra.statSync.mockImplementation(() => ({
 	size: 1000,
 }));
 
@@ -77,26 +79,26 @@ jest.mock('./errorReporting', () => ({
 	reportCompressSuccess: jest.fn(),
 	reportCompressFailure: jest.fn(),
 	reportNoBinFound: jest.fn(),
-	reportBinOutput: jest.fn()
+	reportBinOutput: jest.fn(),
 }));
 
 class MockChildProc extends EventEmitter {
 	stderr: Readable;
 	stdout: Readable;
-	constructor() {
+	constructor () {
 		super();
 		this.stderr = new Readable({
-			read(){}
+			read () {},
 		});
 		this.stdout = new Readable({
-			read(){}
+			read () {},
 		});
 	}
 }
 
 const emitters = [];
 let compressedCount = 0;
-childProcess.spawn.mockImplementation((command: string, args: any[]) => {
+childProcess.spawn.mockImplementation(() => {
 	const emitter = new MockChildProc();
 	emitter.on = (channel: string, cb) => {
 		if (channel !== 'close') {
@@ -164,7 +166,7 @@ describe('compressImages', () => {
 
 	it('calls child_process.spawn with the correct args', () => {
 		const mock = childProcess.spawn.mock;
-		const cliArgs = [ ...mock.calls[0][1] ];
+		const cliArgs = [...mock.calls[0][1]];
 
 		expect(mock.calls.length).toEqual(2);
 
@@ -191,14 +193,14 @@ describe('compressImages', () => {
 
 	it('updates the store correctly when successful', () => {
 		const { imageData: allImageData } = imageDataStore.getStateBySiteID(siteID);
-		let imageData = allImageData[imageOneID];
+		const imageData = allImageData[imageOneID];
 
 		expect(imageData).toContainAllKeys(expectedImageDataKeys);
 	});
 
 	it('calls sendIPCEvent with the correct args when unnsuccessful', () => {
 		const { mock } = mockServiceContainer.sendIPCEvent;
-		let call = mock.calls[3];
+		const call = mock.calls[3];
 
 		expect(call[0]).toEqual(IPC_EVENTS.COMPRESS_IMAGE_FAIL);
 		expect(call[1]).toEqual(siteID);
@@ -208,13 +210,13 @@ describe('compressImages', () => {
 
 	it('updates the store with an error message if the file did not successfully compress', () => {
 		const { imageData: allImageData } = imageDataStore.getStateBySiteID(siteID);
-		let imageData = allImageData[imageTwoID];
+		const imageData = allImageData[imageTwoID];
 
 		expect(imageData).toContainAllKeys([
 			'originalImageHash',
 			'filePath',
 			'originalSize',
-			'errorMessage'
+			'errorMessage',
 		]);
 	});
 
