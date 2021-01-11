@@ -29,7 +29,6 @@ describe('restoreImageFromBackupFactory', () => {
 	let restoreImageFromBackup;
 
 
-
 	beforeAll(() => {
 		restoreImageFromBackup = restoreImageFromBackupFactory(
 			mockServiceContainer as unknown as LocalMain.ServiceContainerServices,
@@ -46,8 +45,8 @@ describe('restoreImageFromBackupFactory', () => {
 					originalSize: 20093,
 					compressedSize: 1200,
 					filePath: imagePath,
-				}
-			}
+				},
+			},
 		});
 	});
 
@@ -135,7 +134,6 @@ describe('restoreImageFromBackupFactory', () => {
 		expect(image.errorMessage).toBeFalsy();
 		expect(image.revertToBackupStatus).toEqual(RevertToBackupStatus.FAILURE);
 
-		/* @ts-ignore */
 		const saveImageDataArgs = saveImageDataToDisk.mock.calls[saveImageDataToDisk.mock.calls.length - 1];
 
 		expect(saveImageDataArgs[0]).toEqual(store);

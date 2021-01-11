@@ -20,14 +20,14 @@ const getSelectedIDCountByKey = (key: 'compressedSize' | 'originalSize') => (sit
 
 		return size;
 	}, 0);
-}
+};
 
-export const erroredImageFilter = ({ errorMessage, compressedImageHash}: ImageData) => errorMessage && !compressedImageHash;
+export const erroredImageFilter = ({ errorMessage, compressedImageHash }: ImageData) => errorMessage && !compressedImageHash;
 
 const selectActiveSite = (): SiteData | undefined => {
 	const state = store.getState();
 	return state.sites[state.activeSiteID];
-}
+};
 
 /**
  * @todo bind state to this
@@ -58,7 +58,7 @@ const uncompressedSiteImages = createSelector(
 	(siteState) =>
 		siteState
 			? Object.values(siteState.imageData).filter(
-				(d) => !d.compressedImageHash && !d.errorMessage
+				(d) => !d.compressedImageHash && !d.errorMessage,
 			)
 			: [],
 );
@@ -173,7 +173,7 @@ const siteImages = createSelector(
 const compressedAndErroredImages = createSelector(
 	selectActiveSite,
 	({ imageData }) => Object.values(imageData).filter(
-		({ errorMessage, compressedImageHash }) => errorMessage || compressedImageHash
+		({ errorMessage, compressedImageHash }) => errorMessage || compressedImageHash,
 	),
 );
 

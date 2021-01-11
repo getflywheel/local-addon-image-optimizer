@@ -13,7 +13,7 @@ interface ModalOptions<ModalContentsProps> extends BaseModalProps {
 	modalContentsProps?: ModalContentsProps;
 }
 
-function invokeModal<ModalContentsProps>(options: ModalOptions<ModalContentsProps>)  {
+function invokeModal<ModalContentsProps> (options: ModalOptions<ModalContentsProps>) {
 	const {
 		ModalContents,
 		onSubmit,
@@ -35,6 +35,6 @@ function invokeModal<ModalContentsProps>(options: ModalOptions<ModalContentsProp
 			</FlyModal>
 		), document.getElementById('popup-container'),
 	);
-};
+}
 
 export default invokeModal;

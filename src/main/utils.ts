@@ -1,6 +1,6 @@
 import path from 'path';
 import fs from 'fs-extra';
-import recursiveReaddir from 'recursive-readdir'
+import recursiveReaddir from 'recursive-readdir';
 import md5 from 'md5';
 import * as LocalMain from '@getflywheel/local/main';
 import * as Local from '@getflywheel/local';
@@ -17,16 +17,16 @@ import { COMPRESSED_IMAGE_DATA_FILE_NAME, BACKUP_DIR_NAME } from '../constants';
  */
 export const getSupportedFileExtensions = () => [
 	'.jpg',
-	'.jpeg'
+	'.jpeg',
 ];
 
-export function saveImageDataToDisk(imageDataStore, serviceContainer: LocalMain.ServiceContainerServices): void {
+export function saveImageDataToDisk (imageDataStore, serviceContainer: LocalMain.ServiceContainerServices): void {
 	serviceContainer.userData.set(COMPRESSED_IMAGE_DATA_FILE_NAME, {
 		...imageDataStore.getState(),
 	});
-};
+}
 
-export function getFileHash(filePath: string): Promise<string> {
+export function getFileHash (filePath: string): Promise<string> {
 	return new Promise((resolve, reject) => {
 		fs.readFile(
 			filePath,
@@ -39,14 +39,14 @@ export function getFileHash(filePath: string): Promise<string> {
 			},
 		);
 	});
-};
+}
 
 /**
  * Get all JPG's recursively given a directly
  *
  * @param contentPath
  */
-export async function getImageFilePathsHelper(contentPath: string): Promise<string[]> {
+export async function getImageFilePathsHelper (contentPath: string): Promise<string[]> {
 	// ignore all files that aren't JPG's.
 	// Directories must return false so that they won't be ignored. If they are ignored,
 	// they will not be traversed
@@ -66,21 +66,21 @@ export async function getImageFilePathsHelper(contentPath: string): Promise<stri
 		[fileFilter],
 		(err, files) => {
 			if (err) {
-				reject(err)
+				reject(err);
 				return;
 			}
 
 			resolve(files);
 		},
 	));
-};
+}
 
 /**
  * Get all JPG's for wp-content/uploads
  *
  * @param site
  */
-export async function getImageFilePaths(webRoot: Local.Site['paths']['webRoot']) {
+export async function getImageFilePaths (webRoot: Local.Site['paths']['webRoot']) {
 	return getImageFilePathsHelper(
 		path.join(webRoot, 'wp-content', 'uploads'),
 	);
@@ -93,11 +93,11 @@ export async function getImageFilePaths(webRoot: Local.Site['paths']['webRoot'])
  * @param fileHash
  * @param imageData
  */
-export function getImageIfCompressed(fileHash: string, imageData: SiteData['imageData']) {
+export function getImageIfCompressed (fileHash: string, imageData: SiteData['imageData']) {
 	return Object.values(imageData).find((data: ImageData) => data.compressedImageHash === fileHash);
 }
 
-export function getSiteFullBackupPath(siteId: string, site) {
+export function getSiteFullBackupPath (siteId: string, site) {
 	return path.join(
 		site.longPath,
 		BACKUP_DIR_NAME,

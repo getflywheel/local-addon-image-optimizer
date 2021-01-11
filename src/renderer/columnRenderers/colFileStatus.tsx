@@ -1,11 +1,11 @@
 import React from 'react';
 import {
-		Checkbox,
-		IVirtualTableCellRendererDataArgs,
-		Spinner,
-	} from '@getflywheel/local-components';
-import { OptimizerStatus } from '../../types';
-import { FileStatus } from '../../types';
+	Checkbox,
+	IVirtualTableCellRendererDataArgs,
+	Spinner,
+} from '@getflywheel/local-components';
+import { OptimizerStatus , FileStatus } from '../../types';
+
 import WarningSVG from '../_assets/svg/warning.svg';
 import CheckmarkSmallSVG from '../_assets/svg/checkmark--sm.svg';
 
@@ -18,7 +18,7 @@ interface IFileStatusProps {
 	optimizationStatus: OptimizerStatus,
 }
 
-export const ColFileStatus = (props: IFileStatusProps) =>  {
+export const ColFileStatus = (props: IFileStatusProps) => {
 	const {
 		dataArgs,
 		handleCheckBoxChange,

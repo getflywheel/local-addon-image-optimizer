@@ -1,18 +1,15 @@
 import 'jest-extended';
 import fs from 'fs-extra';
 import { createMockServiceContainer } from '../test/mockCreators';
-import { createStore } from './createStore';
 import md5 from 'md5';
 import { scanImages, getImageStats } from './scanImagesProcess';
 
 const sitePath = '/Users/cool-man-joe/Local Sites/twice-baked-potato';
 const serviceContainer = createMockServiceContainer(sitePath);
 
-const imageDataStore = createStore();
-
 jest.mock('fs-extra');
 fs.statSync.mockImplementation((filePath: string) => ({
-	size: Math.floor(Math.random() * 99999) + 700
+	size: Math.floor(Math.random() * 99999) + 700,
 }));
 
 const mockFileHashOne = '40cf40c608bab653903bec92ab8bd26a';
@@ -41,21 +38,18 @@ const mockImageData = {
 		compressedSize: 3500000,
 		fileStatus: 'succeeded',
 		isChecked: true,
-	}
-}
+	},
+};
 
 // mock out utils so that we don't accidentally make calls to fs, etc.
 // also this makes assertions much easier and utils should be tested independantly anyways
 jest.mock('./utils');
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const utils = require('./utils');
-utils.getImageFilePaths.mockImplementation(() => {
-	return mockFilePaths;
-});
-utils.getFileHash.mockImplementation((filePath) => {
-	return md5(filePath);
-});
-utils.getImageIfCompressed.mockImplementation((fileHash, imageData) => {
-	if(fileHash === mockFileHashOne) {
+utils.getImageFilePaths.mockImplementation(() => mockFilePaths);
+utils.getFileHash.mockImplementation((filePath) => md5(filePath));
+utils.getImageIfCompressed.mockImplementation((fileHash) => {
+	if (fileHash === mockFileHashOne) {
 		return mockImageData[mockFileHashOne];
 	}
 	return undefined;
@@ -63,15 +57,15 @@ utils.getImageIfCompressed.mockImplementation((fileHash, imageData) => {
 
 describe('scanImagesProcess', () => {
 	let imageStats;
-	beforeAll( async () => {
-		const filePaths = await scanImages({webRoot: sitePath});
+	beforeAll(async () => {
+		await scanImages({ webRoot: sitePath });
 		imageStats = await getImageStats({ filePaths: mockFilePaths, imageData: mockImageData });
 	});
 
 	it('calls getImageFilePaths once with the correct args', () => {
 		expect(utils.getImageFilePaths.mock.calls).toBeArrayOfSize(1);
 		expect(utils.getImageFilePaths.mock.calls[0][0]).toEqual(
-			serviceContainer.siteData.getSite('1234').longPath
+			serviceContainer.siteData.getSite('1234').longPath,
 		);
 
 	});
@@ -86,7 +80,7 @@ describe('scanImagesProcess', () => {
 	it('calls getFileHash once for each file ', () => {
 		const { mock } = utils.getFileHash;
 		expect(mock.calls).toBeArrayOfSize(mockFilePaths.length);
-		expect(mock.calls.map(call => call[0])).toIncludeSameMembers(mockFilePaths);
+		expect(mock.calls.map((call) => call[0])).toIncludeSameMembers(mockFilePaths);
 	});
 
 	it('confirms getImageStats returns data in the correct format', () => {

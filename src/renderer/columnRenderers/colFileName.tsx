@@ -6,27 +6,27 @@ interface IFileNameProps {
 	headerText: string | null;
 }
 
-export const ColFileName = (props: IFileNameProps) =>  {
+export const ColFileName = (props: IFileNameProps) => {
 	const { dataArgs, headerText } = props;
 	const { rowData } = dataArgs;
 
 	const formattedFilePath = dataArgs.cellData.replace(/^.*\/app\/public\/wp-content/g, 'wp-content');
 
 	if (dataArgs.isHeader) {
-		return(
+		return (
 			<div className='fileList_File_Name_Header'>
 				{headerText}
 			</div>
 		);
-	} else {
-		return (
-			<div
-				className='fileList_File_Name_Row'
-				title={formattedFilePath}
-				data-imageid={rowData.originalImageHash}
-			>
-				{formattedFilePath}
-			</div>
-		)
 	}
+	return (
+		<div
+			className='fileList_File_Name_Row'
+			title={formattedFilePath}
+			data-imageid={rowData.originalImageHash}
+		>
+			{formattedFilePath}
+		</div>
+	);
+
 };

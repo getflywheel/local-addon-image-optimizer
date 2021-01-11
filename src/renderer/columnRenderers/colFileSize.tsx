@@ -7,7 +7,7 @@ interface IFileSizeProps {
 	errorOverrideMessage?: string;
 }
 
-export const ColFileSize = (props: IFileSizeProps) =>  {
+export const ColFileSize = (props: IFileSizeProps) => {
 	const { dataArgs, errorOverrideMessage } = props;
 	const { colKey, rowData } = dataArgs;
 
@@ -20,8 +20,8 @@ export const ColFileSize = (props: IFileSizeProps) =>  {
 	let content = null;
 
 	const shouldDisplayErrorMessage = () => {
-		return
-	}
+		return;
+	};
 
 	const errorCompressingImage = (
 		colKey === 'compressedSize'

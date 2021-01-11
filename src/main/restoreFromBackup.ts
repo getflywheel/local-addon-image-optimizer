@@ -9,8 +9,8 @@ import { saveImageDataToDisk } from './utils';
 import { RevertToBackupStatus, Store } from '../types';
 
 
-export function restoreImageFromBackupFactory(serviceContainer: LocalMain.ServiceContainerServices, store: Store) {
-	return async function(siteId: string, imageId: string): Promise<{ success: boolean }>{
+export function restoreImageFromBackupFactory (serviceContainer: LocalMain.ServiceContainerServices, store: Store) {
+	return async function (siteId: string, imageId: string): Promise<{ success: boolean }> {
 		/**
 		 * Return a properly formatted error response, update the in-memory store and write that value to disk
 		 */
@@ -35,7 +35,7 @@ export function restoreImageFromBackupFactory(serviceContainer: LocalMain.Servic
 
 		// path to the root of the site's backup dir
 		const baseBackupDirPath = path.join(site.longPath, BACKUP_DIR_NAME);
-		let imageBackupPath = filePath.replace(path.join(site.paths.webRoot, 'wp-content'), baseBackupDirPath);
+		const imageBackupPath = filePath.replace(path.join(site.paths.webRoot, 'wp-content'), baseBackupDirPath);
 		const { dir, name, ext } = path.parse(imageBackupPath);
 
 		const globMatcher = `${escapeGlob(`${dir}/${name}`)}?( \\([1-9]*\\))${ext}`;
@@ -44,13 +44,13 @@ export function restoreImageFromBackupFactory(serviceContainer: LocalMain.Servic
 
 		try {
 			matches = glob.sync(globMatcher);
-		} catch(err) {
+		} catch (err) {
 			reportRestoreBackupFailure(err);
 		}
 
 		if (!matches || matches.length === 0) {
 			const errorMessage = 'No backups found for this image';
-			reportRestoreBackupFailure(errorMessage)
+			reportRestoreBackupFailure(errorMessage);
 			return formatErrorReplyAndSetState();
 		}
 
@@ -85,5 +85,5 @@ export function restoreImageFromBackupFactory(serviceContainer: LocalMain.Servic
 		return {
 			success: true,
 		};
-	}
+	};
 }

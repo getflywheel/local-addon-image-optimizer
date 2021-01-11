@@ -7,8 +7,8 @@ import {
 	Spinner,
 } from '@getflywheel/local-components';
 import LastOptimizeStatus from './lastOptimizeStatus';
-import { ColFileName } from './columnRenderers/ColFileName';
-import { ColFileSize } from './columnRenderers/ColFileSize';
+import { ColFileName } from './columnRenderers/colFileName';
+import { ColFileSize } from './columnRenderers/colFileSize';
 import { selectors, useStoreSelector } from './store/store';
 import { SiteData, RevertToBackupStatus } from '../types';
 import WarningSVG from './_assets/svg/warning.svg';
@@ -42,7 +42,7 @@ export const Overview = (props: IProps) => {
 
 	const onClickViewImages = () => {
 		setOverviewSelected(false);
-	}
+	};
 
 	const {
 		imageCount,
@@ -62,11 +62,11 @@ export const Overview = (props: IProps) => {
 			compressedImageHash,
 			errorMessage,
 			revertToBackupStatus,
-		}} = dataArgs;
+		} } = dataArgs;
 
 		const errorRevertingFromBackup = revertToBackupStatus === RevertToBackupStatus.FAILURE;
 
-		if (colKey ==='filePath') {
+		if (colKey === 'filePath') {
 			return (
 				<ColFileName
 					dataArgs={dataArgs}
@@ -99,7 +99,7 @@ export const Overview = (props: IProps) => {
 		if (revertToBackupStatus === RevertToBackupStatus.IN_PROGRESS) {
 			return (
 				<Spinner className='spinner-svg' />
-			)
+			);
 		}
 
 		if (errorRevertingFromBackup || (!compressedImageHash && errorMessage)) {
@@ -154,7 +154,7 @@ export const Overview = (props: IProps) => {
 					<VirtualTable
 						id={compressedImageListContextMenu}
 						data={compressedAndErroredImages}
-								rowClassName='fileList_Virtual_Table_Row'
+						rowClassName='fileList_Virtual_Table_Row'
 						headers={[
 							{ key: 'fileStatus', value: '', className: 'fileListViewer_Column_Selected' },
 							{ key: 'filePath', value: 'Filename', className: 'fileListViewer_Column_File_Name' },
@@ -171,4 +171,4 @@ export const Overview = (props: IProps) => {
 			}
 		</div>
 	);
-}
+};

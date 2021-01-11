@@ -18,23 +18,23 @@ export const ConfirmOptimizationModal = (props: BaseModalProps & ModalContentsPr
 	const openPreferencesModal = () => {
 		FlyModal.onRequestClose();
 		ipcRenderer.send(IPC_EVENTS.GO_TO_PREFERENCES);
-	}
+	};
 
 	return (
 		<div className='fileList_Modal'>
-			<Title size="l" container={{ margin: 'm 30 30'}}> Confirm Optimization </Title>
+			<Title size="l" container={{ margin: 'm 30 30' }}> Confirm Optimization </Title>
 			<Divider />
-				<div className='fileList_Modal_Text'>
-					{displayText}
-					<br />
-					<br />
-					<TextButton
-						className="fileList_Modal_Settings_Button"
-						onClick={openPreferencesModal}
-					>
+			<div className='fileList_Modal_Text'>
+				{displayText}
+				<br />
+				<br />
+				<TextButton
+					className="fileList_Modal_Settings_Button"
+					onClick={openPreferencesModal}
+				>
 						View Settings
-					</TextButton>
-				</div>
+				</TextButton>
+			</div>
 			<Divider />
 			<PrimaryButton
 				onClick={onSubmit}

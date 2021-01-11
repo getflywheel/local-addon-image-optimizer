@@ -3,7 +3,7 @@ import 'jest-extended';
 import { createStore } from './createStore';
 import {
 	SiteDataBySiteID,
-	SiteData
+	SiteData,
 } from '../types';
 
 describe('createStore', () => {
@@ -31,7 +31,7 @@ describe('createStore', () => {
 			compressedTotalSize: 494,
 			imageCount: 394,
 		} as SiteData,
-	}
+	};
 
 	beforeAll(() => {
 		store = createStore(initialState);

@@ -10,14 +10,14 @@ import {
 /**
  * @todo rename this to imageDataStore
  */
-export function createStore(initialState: SiteDataBySiteID = {}): Store {
+export function createStore (initialState: SiteDataBySiteID = {}): Store {
 	let state = initialState;
 
 	return {
 		/**
 		 * returns the current state
 		 */
-		getState(): SiteDataBySiteID {
+		getState (): SiteDataBySiteID {
 			return state;
 		},
 
@@ -26,8 +26,8 @@ export function createStore(initialState: SiteDataBySiteID = {}): Store {
 		 *
 		 * @param siteID
 		 */
-		getStateBySiteID(siteID: string): SiteData {
-			return state[siteID] || ({ imageData: {}} as SiteData);
+		getStateBySiteID (siteID: string): SiteData {
+			return state[siteID] || ({ imageData: {} } as SiteData);
 		},
 
 		/**
@@ -35,7 +35,7 @@ export function createStore(initialState: SiteDataBySiteID = {}): Store {
 		 *
 		 * @param update new state
 		 */
-		setState(newState: SiteDataBySiteID): void {
+		setState (newState: SiteDataBySiteID): void {
 			state = {
 				...state,
 				...newState,
@@ -47,7 +47,7 @@ export function createStore(initialState: SiteDataBySiteID = {}): Store {
 		 *
 		 * @param siteID
 		 */
-		deleteSiteData(siteID) {
+		deleteSiteData (siteID) {
 			delete state[siteID];
 		},
 
@@ -58,13 +58,13 @@ export function createStore(initialState: SiteDataBySiteID = {}): Store {
 		 * @param siteID
 		 * @param newState
 		 */
-		setStateBySiteID(siteID: string, newState: Partial<SiteData>): void {
+		setStateBySiteID (siteID: string, newState: Partial<SiteData>): void {
 			state = {
 				...state,
 				[siteID]: {
 					...(state[siteID] || {} as SiteData),
 					...newState,
-				}
+				},
 			};
 		},
 
@@ -75,7 +75,7 @@ export function createStore(initialState: SiteDataBySiteID = {}): Store {
 		 * @param imageID
 		 * @param newState
 		 */
-		setStateByImageID(siteID, imageID, newState) {
+		setStateByImageID (siteID, imageID, newState) {
 			state = {
 				...state,
 				[siteID]: {
@@ -85,21 +85,21 @@ export function createStore(initialState: SiteDataBySiteID = {}): Store {
 						[imageID]: {
 							...state[siteID]?.imageData?.[imageID],
 							...newState,
-						}
-					}
-				}
-			}
+						},
+					},
+				},
+			};
 		},
 	};
 }
 
-export function createRuntimeStore(initialState: RuntimeData = {}): RuntimeStore {
-	let state = initialState;
+export function createRuntimeStore (initialState: RuntimeData = {}): RuntimeStore {
+	const state = initialState;
 	return {
 		/**
 		 * returns the current state
 		 */
-		getState() {
+		getState () {
 			return state;
 		},
 
@@ -108,7 +108,7 @@ export function createRuntimeStore(initialState: RuntimeData = {}): RuntimeStore
 		 *
 		 * @param siteID
 		 */
-		getStateBySiteID(siteID) {
+		getStateBySiteID (siteID) {
 			return state[siteID] || {};
 		},
 
@@ -118,12 +118,12 @@ export function createRuntimeStore(initialState: RuntimeData = {}): RuntimeStore
 		 * @param siteID
 		 * @param cancelCompression
 		 */
-		setCancelCompressionBySiteID(siteID, cancelCompression) {
+		setCancelCompressionBySiteID (siteID, cancelCompression) {
 			if (!state[siteID]) {
-				state[siteID] = {}
+				state[siteID] = {};
 			}
 
 			state[siteID].cancelCompression = cancelCompression;
-		}
+		},
 	};
 }

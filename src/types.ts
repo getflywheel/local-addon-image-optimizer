@@ -22,6 +22,8 @@ export enum RevertToBackupStatus {
 	FAILURE = 'failure',
 }
 
+type GenericObject = { [key: string]: any }
+
 export interface SiteData {
 	imageData: { [imageID: string]: ImageData };
 	lastScan?: number;

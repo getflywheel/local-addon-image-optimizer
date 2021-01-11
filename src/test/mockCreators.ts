@@ -5,19 +5,17 @@ class MockSiteData {
 
 	paths: { webRoot: string; };
 
-	constructor(sitePath) {
+	constructor (sitePath) {
 		this.sitePath = sitePath;
 		this.paths = {
 			webRoot: path.join(this.sitePath, 'app', 'public'),
-		}
+		};
 	}
 
-	getSite = jest.fn((siteID: string) => {
-		return {
-			paths: { webRoot: path.join(this.sitePath, 'app', 'public')},
-			longPath: this.sitePath,
-		};
-	});
+	getSite = jest.fn((siteID: string) => ({
+		paths: { webRoot: path.join(this.sitePath, 'app', 'public') },
+		longPath: this.sitePath,
+	}));
 
 	sendIPCEvent = jest.fn();
 }
@@ -28,7 +26,7 @@ class MockUserData {
 	get = jest.fn((fileName, defaultData) => this.mockUserData[fileName] || defaultData);
 
 	set = jest.fn((fileName, newData) => {
-		this.mockUserData[fileName] = newData
+		this.mockUserData[fileName] = newData;
 
 		return newData;
 	});

@@ -10,7 +10,7 @@ const mockServiceContainer = {
 			'b': {},
 		},
 
-		getSite(id: string) {
+		getSite (id: string) {
 			return this.sites[id] || null;
 		},
 	} as LocalMain.SiteData,
