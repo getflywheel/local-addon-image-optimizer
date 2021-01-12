@@ -59,17 +59,6 @@ describe('saveImageDataToDisk', () => {
 		);
 	});
 
-	it('calls userData.get once with the correct args', () => {
-		const { get } = serviceContainer.userData;
-
-		expect(get.mock.calls).toBeArrayOfSize(1);
-
-		expect(get.mock.calls[0][0]).toEqual(COMPRESSED_IMAGE_DATA_FILE_NAME);
-
-		// no data has been set yet, so userData.get should be passed an empty object
-		expect(get.mock.calls[0][1]).toContainAllKeys([]);
-	});
-
 	it('calls userData.set once with the correct args', () => {
 		const { set } = serviceContainer.userData;
 
