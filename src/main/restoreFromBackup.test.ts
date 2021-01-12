@@ -135,6 +135,7 @@ describe('restoreImageFromBackupFactory', () => {
 		expect(image.errorMessage).toBeFalsy();
 		expect(image.revertToBackupStatus).toEqual(RevertToBackupStatus.SUCCESS);
 
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 		// @ts-ignore
 		const saveImageDataArgs = saveImageDataToDisk.mock.calls[saveImageDataToDisk.mock.calls.length - 1];
 
