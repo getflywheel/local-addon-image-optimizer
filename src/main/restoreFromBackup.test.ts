@@ -134,6 +134,7 @@ describe('restoreImageFromBackupFactory', () => {
 		expect(image.errorMessage).toBeFalsy();
 		expect(image.revertToBackupStatus).toEqual(RevertToBackupStatus.FAILURE);
 
+		// @ts-ignore
 		const saveImageDataArgs = saveImageDataToDisk.mock.calls[saveImageDataToDisk.mock.calls.length - 1];
 
 		expect(saveImageDataArgs[0]).toEqual(store);
