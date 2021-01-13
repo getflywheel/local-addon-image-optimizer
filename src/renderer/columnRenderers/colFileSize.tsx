@@ -19,13 +19,9 @@ export const ColFileSize = (props: IFileSizeProps) => {
 
 	let content = null;
 
-	const shouldDisplayErrorMessage = () => {
-		return;
-	};
-
 	const errorCompressingImage = (
 		colKey === 'compressedSize'
-		&& rowData.errorOverrideMessage
+		&& rowData.errorMessage
 		&& !rowData.compressedSize
 	);
 
