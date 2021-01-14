@@ -57,7 +57,11 @@ export const sitesSlice = createSlice({
 					...generateInitialSiteState(),
 				};
 
-				Object.values(acc[id].imageData).forEach((d) => d.isChecked = true);
+				Object.values(acc[id].imageData).forEach((d) => {
+					if (!d.compressedImageHash && !d.errorMessage) {
+						d.isChecked = true;
+					}
+				});
 
 				return acc;
 			}, {} as SiteDataBySiteID);
@@ -142,7 +146,12 @@ export const sitesSlice = createSlice({
 			isChecked ? reportAnalytics(ANALYTIC_EVENT_TYPES.OPTIMIZE_INCLUDE_ALL_FILES) :
 				reportAnalytics(ANALYTIC_EVENT_TYPES.OPTIMIZE_EXCLUDE_ALL_FILES);
 
-			Object.values(siteState.imageData).forEach((d) => d.isChecked = isChecked);
+			Object.values(siteState.imageData).forEach((d) => {
+				if (!d.compressedImageHash && !d.errorMessage) {
+					d.isChecked = isChecked;
+				}
+			});
+
 			siteState.areAllFilesSelected = isChecked;
 
 			return state;
