@@ -45,7 +45,7 @@ const LastOptimizeStatus: React.FC<IProps> = (props: IProps) => {
 				>
 					{lastScan
 						? <Text
-							className="lastOptimizeStatus_Text"
+							className={classnames('lastOptimizeStatus_Text', 'hideOnSpectron')}
 							privateOptions={{
 								fontWeight: 'bold',
 							}}
