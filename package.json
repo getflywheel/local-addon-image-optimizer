@@ -103,5 +103,6 @@
   ],
   "engines": {
     "local-by-flywheel": "^5.9.2"
-  }
+  },
+  "requiresLocalAccount": true
 }
