@@ -7,13 +7,12 @@ import { store, actions, selectors, useStoreSelector } from './store/store';
 import { reportAnalytics, ANALYTIC_EVENT_TYPES } from './analytics';
 
 interface IProps {
-	match: { params: { siteID: string; } };
+	siteID: string;
 }
 
 
 const ImageOptimizer = (props: IProps) => {
-	const { match } = props;
-	const { siteID } = match.params;
+	const { siteID } = props;
 
 	const [activeSiteID, preferences, siteData] = useStoreSelector((state) => ([
 		state.activeSiteID,

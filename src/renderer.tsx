@@ -1,4 +1,5 @@
 import React from 'react';
+import fs from 'fs-extra';
 import path from 'path';
 import { Provider } from 'react-redux';
 import * as LocalRenderer from '@getflywheel/local/renderer';
@@ -14,6 +15,8 @@ const stylesheetPath = path.resolve(__dirname, '../style.css');
 
 export default async function (context) {
 	const { React, hooks } = context;
+	const packageJSON = fs.readJsonSync(path.join(__dirname, '../package.json'));
+	const addonID = packageJSON.slug;
 
 	setupListeners();
 
@@ -48,15 +51,22 @@ export default async function (context) {
 
 	const SiteInfoMenuItemHOC = withStoreProvider(SiteInfoMenuItem);
 
-	hooks.addContent('local-addon-image-optimizer:site-info-menu-item', () => (
-		<SiteInfoMenuItemHOC />
-	));
-
 	const ImageOptimizerHOC = withStoreProvider(ImageOptimizer);
 
-	hooks.addContent('siteToolsImageOptimizer', ({ match }) => (
-		<ImageOptimizerHOC match={match} />
-	));
+	hooks.addFilter(
+		'siteInfoToolsItem',
+		(menu) => {
+			menu.push({
+				path: `/${addonID}`,
+				menuItem: <SiteInfoMenuItemHOC />,
+				render: ({ site }) => (
+					<ImageOptimizerHOC siteID={site.id} />
+				),
+			});
+			return menu;
+		},
+	);
+
 
 	hooks.addFilter(
 		'preferencesMenuItems',
