@@ -1,7 +1,7 @@
 {
   "name": "@getflywheel/local-addon-image-optimizer",
   "productName": "Image Optimizer",
-  "version": "1.2.1",
+  "version": "2.0.0",
   "author": "Local Team",
   "keywords": [
     "local-addon"
@@ -9,7 +9,7 @@
   "bgColor": "#50C6DB",
   "icon": "icon.svg",
   "slug": "local-addon-image-optimizer",
-  "description": "A quick start to your amazing addon!",
+  "description": "A Local addon for compressing images on your WordPress site.",
   "renderer": "lib/renderer.js",
   "main": "lib/main.js",
   "repository": {
@@ -34,7 +34,7 @@
   },
   "devDependencies": {
     "@getflywheel/eslint-config-local": "1.0.4",
-    "@getflywheel/local": "^5.9.0",
+    "@getflywheel/local": "^6.0.0",
     "@types/classnames": "^2.2.9",
     "@types/dateformat": "^3.0.1",
     "@types/jest": "^26.0.13",
@@ -102,6 +102,6 @@
 	"style.css"
   ],
   "engines": {
-    "local-by-flywheel": "^5.9.2"
+    "local-by-flywheel": "^6.0.0"
   }
 }
