@@ -40,7 +40,7 @@ export const MetaDataRow = (props) => {
 					}}
 					className={'preferences_MarginLeft_16px'}
 				>
-					Strip my Metadata
+					Strip my metadata
 				</Text>
 			</div>
 			<Text>
