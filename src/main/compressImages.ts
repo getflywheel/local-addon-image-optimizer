@@ -143,7 +143,7 @@ export function compressImagesFactory (serviceContainer: LocalMain.ServiceContai
 				/**
 				 * Wrap this in a promise to ensure that only one image is compressed at a time
 				 */
-				await new Promise((resolve) => {
+				await new Promise<void>((resolve) => {
 					const cp = childProcess.spawn(
 						jpegRecompressBin,
 						args,
