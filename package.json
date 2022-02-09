@@ -34,12 +34,12 @@
   },
   "devDependencies": {
     "@getflywheel/eslint-config-local": "1.0.4",
-    "@getflywheel/local": "^6.0.0",
+    "@getflywheel/local": "^6.2.0",
     "@types/classnames": "^2.2.9",
     "@types/dateformat": "^3.0.1",
     "@types/jest": "^26.0.13",
-    "@types/node": "^12.7.12",
-    "@types/react": "^16.9.0",
+    "@types/node": "^14.14.35",
+    "@types/react": "^16.9.41",
     "@types/react-dom": "^16.9.0",
     "@types/react-redux": "^7.1.9",
     "@typescript-eslint/eslint-plugin": "^4.7.0",
@@ -59,13 +59,16 @@
     "webpack": "^4.44.2",
     "webpack-cli": "^3.3.12"
   },
+  "resolutions": {
+    "@types/react": "^16.9.41"
+  },
   "peerDependencies": {
     "react": ">= 16.4.0",
     "react-dom": ">= 16.4.0",
     "react-router-dom": "^4.3.1"
   },
   "dependencies": {
-    "@getflywheel/local-components": "^15.0.0",
+    "@getflywheel/local-components": "^17.0.4",
     "@reduxjs/toolkit": "^1.4.0",
     "classnames": "^2.2.6",
     "dateformat": "^3.0.3",
@@ -84,9 +87,9 @@
     "@getflywheel/local-components",
     "classnames",
     "dateformat",
-	"fs-extra",
-	"glob",
-	"glob-escape",
+	  "fs-extra",
+	  "glob",
+	  "glob-escape",
     "lodash",
     "md5",
     "prop-types",

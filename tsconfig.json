@@ -13,11 +13,13 @@
 		"outDir": "./lib",
 		"resolveJsonModule": true,
 		"rootDir": "./src",
+		"typeRoots": ["./types", "./node_modules/@types"],
 		"sourceMap": true,
 		"strict": false,
 		"target": "es2015"
 	},
 	"exclude": [
+		"node_modules",
 		"src/**/*.test.ts",
 		"src/test",
 		"src/renderer",
