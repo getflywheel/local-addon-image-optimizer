@@ -66,7 +66,7 @@ const LastOptimizeStatus: React.FC<IProps> = (props: IProps) => {
 						}}
 						disabled={scanInProgress}
 					>
-						{scanInProgress ? 'Scanning...' : 'Scan for Images'}
+						{scanInProgress ? 'Scanning...' : 'Scan for images'}
 					</Button>
 				</TableListRow>
 				<TableListRow className="lastOptimizeStatus_Row">

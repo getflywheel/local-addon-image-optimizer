@@ -29,17 +29,19 @@ export const ConfirmOptimizationModal = (props: BaseModalProps & ModalContentsPr
 				<br />
 				<br />
 				<TextButton
+					inline
 					className="fileList_Modal_Settings_Button"
 					onClick={openPreferencesModal}
 				>
-						View Settings
+						View settings
 				</TextButton>
 			</div>
 			<Divider />
 			<PrimaryButton
+				inline
 				onClick={onSubmit}
 			>
-				Optimize Images
+				Optimize images
 			</PrimaryButton>
 		</div>
 	);

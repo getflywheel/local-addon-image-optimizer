@@ -2,11 +2,11 @@ import React from 'react';
 import {
 	Button,
 	TextButton,
+	ArrowLeftIcon,
 } from '@getflywheel/local-components';
 import { ImageData, Preferences , OptimizerStatus, SiteData } from '../../types';
 
 import { convertBytesToMb } from '../utils';
-import ChevronArrowSVG from '../_assets/svg/chevron-arrow-right.svg';
 import { ConfirmOptimizationModal } from './ConfirmOptimizationModal';
 import { selectors, useStoreSelector } from '../store/store';
 import invokeModal from '../invokeModal';
@@ -50,9 +50,9 @@ export const FileListHeader = (props: IFileListHeaderProps) => {
 				<TextButton
 					onClick={() => setOverviewSelected(true)}
 					className='fileView_Header_Back_Button'
+					leftIcon={ArrowLeftIcon}
 				>
-					<ChevronArrowSVG className='caret-svg' />
-                    Back To Overview
+                    Back to overview
 				</TextButton>
 
 				<Button
@@ -68,7 +68,7 @@ export const FileListHeader = (props: IFileListHeaderProps) => {
 					}}
 					disabled={disableOptimizeButton}
 				>
-                    Optimize Images
+                    Optimize images
 				</Button>
 			</div>
 		);
@@ -108,7 +108,7 @@ export const FileListHeader = (props: IFileListHeaderProps) => {
 						form: 'fill',
 					}}
 				>
-                    Go To Overview
+                    Go to overview
 				</Button>
 			</div>
 		);

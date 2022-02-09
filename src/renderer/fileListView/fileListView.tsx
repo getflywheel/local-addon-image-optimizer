@@ -68,8 +68,8 @@ export const FileListView = (props: IFileListViewProps) => {
 				let headerText = null;
 				if (dataArgs.isHeader) {
 					headerText = siteData.optimizationStatus === OptimizerStatus.BEFORE
-						? `${getSelectedCount()} Images Selected`
-						: 'File Name';
+						? `${getSelectedCount()} images selected`
+						: 'File name';
 				}
 
 				return (
