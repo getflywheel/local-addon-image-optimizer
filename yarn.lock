@@ -421,18 +421,20 @@
   resolved "https://registry.yarnpkg.com/@getflywheel/eslint-config-local/-/eslint-config-local-1.0.4.tgz#2fab6bb77b63ec123e831534f50e1d3c7c135571"
   integrity sha512-GvnhhT3XaNipDdVvHifWbKjoFpLAbezkKsYBGfDF4uG/9gWo5UX9YLANPlzSLRyvgBrX0+27S5Cu8YE/yM7kPg==
 
-"@getflywheel/local-components@^17.0.4":
-  version "17.0.4"
-  resolved "https://registry.yarnpkg.com/@getflywheel/local-components/-/local-components-17.0.4.tgz#e0b4c2bf4a479fcf014ac0b5991138b2152a46e9"
-  integrity sha512-BMwy399Z1DwbYdMDAbxo6glQQwDBensnbAajdLLAo4JxmBWmRxva5CHoDX2fLNFymYSn//xolDh5wa52/umRAg==
+"@getflywheel/local-components@^17.2.1":
+  version "17.2.1"
+  resolved "https://registry.yarnpkg.com/@getflywheel/local-components/-/local-components-17.2.1.tgz#481a011966e642ff024eab6b09a9c764f57c8759"
+  integrity sha512-2SveTr0xRdIi77ZUvaSrLFBXoXIvbd/crsKdVFfAnpUWlbMuVG4kFaER4GSf8UUdWhZB7RkoR314syVPw4rB3w==
   dependencies:
     "@getflywheel/memoize-one-ts" "^0.0.2"
     "@popperjs/core" "^2.9.2"
+    "@types/lz-string" "^1.3.34"
     "@types/untildify" "^3.0.0"
     classnames "^2.2.6"
     clipboard-copy "^3.1.0"
     highlight.js "^10.4.1"
     lodash.isequal "^4.5.0"
+    lz-string "^1.4.4"
     react-animate-height "^2.0.23"
     react-lowlight "^2.0.0"
     react-markdown "^4.0.3"
@@ -875,6 +877,11 @@
   version "0.0.29"
   resolved "https://registry.yarnpkg.com/@types/json5/-/json5-0.0.29.tgz#ee28707ae94e11d2b827bcbe5270bcea7f3e71ee"
   integrity sha1-7ihweulOEdK4J7y+UnC86n8+ce4=
+
+"@types/lz-string@^1.3.34":
+  version "1.3.34"
+  resolved "https://registry.yarnpkg.com/@types/lz-string/-/lz-string-1.3.34.tgz#69bfadde419314b4a374bf2c8e58659c035ed0a5"
+  integrity sha512-j6G1e8DULJx3ONf6NdR5JiR2ZY3K3PaaqiEuKYkLQO0Czfi1AzrtjfnfCROyWGeDd5IVMKCwsgSmMip9OWijow==
 
 "@types/node@*":
   version "16.11.5"
@@ -5212,6 +5219,11 @@ lru-cache@^6.0.0:
   integrity sha512-Jo6dJ04CmSjuznwJSS3pUeWmd/H0ffTlkXXgwZi+eq1UCmqQwCh+eLsYOYCwY991i2Fah4h1BEMCx4qThGbsiA==
   dependencies:
     yallist "^4.0.0"
+
+lz-string@^1.4.4:
+  version "1.4.4"
+  resolved "https://registry.yarnpkg.com/lz-string/-/lz-string-1.4.4.tgz#c0d8eaf36059f705796e1e344811cf4c498d3a26"
+  integrity sha1-wNjq82BZ9wV5bh40SBHPTEmNOiY=
 
 make-dir@^2.0.0:
   version "2.1.0"
