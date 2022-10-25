@@ -35,6 +35,7 @@
   "devDependencies": {
     "@getflywheel/eslint-config-local": "1.0.4",
     "@getflywheel/local": "^6.2.0",
+	"@electron/remote":"^2.0.8",
     "@types/classnames": "^2.2.9",
     "@types/dateformat": "^3.0.1",
     "@types/jest": "^26.0.13",
