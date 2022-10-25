@@ -1,4 +1,4 @@
-import { remote, shell } from 'electron';
+import { shell } from 'electron';
 import { useEffect } from 'react';
 import * as LocalRenderer from '@getflywheel/local/renderer';
 import { IPC_EVENTS } from '../constants';
@@ -7,6 +7,8 @@ import invokeModal from './invokeModal';
 import ConfirmRestoreBackupModalContents from './confirmRestoreBackupModalContents';
 import { reportAnalytics, ANALYTIC_EVENT_TYPES } from './analytics';
 
+/* eslint-disable-next-line */
+const remote = require('@electron/remote');
 const { Menu, MenuItem } = remote;
 
 const isMac = process.platform === 'darwin';
@@ -91,6 +93,7 @@ export function useContextMenu(parentNodeId: string, contextMenuAreaId: string) 
 
 		const imageList = document.getElementById(contextMenuAreaId);
 
+		const window = new Br
 		if (!imageList) {
 			return;
 		}
