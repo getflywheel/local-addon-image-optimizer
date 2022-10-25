@@ -49,5 +49,4 @@ jobs:
       - *install_yarn_deps
       - *save_yarn_cache
       - *build
-      - *lint
       - *test
