@@ -106,6 +106,6 @@
 	"style.css"
   ],
   "engines": {
-    "local-by-flywheel": "^6.0.0"
+    "local-by-flywheel": "^6.5.0"
   }
 }
