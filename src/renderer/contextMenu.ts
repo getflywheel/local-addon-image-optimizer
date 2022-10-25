@@ -1,4 +1,4 @@
-import { remote, shell } from 'electron';
+import { shell } from 'electron';
 import { useEffect } from 'react';
 import * as LocalRenderer from '@getflywheel/local/renderer';
 import { IPC_EVENTS } from '../constants';
@@ -7,6 +7,8 @@ import invokeModal from './invokeModal';
 import ConfirmRestoreBackupModalContents from './confirmRestoreBackupModalContents';
 import { reportAnalytics, ANALYTIC_EVENT_TYPES } from './analytics';
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const remote = require(`@electron/remote`);
 const { Menu, MenuItem } = remote;
 
 const isMac = process.platform === 'darwin';
@@ -19,62 +21,56 @@ export const uncompressedImageListContextMenu = 'uncompressed-image-list-context
 export const comprepssedImageListNoContextMenu = 'compressed-image-list-no-context-menu';
 export const compressedImageListContextMenu = 'compressed-image-list-context-menu';
 
-const revealPathMenuItem = (path: string) => {
-	return new MenuItem({
-		label: isMac ? 'Reveal in Finder' : 'Show folder',
-		click() {
-			shell.showItemInFolder(path)
+const revealPathMenuItem = (path: string) => new MenuItem({
+	label: isMac ? 'Reveal in Finder' : 'Show folder',
+	click () {
+		shell.showItemInFolder(path);
 
-			/**
+		/**
 			 * Generally, these calls should live in redux reducers, but given that we do not have
 			 * reducers for these, this location makes the most sense
 			 */
-			reportAnalytics(ANALYTIC_EVENT_TYPES.CONTEXTMENU_REVEAL_IN_FINDER);
-		}
-	});
-}
+		reportAnalytics(ANALYTIC_EVENT_TYPES.CONTEXTMENU_REVEAL_IN_FINDER);
+	},
+});
 
-const openPathMenuItem = (path: string) => {
-	return new MenuItem({
-		label: 'Open',
-		click() {
-			shell.openPath(path)
+const openPathMenuItem = (path: string) => new MenuItem({
+	label: 'Open',
+	click () {
+		shell.openPath(path);
 
-			/**
+		/**
 			 * Generally, these calls should live in redux reducers, but given that we do not have
 			 * reducers for these, this location makes the most sense
 			 */
-			reportAnalytics(ANALYTIC_EVENT_TYPES.CONTEXTMENU_OPEN);
-		}
-	});
-}
+		reportAnalytics(ANALYTIC_EVENT_TYPES.CONTEXTMENU_OPEN);
+	},
+});
 
-const revertToBackupMenuItem = (imageID: string, filePath: string) => {
-	return new MenuItem({
-		label: 'Revert to backup',
-		async click() {
-			const siteID = selectors.activeSiteID();
-			invokeModal({
-				ModalContents: ConfirmRestoreBackupModalContents,
-				onSubmit: async () => {
-					const actionPayload = { siteID, imageID };
-					store.dispatch(actions.revertToBackupStarted(actionPayload));
+const revertToBackupMenuItem = (imageID: string, filePath: string) => new MenuItem({
+	label: 'Revert to backup',
+	async click () {
+		const siteID = selectors.activeSiteID();
+		invokeModal({
+			ModalContents: ConfirmRestoreBackupModalContents,
+			onSubmit: async () => {
+				const actionPayload = { siteID, imageID };
+				store.dispatch(actions.revertToBackupStarted(actionPayload));
 
-					const { success } = await LocalRenderer.ipcAsync(IPC_EVENTS.RESTORE_IMAGE_FROM_BACKUP, siteID, imageID)
-					let action = actions.revertToBackupSuccess;
+				const { success } = await LocalRenderer.ipcAsync(IPC_EVENTS.RESTORE_IMAGE_FROM_BACKUP, siteID, imageID);
+				let action = actions.revertToBackupSuccess;
 
-					if (!success) {
-						action = actions.revertToBackupFailure;
-					}
-
-					store.dispatch(action(actionPayload));
+				if (!success) {
+					action = actions.revertToBackupFailure;
 				}
-			});
-		},
-	});
-};
 
-export function useContextMenu(parentNodeId: string, contextMenuAreaId: string) {
+				store.dispatch(action(actionPayload));
+			},
+		});
+	},
+});
+
+export function useContextMenu (parentNodeId: string, contextMenuAreaId: string) {
 	useEffect(() => {
 		/**
 		 * Remove any other context menu's.
@@ -103,7 +99,7 @@ export function useContextMenu(parentNodeId: string, contextMenuAreaId: string) 
 				return;
 			}
 
-			const menu = new Menu()
+			const menu = new Menu();
 			const { filePath, compressedImageHash } = selectors.siteImages()[imageID];
 
 			menu.append(revealPathMenuItem(filePath));
