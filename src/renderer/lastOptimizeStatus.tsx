@@ -56,6 +56,7 @@ const LastOptimizeStatus: React.FC<IProps> = (props: IProps) => {
 					}
 					<Button
 						className="lastOptimizeStatus_Rescan_Button"
+						inline
 						onClick={() => props.handleScanForImages()}
 						privateOptions={{
 							color: 'green',
