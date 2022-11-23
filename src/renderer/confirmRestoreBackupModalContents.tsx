@@ -13,6 +13,7 @@ const ConfirmRestoreBackupModalContents = (props) => {
 			<br/>
 
 			<PrimaryButton
+				inline
 				onClick={onSubmit}
 			>
 				Confirm

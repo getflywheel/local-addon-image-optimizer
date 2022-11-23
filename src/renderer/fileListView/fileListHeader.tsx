@@ -49,6 +49,7 @@ export const FileListHeader = (props: IFileListHeaderProps) => {
 			<div className='fileView_Header'>
 				<TextButton
 					onClick={() => setOverviewSelected(true)}
+					inline
 					className='fileView_Header_Back_Button'
 					leftIcon={ArrowLeftIcon}
 				>
@@ -57,6 +58,7 @@ export const FileListHeader = (props: IFileListHeaderProps) => {
 
 				<Button
 					className='fileView_Button_Optimization'
+					inline
 					onClick={() => invokeModal<ModalContentsProps>({
 						ModalContents: ConfirmOptimizationModal,
 						modalContentsProps: { preferences },
@@ -81,6 +83,7 @@ export const FileListHeader = (props: IFileListHeaderProps) => {
 
 				<Button
 					className='fileView_Button_Optimization'
+					inline
 					onClick={cancelImageCompression}
 					privateOptions={{
 						color: 'green',
@@ -102,6 +105,7 @@ export const FileListHeader = (props: IFileListHeaderProps) => {
 
 				<Button
 					className='fileView_Button_Optimization'
+					inline
 					onClick={resetToOverview}
 					privateOptions={{
 						color: 'green',

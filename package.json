@@ -1,7 +1,7 @@
 {
   "name": "@getflywheel/local-addon-image-optimizer",
   "productName": "Image Optimizer",
-  "version": "2.1.1",
+  "version": "2.1.0",
   "author": "Local Team",
   "keywords": [
     "local-addon"
@@ -106,7 +106,6 @@
 	"style.css"
   ],
   "engines": {
-    "local-by-flywheel": "^6.4.3",
-	"node": ">=14 <17"
+    "local-by-flywheel": "^6.4.3"
   }
 }
