@@ -125,7 +125,7 @@ export const Overview = (props: IProps) => {
 		<div className="overview_Container" id={comprepssedImageListNoContextMenu}>
 			{remainingUncompressedImages > 0 &&
 				<Banner className="imageNotificationBanner" variant="success" icon="false" buttonText={'View images'} buttonOnClick={() => onClickViewImages()}>
-					We've found{' '}<strong>{remainingUncompressedImages}</strong>{maybePluralizedImages} slowing down your site.
+					We've found{' '}<strong>{remainingUncompressedImages}{' '}</strong>{maybePluralizedImages} slowing down your site.
 				</Banner>
 			}
 			{imageCount === 0
