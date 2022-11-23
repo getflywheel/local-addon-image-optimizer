@@ -124,7 +124,7 @@ export const Overview = (props: IProps) => {
 	return (
 		<div className="overview_Container" id={comprepssedImageListNoContextMenu}>
 			{remainingUncompressedImages > 0 &&
-				<Banner className="imageNotificationBanner" variant="success" icon="false" buttonText={'View images'} buttonOnClick={() => onClickViewImages()}>
+				<Banner className="imageNotificationBanner" variant="success" buttonText={'View images'} buttonOnClick={() => onClickViewImages()}>
 					We've found{' '}<strong>{remainingUncompressedImages}{' '}</strong>{maybePluralizedImages} slowing down your site.
 				</Banner>
 			}

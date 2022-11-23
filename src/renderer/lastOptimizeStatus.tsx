@@ -1,6 +1,6 @@
 import React from 'react';
 import { getFormattedTimestamp , formatCompressedPercentage, convertBytesToMb } from './utils';
-import { Button, Text, TableList, TableListRow } from '@getflywheel/local-components';
+import { Button, Text, TableList, TableListRow, Divider } from '@getflywheel/local-components';
 import classnames from 'classnames';
 
 import { SiteData } from '../types';
@@ -70,6 +70,7 @@ const LastOptimizeStatus: React.FC<IProps> = (props: IProps) => {
 						{scanInProgress ? 'Scanning...' : 'Scan for images'}
 					</Button>
 				</TableListRow>
+				<Divider/>
 				<TableListRow className="lastOptimizeStatus_Row">
 					<Text className="lastOptimizeStatus_Text">Total reductions</Text>
 					<Text className="lastOptimizeStatus_TextAlignRight">

@@ -69,7 +69,7 @@
     "react-router-dom": "^4.3.1"
   },
   "dependencies": {
-    "@getflywheel/local-components": "^17.6.2",
+    "@getflywheel/local-components": "^17.6.3",
     "@reduxjs/toolkit": "^1.4.0",
     "classnames": "^2.2.6",
     "dateformat": "^3.0.3",
