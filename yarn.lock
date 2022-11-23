@@ -426,10 +426,10 @@
   resolved "https://registry.yarnpkg.com/@getflywheel/eslint-config-local/-/eslint-config-local-1.0.4.tgz#2fab6bb77b63ec123e831534f50e1d3c7c135571"
   integrity sha512-GvnhhT3XaNipDdVvHifWbKjoFpLAbezkKsYBGfDF4uG/9gWo5UX9YLANPlzSLRyvgBrX0+27S5Cu8YE/yM7kPg==
 
-"@getflywheel/local-components@^17.6.2":
-  version "17.6.2"
-  resolved "https://registry.yarnpkg.com/@getflywheel/local-components/-/local-components-17.6.2.tgz#2c63c03674ecbbf7ddbace2fdc2cc1833a3b8963"
-  integrity sha512-D+MphbNyAsRCv0hI07TVfwXq8fE7DTHclgwrLzSvoQp/yWULcqV4n8xlpx5N3utikL91+t+h/Gobb7NEkiPUOw==
+"@getflywheel/local-components@^17.6.3":
+  version "17.6.3"
+  resolved "https://registry.yarnpkg.com/@getflywheel/local-components/-/local-components-17.6.3.tgz#6fdc3621b5a56c85de1a530996fe3523c58a7b13"
+  integrity sha512-/Qb5x9Ll1qt1KDughFDHHsqFDGSOtSIhgNAk+GgalRS7X1oiO0d+SG/GjRk7wKIceDo+F7oM+pPTukBofoIhfQ==
   dependencies:
     "@electron/remote" "^2.0.8"
     "@popperjs/core" "^2.9.2"
