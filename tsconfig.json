@@ -13,6 +13,7 @@
 		"outDir": "./lib",
 		"resolveJsonModule": true,
 		"rootDir": "./src",
+		"skipLibCheck": true,
 		"typeRoots": ["./types", "./node_modules/@types"],
 		"sourceMap": true,
 		"strict": false,
