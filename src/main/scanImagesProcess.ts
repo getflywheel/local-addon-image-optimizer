@@ -45,7 +45,7 @@ function processSafeSend(name) {
 	};
 }
 
-process.on('message', async (message) => {
+process.on('message', async (message: {name: string, payload: unknown}) => {
 	const { name, payload } = message;
 	const reply = processSafeSend(name);
 
@@ -53,7 +53,7 @@ process.on('message', async (message) => {
 		reply(await scanImages(payload));
 	}
 
-	if (name ==='get-image-stats') {
+	if (name === 'get-image-stats') {
 		reply(await getImageStats(payload));
 	}
 });

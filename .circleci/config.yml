@@ -2,6 +2,9 @@
 
 version: 2.1
 
+orbs:
+  node: circleci/node@5.1
+
 anchors:
   install_yarn_deps: &install_yarn_deps
     run:
@@ -41,10 +44,11 @@ anchors:
 
 jobs:
   build:
-    docker:
-      - image: cimg/node:12.14
+    executor: node/default
     steps:
       - checkout
+      - node/install:
+          install-yarn: true
       - *restore_yarn_cache
       - *install_yarn_deps
       - *save_yarn_cache

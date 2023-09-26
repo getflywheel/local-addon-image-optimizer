@@ -2,7 +2,7 @@
 const path = require('path');
 
 module.exports = {
-	mode: 'production',
+	mode: process.env.NODE_ENV || 'development',
 	entry: [
 		path.join(__dirname, 'src', 'renderer.tsx'),
 	],
@@ -32,9 +32,7 @@ module.exports = {
 			},
 			{
 				test: /\.svg$/,
-				issuer: {
-					test: /\.[tj]sx?$/,
-				},
+				issuer: /\.[tj]sx?$/,
 				use: [
 					'babel-loader',
 					{
@@ -52,11 +50,6 @@ module.exports = {
 				],
 			},
 		],
-	},
-	node: {
-		fs: 'empty',
-		child_process: 'empty',
-		__dirname: false,
 	},
 	resolve: {
 		extensions: ['.tsx', '.ts', '.jsx', '.js'],
