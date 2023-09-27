@@ -69,13 +69,13 @@
     "react-router-dom": "^4.3.1"
   },
   "dependencies": {
-    "@getflywheel/local-components": "^17.6.3",
+    "@getflywheel/local-components": "^17.7.1",
     "@reduxjs/toolkit": "^1.4.0",
     "classnames": "^2.2.6",
-    "dateformat": "^3.0.3",
-    "fs-extra": "^9.0.1",
+    "dateformat": "^5.0.3",
+    "fs-extra": "^11.1.1",
     "glob-escape": "^0.0.2",
-    "lodash": "^4.17.20",
+    "lodash": "^4.17.21",
     "md5": "^2.3.0",
     "prop-types": "^15.6.2",
     "react": "^16.10.2",
