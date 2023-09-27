@@ -1,6 +1,6 @@
 import path from 'path';
 import fs from 'fs-extra';
-import glob from 'glob';
+import { glob } from 'glob';
 import escapeGlob from 'glob-escape';
 import type * as LocalMain from '@getflywheel/local/main';
 import { BACKUP_DIR_NAME } from '../constants';
