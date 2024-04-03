@@ -35,7 +35,7 @@
   "devDependencies": {
     "@electron/remote": "^2.0.8",
     "@getflywheel/eslint-config-local": "1.0.4",
-    "@getflywheel/local": "^8.0.0",
+    "@getflywheel/local": "^9.0.0",
     "@types/classnames": "^2.2.9",
     "@types/dateformat": "^3.0.1",
     "@types/jest": "^26.0.13",
@@ -69,7 +69,7 @@
     "react-router-dom": "^4.3.1"
   },
   "dependencies": {
-    "@getflywheel/local-components": "^17.7.1",
+    "@getflywheel/local-components": "^17.8.0",
     "@reduxjs/toolkit": "^1.4.0",
     "classnames": "^2.2.6",
     "dateformat": "^5.0.3",
