@@ -6,6 +6,7 @@ import { selectors, actions, store } from './store/store';
 import invokeModal from './invokeModal';
 import ConfirmRestoreBackupModalContents from './confirmRestoreBackupModalContents';
 import { reportAnalytics, ANALYTIC_EVENT_TYPES } from './analytics';
+import path from 'path';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const remote = require(`@electron/remote`);
@@ -21,15 +22,15 @@ export const uncompressedImageListContextMenu = 'uncompressed-image-list-context
 export const comprepssedImageListNoContextMenu = 'compressed-image-list-no-context-menu';
 export const compressedImageListContextMenu = 'compressed-image-list-context-menu';
 
-const revealPathMenuItem = (path: string) => new MenuItem({
+const revealPathMenuItem = (imagePath: string) => new MenuItem({
 	label: isMac ? 'Reveal in Finder' : 'Show folder',
 	click () {
-		shell.showItemInFolder(path);
+		shell.openPath(path.dirname(imagePath));
 
 		/**
-			 * Generally, these calls should live in redux reducers, but given that we do not have
-			 * reducers for these, this location makes the most sense
-			 */
+		 * Generally, these calls should live in redux reducers, but given that we do not have
+		 * reducers for these, this location makes the most sense
+		 */
 		reportAnalytics(ANALYTIC_EVENT_TYPES.CONTEXTMENU_REVEAL_IN_FINDER);
 	},
 });
