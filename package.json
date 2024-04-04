@@ -33,7 +33,6 @@
     "test:watch": "yarn test --watch"
   },
   "devDependencies": {
-    "@electron/remote": "^2.0.8",
     "@getflywheel/eslint-config-local": "1.0.4",
     "@getflywheel/local": "^9.0.0",
     "@types/classnames": "^2.2.9",
@@ -69,6 +68,7 @@
     "react-router-dom": "^4.3.1"
   },
   "dependencies": {
+    "@electron/remote": "^2.1.2",
     "@getflywheel/local-components": "^17.8.0",
     "@reduxjs/toolkit": "^1.4.0",
     "classnames": "^2.2.6",
