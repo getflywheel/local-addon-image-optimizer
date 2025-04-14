@@ -61,7 +61,11 @@
     "webpack-cli": "^5.1.4"
   },
   "resolutions": {
-    "@types/react": "^16.9.41"
+    "@types/react": "^16.9.41",
+	"braces": "^3.0.3",
+	"micromatch": "^4.0.8",
+	"trim": "^0.0.3",
+	"nth-check": "^2.0.1"
   },
   "peerDependencies": {
     "react": ">= 16.4.0",
