@@ -35,7 +35,7 @@
   "devDependencies": {
     "@babel/preset-react": "^7.26.3",
     "@getflywheel/eslint-config-local": "1.0.4",
-    "@getflywheel/local": "^9.0.0",
+    "@getflywheel/local": "^9.2.4",
     "@types/classnames": "^2.2.9",
     "@types/dateformat": "^3.0.1",
     "@types/jest": "^26.0.13",
